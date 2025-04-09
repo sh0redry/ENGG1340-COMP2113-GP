@@ -1,4 +1,2 @@
 # ENGG1340-COMP2113-GP
-123
-456789
-testing
+
