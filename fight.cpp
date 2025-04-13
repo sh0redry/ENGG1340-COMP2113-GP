@@ -17,7 +17,8 @@ const char BULLET_CHAR = '|';
 int enemyInitHP = 1; // 敌机初始血量
 int BulletDamage = 1; // 子弹伤害
 int enemynum=15; // 敌机生成概率（15-30)比较合理
-int fps=250;
+int fps=250;   //帧率，可以看作游戏刷新率
+int initialHP = 100; // 初始血量
 
 //设置enemy结构体
 struct Enemy {
@@ -39,8 +40,8 @@ int playerX = WIDTH / 2;
 int playerY = HEIGHT - 1;
 vector<pair<int, int>> bullets;
 vector<Enemy> enemies;
-int score = 0;
 bool gameOver = false;
+int HP = initialHP; // 玩家血量
 
 // 随机数生成器
 mt19937 rng(random_device{}());
@@ -111,7 +112,7 @@ void Draw()
     cout << '+';
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
-    cout << "Score: " << score << endl;
+    cout << "HP: " << HP <<endl; // 显示血量
 }
 
 void Update() {
@@ -121,11 +122,14 @@ void Update() {
 
     // 移动敌人
     for (auto& e : enemies) e.y++;
+    int escaped = count_if(enemies.begin(), enemies.end(), [](const Enemy& e) { return e.y >= HEIGHT; });
+    HP -= escaped;
+    if (HP < 0) HP = 0;
+    //移除过界敌人
     enemies.erase(remove_if(enemies.begin(), enemies.end(), [](auto& e) { return e.y >= HEIGHT; }), enemies.end());
 
     // 生成新敌人
-    // 修改敌人生成逻辑
-    if (dist(rng) < enemynum) { // 10% 概率生成敌人
+    if (dist(rng) < enemynum) { // 敌人生成概率
         uniform_int_distribution<int> xDist(0, WIDTH-1);
         enemies.push_back({xDist(rng), 0, enemyInitHP}); // 随机生成敌人
     }
@@ -138,8 +142,7 @@ void Update() {
             if (b->first == e->x && b->second == e->y) {
                 e->health -= BulletDamage; // 减少敌人血量
                 if (e->health <= 0) {
-                    score += 10; // 击杀敌人得分
-                    e = enemies.erase(e);
+                    e = enemies.erase(e); // 删除被击毁敌人
                 } else {
                     ++e;  // 保留受伤的敌人
                 }
@@ -162,6 +165,10 @@ void Update() {
             gameOver = true;
             return;
         }
+    }
+    if (HP <= 0) { // 玩家血量为0，游戏结束
+        gameOver = true;
+        return;
     }
 }
 
@@ -225,8 +232,7 @@ int main()
 
     // 显示游戏结束画面
     MoveCursor(0, HEIGHT + 2);
-    cout << "Game Over!" << endl;
-    cout << "Final Score: " << score << endl;
+    cout << "Game Over! Your brain has been eaten by zoombies..." << endl;
     
     // 恢复光标
     CONSOLE_CURSOR_INFO cursorInfo;
