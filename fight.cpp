@@ -113,6 +113,7 @@ void Draw()
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
     cout << "HP: " << HP <<endl; // 显示血量
+    cout << "Press A/D to move left/right, Space to shoot, Z/C to move faster." << endl; // 提示信息
 }
 
 void Update() {
@@ -123,7 +124,7 @@ void Update() {
     // 移动敌人
     for (auto& e : enemies) e.y++;
     int escaped = count_if(enemies.begin(), enemies.end(), [](const Enemy& e) { return e.y >= HEIGHT; });
-    HP -= escaped;
+    HP -= escaped*10; // 每个逃脱的敌人扣10血量
     if (HP < 0) HP = 0;
     //移除过界敌人
     enemies.erase(remove_if(enemies.begin(), enemies.end(), [](auto& e) { return e.y >= HEIGHT; }), enemies.end());
@@ -162,8 +163,12 @@ void Update() {
     // 碰撞检测（玩家和敌人）
     for (auto& e : enemies) {
         if (e.x == playerX && e.y == playerY) { // 玩家与敌人相撞,游戏结束
-            gameOver = true;
-            return;
+            HP -= 1; // 玩家血量减少
+            e.health = 0; // 敌人被击毁
+            if (HP <= 0) { // 玩家血量为0，游戏结束
+                gameOver = true;
+                return;
+            }
         }
     }
     if (HP <= 0) { // 玩家血量为0，游戏结束
@@ -198,10 +203,10 @@ void ProcessInput() {
                     bullets.emplace_back(playerX, playerY-1);
                     break;
                 case 'Z':
-                    if (playerX > 1) playerX-=2;
+                    if (playerX > 2) playerX-=3;
                         break;
                 case 'C':
-                    if (playerX < WIDTH-2) playerX+=2;
+                    if (playerX < WIDTH-3) playerX+=3;
                         break;
                 
 
