@@ -4,9 +4,9 @@
 #include <string>
 
 namespace utils {
-    void clearScreen();
-    char getKey();
-    std::string loadUI(const std::string& filename);
+    void ClearScreen();
+    char GetKey();
+    std::string LoadUI(const std::string& filename);
 }
 
 #endif // UTILITIES_H 

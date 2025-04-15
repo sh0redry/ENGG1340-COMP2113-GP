@@ -8,7 +8,7 @@
 
 namespace utils {
     // clear the terminal screen
-    void clearScreen() {
+    void ClearScreen() {
         #ifdef _WIN32
             system("cls");
         #else
@@ -17,29 +17,29 @@ namespace utils {
     }
 
     // get a single character without requiring Enter
-    char getKey() {
+    char GetKey() {
         char ch;
-        struct termios old_settings, new_settings;
+        struct termios oldSettings, newSettings;
         
         // Get current terminal settings
-        tcgetattr(STDIN_FILENO, &old_settings);
-        new_settings = old_settings;
+        tcgetattr(STDIN_FILENO, &oldSettings);
+        newSettings = oldSettings;
         
         // Disable canonical mode and echo
-        new_settings.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
+        newSettings.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
         
         // Read a single character
         ch = getchar();
         
         // Restore original terminal settings
-        tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);
         
         return ch;
     }
 
     // load the UI from a file
-    std::string loadUI(const std::string& filename) {
+    std::string LoadUI(const std::string& filename) {
         std::ifstream file(filename);
         std::string content;
         

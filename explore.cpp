@@ -21,6 +21,7 @@ void explore(int number_of_people, int &gold, int &crop, int &people){
     int addPeople=rand()%3+2;
     cout << "Congrats! You get " << addPeople << " PEOPLE!" << endl;
     people += addPeople;
+  }
   else if (randomValue>89){
     cout << "AHHHHH! They die!" << endl;
     people -= number_of_people;
