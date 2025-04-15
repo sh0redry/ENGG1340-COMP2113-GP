@@ -3,8 +3,10 @@
 
 #include <string>
 
-void clearScreen();
-char getKey();
-std::string loadUI(const std::string& filename);
+namespace utils {
+    void clearScreen();
+    char getKey();
+    std::string loadUI(const std::string& filename);
+}
 
 #endif // UTILITIES_H 
