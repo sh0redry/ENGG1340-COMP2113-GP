@@ -1,11 +1,18 @@
 #include <iostream>
-#include <conio.h>
-#include <windows.h>
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <random>
 #include <algorithm>
+
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 
 using namespace std;
 
@@ -16,8 +23,8 @@ const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
 int enemyInitHP = 1; // 敌机初始血量
 int BulletDamage = 1; // 子弹伤害
-int enemynum=15; // 敌机生成概率（15-30)比较合理
-int fps=250;   //帧率，可以看作游戏刷新率
+int enemynum=11; // 敌机生成概率（15-30)比较合理
+int fps=200;   //帧率，可以看作游戏刷新率
 int initialHP = 100; // 初始血量
 
 //设置enemy结构体
@@ -33,7 +40,11 @@ struct Enemy {
 
 
 // 控制台句柄
+#ifdef _WIN32
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+#else
+struct termios originalTermios;
+#endif
 
 // 游戏状态
 int playerX = WIDTH / 2;
@@ -46,6 +57,39 @@ int HP = initialHP; // 玩家血量
 // 随机数生成器
 mt19937 rng(random_device{}());
 uniform_int_distribution<int> dist(0, 99);
+
+// MAC系统下的控制台输入输出设置
+#ifndef _WIN32
+int _kbhit() {
+    int bytesWaiting;
+    ioctl(STDIN_FILENO, FIONREAD, &bytesWaiting);
+    return bytesWaiting > 0;
+}
+
+int _getch() {
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+
+void setTerminalMode() {
+    struct termios newt;
+    tcgetattr(STDIN_FILENO, &originalTermios);
+    newt = originalTermios;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+void restoreTerminalMode() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
+}
+#endif
 
 void InitConsole()
 {
