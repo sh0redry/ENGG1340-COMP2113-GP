@@ -19,21 +19,21 @@ namespace utils {
     // get a single character without requiring Enter
     char GetKey() {
         char ch;
-        struct termios oldSettings, newSettings;
+        struct termios old_settings, new_settings;
         
         // Get current terminal settings
-        tcgetattr(STDIN_FILENO, &oldSettings);
-        newSettings = oldSettings;
+        tcgetattr(STDIN_FILENO, &old_settings);
+        new_settings = old_settings;
         
         // Disable canonical mode and echo
-        newSettings.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &newSettings);
+        new_settings.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &new_settings);
         
         // Read a single character
         ch = getchar();
         
         // Restore original terminal settings
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldSettings);
+        tcsetattr(STDIN_FILENO, TCSANOW, &old_settings);
         
         return ch;
     }
