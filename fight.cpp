@@ -4,6 +4,7 @@
 #include <thread>
 #include <random>
 #include <algorithm>
+#include <cstdlib>
 
 #ifdef _WIN32
 #include <conio.h>
@@ -11,7 +12,8 @@
 #else
 #include <termios.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <fcntl.h>zz
+#include <sys/ioctl.h>
 #endif
 
 using namespace std;
@@ -21,12 +23,11 @@ const int WIDTH = 25;
 const int HEIGHT = 25;
 const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
-const int GAME_DURATION = 60; // 游戏持续时间（秒）
 int enemyInitHP = 1; // 敌机初始血量
 int BulletDamage = 1; // 子弹伤害
-int enemynum=10; // 敌机生成概率（5-20）比较合理
+int enemynum=11; // 敌机生成概率（15-30)比较合理
 int fps=200;   //帧率，可以看作游戏刷新率
-int initialHP = 100; // 初始血量= survivor*100
+int initialHP = 100; // 初始血量
 
 //设置enemy结构体
 struct Enemy {
@@ -50,17 +51,21 @@ struct termios originalTermios;
 // 游戏状态
 int playerX = WIDTH / 2;
 int playerY = HEIGHT - 1;
-vector<pair<int, int>> bullets;
+vector<pair<int, int> > bullets;//子弹位置（x,y）
 vector<Enemy> enemies;
 bool gameOver = false;
 int HP = initialHP; // 玩家血量
 
 // 随机数生成器
-mt19937 rng(random_device{}());
-uniform_int_distribution<int> dist(0, 99);
+std::mt19937 rng(std::chrono::system_clock::now().time_since_epoch().count());
+std::uniform_int_distribution<int> dist(0, 99);
 
+int random_range(int min, int max) {
+    return min + (rand() % (max - min + 1));
+}
 // MAC系统下的控制台输入输出设置
 #ifndef _WIN32
+
 int _kbhit() {
     int bytesWaiting;
     ioctl(STDIN_FILENO, FIONREAD, &bytesWaiting);
@@ -78,7 +83,6 @@ int _getch() {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return ch;
 }
-
 void setTerminalMode() {
     struct termios newt;
     tcgetattr(STDIN_FILENO, &originalTermios);
@@ -86,11 +90,22 @@ void setTerminalMode() {
     newt.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 }
-
 void restoreTerminalMode() {
     tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
 }
-#endif
+
+void InitConsole() {
+    cout << "\033[?25l"; // 隐藏光标
+    cout << "\033[2J\033[H"; // 清屏并移动光标到左上角
+}
+void RestoreConsole() {
+    cout << "\033[?25h"; // 显示光标
+}
+void MoveCursor(short x, short y) {
+    // ANSI escape sequence to move the cursor
+    cout << "\033[" << (y + 1) << ";" << (x + 1) << "H";
+}
+#else
 
 void InitConsole()
 {
@@ -108,11 +123,17 @@ void InitConsole()
     cursorInfo.bVisible = false;
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
-
-void MoveCursor(short x, short y)
-{
+void RestoreConsole() {
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+    cursorInfo.bVisible = true;
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+}
+void MoveCursor(short x, short y) {
     SetConsoleCursorPosition(hConsole, { x, y });
 }
+#endif
+
 
 void Draw()
 {
@@ -129,15 +150,15 @@ void Draw()
     scene[playerY][playerX] = PLAYER_CHAR;
 
     // 放置子弹
-    for (auto& b : bullets) {
-        if (b.second >= 0 && b.second < HEIGHT)
-            scene[b.second][b.first] = BULLET_CHAR;
+    for (size_t i = 0; i < bullets.size(); ++i) { // 使用索引循环
+        if (bullets[i].second >= 0 && bullets[i].second < HEIGHT)
+            scene[bullets[i].second][bullets[i].first] = BULLET_CHAR;
     }
 
     // 放置敌人
-    for (auto& e : enemies) {
-        if (e.y >= 0 && e.y < HEIGHT)
-            scene[e.y][e.x] = e.GetDisplayChar();
+    for (size_t i = 0; i < enemies.size(); ++i) { // 使用索引循环
+        if (enemies[i].y >= 0 && enemies[i].y < HEIGHT)
+            scene[enemies[i].y][enemies[i].x] = enemies[i].GetDisplayChar();
     }
 
     // 绘制场景
@@ -157,31 +178,52 @@ void Draw()
     cout << '+';
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
-    for (int i = 0; i < (WIDTH-9)/2; i++) cout << '-';
-    cout << "YOUR HOME";
-    for (int i = 0; i < (WIDTH-9)/2; i++) cout << '-';
-    cout << endl;
     cout << "HP: " << HP <<endl; // 显示血量
     cout << "Press A/D to move left/right, Space to shoot, Z/C to move faster." << endl; // 提示信息
 }
+// 移除子弹的谓词函数
+struct IsBulletOutOfRange {
+    bool operator()(const pair<int, int>& bullet) {
+        return bullet.second < 0;
+    }
+};
 
+// 移除敌人的谓词函数
+struct IsEnemyOutOfRange {
+    bool operator()(const Enemy& enemy) {
+        return enemy.y >= HEIGHT;
+    }
+};
+//更新游戏状态
 void Update() {
     // 移动子弹
-    for (auto& b : bullets) b.second--;
-    bullets.erase(remove_if(bullets.begin(), bullets.end(), [](auto& b) { return b.second < 0; }), bullets.end());
+    for (size_t i = 0; i < bullets.size(); ++i) { // 使用索引循环
+        bullets[i].second--;
+    }
+        bullets.erase(remove_if(bullets.begin(), bullets.end(), IsBulletOutOfRange()), bullets.end());
 
-    // 移动敌人
-    for (auto& e : enemies) e.y++;
-    int escaped = count_if(enemies.begin(), enemies.end(), [](const Enemy& e) { return e.y >= HEIGHT; });
-    HP -= escaped*10; // 每个逃脱的敌人扣10血量
+    
+
+    // 逃脱的敌人
+    int escaped = 0;
+    for (size_t i = 0; i < enemies.size(); ++i) { // 使用索引循环
+        if (enemies[i].y >= HEIGHT) {
+            escaped++;
+        }
+    }
+    HP -= escaped * 10;
     if (HP < 0) HP = 0;
-    //移除过界敌人
-    enemies.erase(remove_if(enemies.begin(), enemies.end(), [](auto& e) { return e.y >= HEIGHT; }), enemies.end());
+    enemies.erase(remove_if(enemies.begin(), enemies.end(), IsEnemyOutOfRange()), enemies.end());
 
     // 生成新敌人
-    if (dist(rng) < enemynum) { // 敌人生成概率
-        uniform_int_distribution<int> xDist(0, WIDTH-1);
-        enemies.push_back({xDist(rng), 0, enemyInitHP}); // 随机生成敌人
+
+    if (random_range(0, 99) < enemynum) {
+        int x = random_range(0, WIDTH - 1);
+        Enemy newEnemy;
+        newEnemy.x = x;
+        newEnemy.y = 0;
+        newEnemy.health = enemyInitHP;
+        enemies.push_back(newEnemy);
     }
 
 
@@ -212,7 +254,7 @@ void Update() {
     // 碰撞检测（玩家和敌人）
     for (auto& e : enemies) {
         if (e.x == playerX && e.y == playerY) { // 玩家与敌人相撞,游戏结束
-            HP -= 10; // 玩家血量减少
+            HP -= 1; // 玩家血量减少
             e.health = 0; // 敌人被击毁
             if (HP <= 0) { // 玩家血量为0，游戏结束
                 gameOver = true;
@@ -225,8 +267,9 @@ void Update() {
         return;
     }
 }
-
+// 处理用户输入
 void ProcessInput() {
+#ifdef _WIN32
     if (_kbhit()) {
         int ch = _getch();
         if (ch == 0xE0) { // 处理方向键
@@ -262,27 +305,59 @@ void ProcessInput() {
             }
         }
     }
+#else
+    if (_kbhit()) {
+        int ch = _getch();
+        if (ch == 0x1B) { // ESC或方向键
+            if (_kbhit()) {
+                ch = _getch();
+                if (ch == '[') {   
+                    ch = _getch();
+                    switch (ch) {
+                        case 75: // 左
+                            playerX = max(0, playerX - 1);
+                            break;
+                        case 77: // 右
+                            playerX = min(WIDTH - 1, playerX + 1);
+                         break;
+                    }
+                }
+            }
+        } else {
+            switch (toupper(ch)) {
+                case 'A':
+                    playerX = max(0, playerX - 1);
+                    break;
+                case 'D':
+                    playerX = min(WIDTH - 1, playerX + 1);
+                    break;
+                case ' ':
+                    bullets.emplace_back(playerX, playerY - 1);
+                    break;
+                case 'Z':
+                    playerX = max(0, playerX - 3);
+                    break;
+                case 'C':
+                    playerX = min(WIDTH - 1, playerX + 3);
+                    break;
+            }
+        }
+    }
+#endif
 }
 
-int main()
-{
+
+int main(){
+ #ifndef _WIN32
+    setTerminalMode();   // 进入非规范模式
+#endif
     InitConsole();
     
     auto lastTime = chrono::steady_clock::now();
-    auto startTime = chrono::steady_clock::now(); //开始时间
-    bool timeOut = false;
     
     while (!gameOver) {
         auto currentTime = chrono::steady_clock::now();
         auto elapsed = chrono::duration_cast<chrono::milliseconds>(currentTime - lastTime).count();
-        
-        // 检查游戏总时间,如果超过设定时间则结束游戏
-        auto timeElapsed = chrono::duration_cast<chrono::seconds>(currentTime - startTime).count();
-        if (timeElapsed >= GAME_DURATION) {
-            gameOver = true;
-            timeOut = true;
-        }
-
         if (elapsed > fps) // 控制帧率
         {
             ProcessInput();
@@ -295,20 +370,14 @@ int main()
     }
 
     // 显示游戏结束画面
-    if (!timeOut) {
-        MoveCursor(0, HEIGHT + 2);
-        cout << "Game Over! You have been eaten by zoombies..." << endl;
-    } else {
-        MoveCursor(0, HEIGHT + 2);
-        cout << "Time's up! You survived for this night"  << endl;
-        cout << "Surviver left: " << HP/100 +1 << endl; // 显示剩余幸存者
-    }
+    MoveCursor(0, HEIGHT + 2);
+    cout << "Game Over! Your brain has been eaten by zoombies..." << endl;
     
     // 恢复光标
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(hConsole, &cursorInfo);
-    cursorInfo.bVisible = true;
-    SetConsoleCursorInfo(hConsole, &cursorInfo);
-    
+    RestoreConsole();
+#ifndef _WIN32
+    restoreTerminalMode();  // 恢复终端模式
+#endif
+ 
     return 0;
 }
