@@ -26,10 +26,10 @@ const char BULLET_CHAR = '|';
 const int GAME_DURATION = 60; // 游戏持续时间（秒）
 int enemyInitHP = 1; // 敌机初始血量
 int BulletDamage = 1; // 子弹伤害
-int enemynum=5; // 敌机生成概率（15-30)比较合理
-int fps=350;   //帧率，可以看作每一帧之间间隔的时间
+int enemynum=3; // 敌机生成概率=
+int fps=120;   //帧率，可以看作每一帧之间间隔的时间
 int initialHP = 100; // 初始血量
-int enemySpeed = 30; // 敌机速度,越小敌机越慢
+int enemySpeed = 20; // 敌机速度,越小敌机越慢
 
 //设置enemy结构体
 struct Enemy {
@@ -373,9 +373,6 @@ int main(){
             timeOut = true;
         }
     
-    while (!gameOver) {
-        auto currentTime = chrono::steady_clock::now();
-        auto elapsed = chrono::duration_cast<chrono::milliseconds>(currentTime - lastTime).count();
         if (elapsed > fps) // 控制帧率
         {
             ProcessInput();
