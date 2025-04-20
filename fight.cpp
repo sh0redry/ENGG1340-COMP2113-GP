@@ -23,11 +23,13 @@ const int WIDTH = 25;
 const int HEIGHT = 25;
 const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
+const int GAME_DURATION = 60; // 游戏持续时间（秒）
 int enemyInitHP = 1; // 敌机初始血量
 int BulletDamage = 1; // 子弹伤害
-int enemynum=11; // 敌机生成概率（15-30)比较合理
-int fps=200;   //帧率，可以看作游戏刷新率
+int enemynum=5; // 敌机生成概率（15-30)比较合理
+int fps=350;   //帧率，可以看作每一帧之间间隔的时间
 int initialHP = 100; // 初始血量
+int enemySpeed = 30; // 敌机速度,越小敌机越慢
 
 //设置enemy结构体
 struct Enemy {
@@ -56,12 +58,12 @@ vector<Enemy> enemies;
 bool gameOver = false;
 int HP = initialHP; // 玩家血量
 
-// 随机数生成器
-std::mt19937 rng(std::chrono::system_clock::now().time_since_epoch().count());
-std::uniform_int_distribution<int> dist(0, 99);
 
+// 随机数生成器函数
 int random_range(int min, int max) {
-    return min + (rand() % (max - min + 1));
+    std::mt19937 rng(std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(rng);
 }
 // MAC系统下的控制台输入输出设置
 #ifndef _WIN32
@@ -174,7 +176,7 @@ void Draw()
         cout << '|' << scene[y] << "|\n";
     }
 
-    // 绘制下边框和分数
+    // 绘制下边框和血量
     cout << '+';
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
@@ -204,9 +206,12 @@ void Update() {
 
     
 
-    // 逃脱的敌人
+    // 移动敌人并计算逃脱的敌人
     int escaped = 0;
     for (size_t i = 0; i < enemies.size(); ++i) { // 使用索引循环
+        if (random_range(0, 99) < enemySpeed) { // 敌人每帧向下移动的期望为50%
+            enemies[i].y++;
+        } 
         if (enemies[i].y >= HEIGHT) {
             escaped++;
         }
@@ -254,7 +259,7 @@ void Update() {
     // 碰撞检测（玩家和敌人）
     for (auto& e : enemies) {
         if (e.x == playerX && e.y == playerY) { // 玩家与敌人相撞,游戏结束
-            HP -= 1; // 玩家血量减少
+            HP -= 10; // 玩家血量减少
             e.health = 0; // 敌人被击毁
             if (HP <= 0) { // 玩家血量为0，游戏结束
                 gameOver = true;
@@ -354,6 +359,19 @@ int main(){
     InitConsole();
     
     auto lastTime = chrono::steady_clock::now();
+    auto startTime = chrono::steady_clock::now(); //开始时间
+    bool timeOut = false;
+    
+    while (!gameOver) {
+        auto currentTime = chrono::steady_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(currentTime - lastTime).count();
+        
+        // 检查游戏总时间,如果超过设定时间则结束游戏
+        auto timeElapsed = chrono::duration_cast<chrono::seconds>(currentTime - startTime).count();
+        if (timeElapsed >= GAME_DURATION) {
+            gameOver = true;
+            timeOut = true;
+        }
     
     while (!gameOver) {
         auto currentTime = chrono::steady_clock::now();
@@ -370,8 +388,14 @@ int main(){
     }
 
     // 显示游戏结束画面
-    MoveCursor(0, HEIGHT + 2);
-    cout << "Game Over! Your brain has been eaten by zoombies..." << endl;
+    if (!timeOut) {
+        MoveCursor(0, HEIGHT + 2);
+        cout << "Game Over! You have been eaten by zoombies..." << endl;
+    } else {
+        MoveCursor(0, HEIGHT + 2);
+        cout << "Time's up! You survived for this night"  << endl;
+        cout << "Surviver left: " << HP/100 +1 << endl; // 显示剩余幸存者
+    }
     
     // 恢复光标
     RestoreConsole();
