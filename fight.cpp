@@ -18,26 +18,50 @@
 
 using namespace std;
 
+
 // 游戏参数
 const int WIDTH = 25;
 const int HEIGHT = 25;
 const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
 const int GAME_DURATION = 60; // 游戏持续时间（秒）
-int enemyInitHP = 1; // 敌机初始血量
-int BulletDamage = 1; // 子弹伤害
-int enemynum=3; // 敌机生成概率=
+const int difficulty = 1; // 难度系数，1-3, 从外界传入
+const int gameLevel = 1; // 游戏等级，1-5 , 从外界传入
+int enemyInitHP; // 敌机初始血量,从外界传入
+int weaponLevel = 1; // 武器等级，从外界传入
+int weaponDamage [10] = {20 ,30, 40, 30, 35, 40, 50, 40, 50, 60 };
+int BulletDamage = weaponDamage[weaponLevel-1]; // 子弹伤害
+int weaponMutiple [10] = {1,1,1,3,3,3,3,5,5,5}; // 武器倍数
+int mutiple = weaponMutiple[weaponLevel-1]; // 武器倍数
+int enemynum = 3; // 敌机生成概率
 int fps=120;   //帧率，可以看作每一帧之间间隔的时间
-int initialHP = 100; // 初始血量
+int initialHP = 100; // 初始血量，为people * 100
 int enemySpeed = 20; // 敌机速度,越小敌机越慢
 
+void initGameData(){
+    if (difficulty == 1) { // 难度系数为1
+        int enemyHParr [5]= {36, 45, 54, 63, 72}; // 难度系数为1时的血量数组
+        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
+        
+    } else if (difficulty == 2) { 
+        int enemyHParr [5]= {40, 50, 60, 70, 80}; // 难度系数为2时的血量数组
+        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
+
+    } else if (difficulty == 3) { // 难度系数为3
+        int enemyHParr [5]= {44, 55, 66, 77, 88}; // 难度系数为3时的血量数组
+        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
+    } 
+}
+     
+    
 //设置enemy结构体
 struct Enemy {
     int x;
     int y;
     int health;
     char GetDisplayChar() const {  // 根据血量显示不同字符
-        if (health >= 2) return '*';
+        if (health >= 45) return '*'; // 标记高血量敌人
+        
         return '+';
     }
 };
@@ -209,7 +233,7 @@ void Update() {
     // 移动敌人并计算逃脱的敌人
     int escaped = 0;
     for (size_t i = 0; i < enemies.size(); ++i) { // 使用索引循环
-        if (random_range(0, 99) < enemySpeed) { // 敌人每帧向下移动的期望为50%
+        if (random_range(0, 99) < enemySpeed) { // 敌人每帧向下移动的期望为enemySpeed
             enemies[i].y++;
         } 
         if (enemies[i].y >= HEIGHT) {
@@ -352,7 +376,9 @@ void ProcessInput() {
 }
 
 
-int main(){
+int main(){ 
+    initGameData(); // 初始化游戏数据
+    
  #ifndef _WIN32
     setTerminalMode();   // 进入非规范模式
 #endif
@@ -373,7 +399,7 @@ int main(){
             timeOut = true;
         }
     
-        if (elapsed > fps) // 控制帧率
+        if (elapsed > fps) // 控制帧率，fps为间隔时间
         {
             ProcessInput();
             Update();
