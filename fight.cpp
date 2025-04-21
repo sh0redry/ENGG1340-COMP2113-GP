@@ -26,17 +26,23 @@ const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
 const int DIFFICULTY = 1; // 难度系数，1-3, 从外界传入
 const int GAME_LEVEL = 1; // 游戏等级，1-5 , 从外界传入
-int enemyInitHP; // 敌机初始血量,从外界传入
-int weaponLevel = 1; // 武器等级，从外界传入
+const int PEOPLE = 5; // 玩家数量，1-5, 从外界传入
+
+// 武器参数
+int weaponLevel = 3; // 武器等级，从外界传入
 int weaponDamage [10] = {20 ,30, 40, 30, 35, 40, 50, 40, 50, 60 };
-int gameDuration = 60; // 游戏持续时间（秒）
 int BulletDamage = weaponDamage[weaponLevel-1]; // 子弹伤害
 int weaponMutiple [10] = {1,1,1,3,3,3,3,5,5,5}; // 武器联装数量
 int mutiple = weaponMutiple[weaponLevel-1]; // 武器倍数
-int enemynum = 3; // 敌机生成概率
-int fps=120;   //帧率，可以看作每一帧之间间隔的时间
-int initialHP = 100; // 初始血量，为people * 100
+//游戏难度参数
+int enemyInitHP; // 敌机初始血量,从外界传入
+int enemynum = 8; // 敌机生成概率
+int initialHP = PEOPLE * 100; // 初始血量，为people * 100
 int enemySpeed = 20; // 敌机速度,越小敌机越慢
+auto startTime = chrono::steady_clock::now(); // 游戏开始时间
+int gameDuration = 60; // 游戏持续时间（秒）
+int fps=120;   //帧率，可以看作每一帧之间间隔的时间
+
 
 void initGameData(){
     if (DIFFICULTY == 1) { // 难度系数为1
@@ -82,7 +88,7 @@ int playerY = HEIGHT - 1;
 vector<pair<int, int> > bullets;//子弹位置（x,y）
 vector<Enemy> enemies;
 bool gameOver = false;
-int HP = initialHP; // 玩家血量
+int HP = initialHP; // 初始化玩家血量
 
 
 // 随机数生成器函数
@@ -201,13 +207,22 @@ void Draw()
     for (int y = 0; y < HEIGHT; y++) {
         cout << '|' << scene[y] << "|\n";
     }
+    // 得到剩余时间
+    auto currentTime = chrono::steady_clock::now();
+    int remainingTime = gameDuration - chrono::duration_cast<chrono::seconds>(currentTime - startTime).count();
+    remainingTime = max(0, remainingTime);
 
     // 绘制下边框和血量
     cout << '+';
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
-    cout << "HP: " << HP <<endl; // 显示血量
+    for (int i = 0; i < (WIDTH-7)/2; i++) cout << '-';
+    cout << "YOUR HOME";
+    for (int i = 0; i < (WIDTH-7)/2; i++) cout << '-';
+    cout << endl;
+    cout << "HP: " << HP <<" | " << "Time left: "<< remainingTime <<endl; // 显示血量和剩余时间
     cout << "Press A/D to move left/right, Space to shoot, Z/C to move faster." << endl; // 提示信息
+    cout << "Weapon damage: " << BulletDamage <<"Enemy HP: " << enemyInitHP << endl; // 显示武器伤害和敌人血量
 }
 // 移除子弹的谓词函数
 struct IsBulletOutOfRange {
@@ -323,8 +338,30 @@ void ProcessInput() {
                     if (playerX < WIDTH-1) playerX++;
                     break;
                 case 32:  // 空格键射击
+                    if (mutiple ==1 ){// 单发模式
                     bullets.emplace_back(playerX, playerY-1);
                     break;
+                    } else if (mutiple == 3 && playerX > 1 && playerX < WIDTH-2) { // 三连发模式
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                        break;
+                    } else if (mutiple == 5 && playerX > 2 && playerX < WIDTH-3) { // 五连发模式
+                        bullets.emplace_back(playerX-2, playerY-1);
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                        bullets.emplace_back(playerX+2, playerY-1);
+                        break;
+                    } else if (mutiple ==5 && (playerX == 2 || playerX == WIDTH-3)) { // 边界情况
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                        break;
+                    } else {
+                        bullets.emplace_back(playerX, playerY-1); // 剩余情况全部处理为单发模式
+                        break;
+                    }
                 case 'Z':
                     if (playerX > 2) playerX-=3;
                         break;
@@ -387,7 +424,7 @@ int main(){
     InitConsole();
     
     auto lastTime = chrono::steady_clock::now();
-    auto startTime = chrono::steady_clock::now(); //开始时间
+    
     bool timeOut = false;
     
     while (!gameOver) {
