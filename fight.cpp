@@ -38,7 +38,7 @@ int mutiple = weaponMutiple[weaponLevel-1]; // 武器倍数
 int enemyInitHP; // 敌机初始血量,从外界传入
 int enemynum = 8; // 敌机生成概率
 int initialHP = PEOPLE * 100; // 初始血量，为people * 100
-int enemySpeed = 20; // 敌机速度,越小敌机越慢
+int enemySpeed = 20; // 敌机速度,越小敌机越慢，必须＞0
 auto startTime = chrono::steady_clock::now(); // 游戏开始时间
 int gameDuration = 60; // 游戏持续时间（秒）
 int fps=120;   //帧率，可以看作每一帧之间间隔的时间
@@ -67,7 +67,7 @@ struct Enemy {
     int x;
     int y;
     int health;
-    char GetDisplayChar() const {  // 根据血量显示不同字符
+    char GetDisplayChar() const {  
         if (health >= 45) return '*'; // 标记高血量敌人
         return '+';
     }
@@ -84,7 +84,7 @@ struct termios originalTermios;
 // 游戏状态
 int playerX = WIDTH / 2;
 int playerY = HEIGHT - 1;
-vector<pair<int, int> > bullets;//子弹位置（x,y）
+vector<pair<int, int> > bullets;  //子弹位置（x,y）
 vector<Enemy> enemies;
 bool gameOver = false;
 int HP = initialHP; // 初始化玩家血量
