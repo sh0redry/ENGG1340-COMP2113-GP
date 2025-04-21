@@ -69,7 +69,6 @@ struct Enemy {
     int health;
     char GetDisplayChar() const {  // 根据血量显示不同字符
         if (health >= 45) return '*'; // 标记高血量敌人
-        
         return '+';
     }
 };
@@ -170,7 +169,23 @@ void MoveCursor(short x, short y) {
 
 
 void Draw()
-{
+{   
+    // 获取控制台宽度
+    int consoleWidth = 80; // 默认值为80 后面会更新
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+        consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    }
+#else
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    consoleWidth = w.ws_col;
+#endif
+    //计算所需的空格数
+    int gameAreaWidth = WIDTH + 2;
+    int padding = max(0, (consoleWidth - gameAreaWidth) / 2); 
+
     // 创建场景缓冲区
     char scene[HEIGHT][WIDTH + 1] = {};
 
@@ -199,30 +214,40 @@ void Draw()
     MoveCursor(0, 0);
     
     // 绘制上边框
-    cout << '+';
+    cout << string(padding, ' ')<< "+"; 
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
 
     // 绘制游戏区域
     for (int y = 0; y < HEIGHT; y++) {
-        cout << '|' << scene[y] << "|\n";
+        cout << string(padding, ' ') << '|' << scene[y] << "|\n";
     }
+
     // 得到剩余时间
     auto currentTime = chrono::steady_clock::now();
     int remainingTime = gameDuration - chrono::duration_cast<chrono::seconds>(currentTime - startTime).count();
     remainingTime = max(0, remainingTime);
 
     // 绘制下边框和血量
-    cout << '+';
+    cout << string(padding, ' ') << '+';
     for (int i = 0; i < WIDTH; i++) cout << '-';
     cout << "+\n";
-    for (int i = 0; i < (WIDTH-7)/2; i++) cout << '-';
-    cout << "YOUR HOME";
-    for (int i = 0; i < (WIDTH-7)/2; i++) cout << '-';
-    cout << endl;
-    cout << "HP: " << HP <<" | " << "Time left: "<< remainingTime <<endl; // 显示血量和剩余时间
-    cout << "Press A/D to move left/right, Space to shoot, Z/C to move faster." << endl; // 提示信息
-    cout << "Weapon damage: " << BulletDamage <<"Enemy HP: " << enemyInitHP << endl; // 显示武器伤害和敌人血量
+
+    string homeLine = "YOUR HOME";
+    int homePadding = (consoleWidth - homeLine.length()) / 2;
+    cout << string(homePadding, ' ') << homeLine << endl;
+
+    string statusLine = "HP: " + to_string(HP) + " | Time left: " + to_string(remainingTime);
+    int statusPadding = (consoleWidth - statusLine.length()) / 2;
+    cout << string(statusPadding, ' ') << statusLine << endl;   // 显示血量和剩余时间
+
+    string hintLine = "Press A/D to move left/right, Space to shoot, Z/C to move faster.";
+    int hintPadding = (consoleWidth - hintLine.length()) / 2;
+    cout << string(hintPadding, ' ') << hintLine << endl; // 提示信息
+
+    string weaponLine = "Weapon damage: " + to_string(BulletDamage) + " Enemy HP: " + to_string(enemyInitHP);
+    int weaponPadding = (consoleWidth - weaponLine.length()) / 2;
+    cout << string(weaponPadding, ' ') << weaponLine << endl; // 显示武器伤害和敌人血量
 }
 // 移除子弹的谓词函数
 struct IsBulletOutOfRange {
