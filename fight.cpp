@@ -24,14 +24,14 @@ const int WIDTH = 25;
 const int HEIGHT = 25;
 const char PLAYER_CHAR = 'A';
 const char BULLET_CHAR = '|';
-const int GAME_DURATION = 60; // 游戏持续时间（秒）
-const int difficulty = 1; // 难度系数，1-3, 从外界传入
-const int gameLevel = 1; // 游戏等级，1-5 , 从外界传入
+const int DIFFICULTY = 1; // 难度系数，1-3, 从外界传入
+const int GAME_LEVEL = 1; // 游戏等级，1-5 , 从外界传入
 int enemyInitHP; // 敌机初始血量,从外界传入
 int weaponLevel = 1; // 武器等级，从外界传入
 int weaponDamage [10] = {20 ,30, 40, 30, 35, 40, 50, 40, 50, 60 };
+int gameDuration = 60; // 游戏持续时间（秒）
 int BulletDamage = weaponDamage[weaponLevel-1]; // 子弹伤害
-int weaponMutiple [10] = {1,1,1,3,3,3,3,5,5,5}; // 武器倍数
+int weaponMutiple [10] = {1,1,1,3,3,3,3,5,5,5}; // 武器联装数量
 int mutiple = weaponMutiple[weaponLevel-1]; // 武器倍数
 int enemynum = 3; // 敌机生成概率
 int fps=120;   //帧率，可以看作每一帧之间间隔的时间
@@ -39,18 +39,20 @@ int initialHP = 100; // 初始血量，为people * 100
 int enemySpeed = 20; // 敌机速度,越小敌机越慢
 
 void initGameData(){
-    if (difficulty == 1) { // 难度系数为1
-        int enemyHParr [5]= {36, 45, 54, 63, 72}; // 难度系数为1时的血量数组
-        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
+    if (DIFFICULTY == 1) { // 难度系数为1
+        int enemyHParr [5]= {36, 45, 54, 63, 72}; // 难度为1时的血量
+        enemyInitHP = enemyHParr[GAME_LEVEL-1]; // 敌机初始血量
         
-    } else if (difficulty == 2) { 
-        int enemyHParr [5]= {40, 50, 60, 70, 80}; // 难度系数为2时的血量数组
-        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
+    } else if (DIFFICULTY == 2) { 
+        int enemyHParr [5]= {40, 50, 60, 70, 80}; // 难度为2时的血量
+        enemyInitHP = enemyHParr[GAME_LEVEL-1]; // 敌机初始血量
 
-    } else if (difficulty == 3) { // 难度系数为3
-        int enemyHParr [5]= {44, 55, 66, 77, 88}; // 难度系数为3时的血量数组
-        enemyInitHP = enemyHParr[gameLevel-1]; // 敌机初始血量
-    } 
+    } else if (DIFFICULTY == 3) { // 难度系数为3
+        int enemyHParr [5]= {44, 55, 66, 77, 88}; // 难度为3时的血量
+        enemyInitHP = enemyHParr[GAME_LEVEL-1]; // 敌机初始血量
+    }
+    int gameDurationArr [5] = {40, 40, 50, 50, 60}; // 游戏时间
+    gameDuration= gameDurationArr[GAME_LEVEL-1]; // 游戏时间
 }
      
     
@@ -394,7 +396,7 @@ int main(){
         
         // 检查游戏总时间,如果超过设定时间则结束游戏
         auto timeElapsed = chrono::duration_cast<chrono::seconds>(currentTime - startTime).count();
-        if (timeElapsed >= GAME_DURATION) {
+        if (timeElapsed >= gameDuration) {
             gameOver = true;
             timeOut = true;
         }
