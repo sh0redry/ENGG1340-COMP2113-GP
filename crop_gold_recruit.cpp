@@ -1,3 +1,4 @@
+#include "FarmGame.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -6,7 +7,12 @@
 
 using namespace std;
 
-void previewAndRestore(const string& filename, int line_num, int col_pos, const string& text) {
+FarmGame::FarmGame(int initial_crops, int initial_gold, 
+                   int initial_members, int game_difficulty)
+    : crops_storage(initial_crops), gold_storage(initial_gold),
+      available_members(initial_members), difficulty(game_difficulty) {}
+
+void FarmGame::previewAndRestore(const string& filename, int line_num, int col_pos, const string& text) {
     vector<string> original_lines;
     ifstream in_file(filename);
     string line;
@@ -40,7 +46,7 @@ void previewAndRestore(const string& filename, int line_num, int col_pos, const 
     out_file.close();
 }
 
-void displayMultiLineInBox(const string& filename, int start_line, int col_pos, const vector<string>& lines) {
+void FarmGame::displayMultiLineInBox(const string& filename, int start_line, int col_pos, const vector<string>& lines) {
     vector<string> original_lines;
     ifstream in_file(filename);
     string line;
@@ -75,7 +81,7 @@ void displayMultiLineInBox(const string& filename, int start_line, int col_pos, 
     out_file.close();
 }
 
-void displayArtFile(const string& filename) {
+void FarmGame::displayArtFile(const string& filename) {
     ifstream file(filename);
     string line;
     
@@ -85,22 +91,25 @@ void displayArtFile(const string& filename) {
     file.close();
 }
 
-void clearScreen() {
+void FarmGame::clearScreen() {
     cout << "\033[2J\033[1;1H";
     cout.flush();
 }
 
-struct info {
-    int resource_storage;
-    int member_available;
-};
-
-void waitForEnter(const string& message = "Press enter to continue...") {
+void FarmGame::waitForEnter(const string& message) {
     cout << message;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-info grow_crops(int crops_storage, int available_members, int difficulty) {
+void FarmGame::displayGameState() const {
+    cout << "=== 当前游戏状态 ===" << endl;
+    cout << "作物存储: " << crops_storage << " kg" << endl;
+    cout << "黄金存储: " << gold_storage << " gold" << endl;
+    cout << "可用成员: " << available_members << " 人" << endl;
+    cout << "难度等级: " << difficulty << endl;
+}
+
+void FarmGame::growCrops() {
     int work_member;
     clearScreen();
     displayArtFile("farm_art1.txt");
@@ -125,10 +134,9 @@ info grow_crops(int crops_storage, int available_members, int difficulty) {
         }
     }
 
-    int new_crops_storage = crops_storage + crops_harvest * work_member;
-    int new_available_members = available_members - work_member;
+    crops_storage += crops_harvest * work_member;
+    available_members -= work_member;
 
-    
     clearScreen();
     displayArtFile("farm_art1.txt");
     waitForEnter();    
@@ -146,10 +154,9 @@ info grow_crops(int crops_storage, int available_members, int difficulty) {
     displayMultiLineInBox("explore.txt", 18, 33, result_lines);
     waitForEnter();
     clearScreen();
-    return {new_crops_storage, new_available_members};
 }
 
-info mine_gold(int gold_storage, int available_members, int difficulty) {
+void FarmGame::mineGold() {
     int work_member;
     
     clearScreen();
@@ -176,8 +183,8 @@ info mine_gold(int gold_storage, int available_members, int difficulty) {
         }
     }
 
-    int new_gold_storage = gold_storage + gold_yield * work_member;
-    int new_available_members = available_members - work_member;
+    gold_storage += gold_yield * work_member;
+    available_members -= work_member;
 
     clearScreen();
     displayArtFile("mine_art1.txt");
@@ -196,27 +203,23 @@ info mine_gold(int gold_storage, int available_members, int difficulty) {
     displayMultiLineInBox("explore.txt", 18, 33, result_lines);
     waitForEnter();
     clearScreen();
-    return {new_gold_storage, new_available_members};
 }
 
-info recruit_member(int crops_storage, int available_members) {
+void FarmGame::recruitMembers() {
     clearScreen();
-    displayArtFile("recruit_art1.txt");  // Show recruitment art
-    waitForEnter();  // Wait for user to view art
+    displayArtFile("recruit_art1.txt");
+    waitForEnter();
     clearScreen();
 
-    // Recruitment cost parameters
     const int base_cost = 100;
     const int cost_per_member = 100;
     
-    // Calculate maximum possible recruits
     int max_possible = (crops_storage - base_cost) / cost_per_member;
-    max_possible = max(0, max_possible);  // Ensure non-negative
+    max_possible = max(0, max_possible);
 
     vector<string> result_lines;
     int recruit_num = 0;
 
-    // Check if recruitment is possible
     if (max_possible <= 0) {
         int required = base_cost + cost_per_member;
         result_lines = {
@@ -226,10 +229,9 @@ info recruit_member(int crops_storage, int available_members) {
         };
         displayMultiLineInBox("explore.txt", 18, 33, result_lines);
         waitForEnter();
-        return {crops_storage, available_members};
+        return;
     }
 
-    // Get user input for number to recruit
     while (true) {
         string prompt = "Recruit members (0-" + to_string(max_possible) + " available): ";
         previewAndRestore("explore.txt", 18, 33, prompt);
@@ -248,22 +250,19 @@ info recruit_member(int crops_storage, int available_members) {
         }
     }
 
-    // Handle cancellation case
     if (recruit_num == 0) {
         result_lines = {"Recruitment canceled."};
         displayMultiLineInBox("explore.txt", 18, 33, result_lines);
         waitForEnter();
-        return {crops_storage, available_members};
+        return;
     }
 
-    // Show success art and wait for user to view it
     waitForEnter();
     clearScreen();
     displayArtFile("recruit_art2.txt");
-    waitForEnter();  // Fixed: Now properly waits before clearing
+    waitForEnter();
     clearScreen();
 
-    // Calculate and display results
     int total_cost = base_cost + (cost_per_member * recruit_num);
     result_lines = {
         "SUCCESSFUL RECRUITMENT!",
@@ -276,6 +275,7 @@ info recruit_member(int crops_storage, int available_members) {
     displayMultiLineInBox("explore.txt", 18, 33, result_lines);
     waitForEnter();
     clearScreen();
-    // Return updated resources and members
-    return {crops_storage - total_cost, available_members + recruit_num};
-}
+
+    crops_storage -= total_cost;
+    available_members += recruit_num;
+} 
