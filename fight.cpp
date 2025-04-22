@@ -12,7 +12,7 @@
 #else
 #include <termios.h>
 #include <unistd.h>
-#include <fcntl.h>zz
+#include <fcntl.h>
 #include <sys/ioctl.h>
 #endif
 

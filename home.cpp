@@ -128,7 +128,6 @@ int main() {
         switch (choice) {
             case '1':
                 //function1();
-                return 0;
                 break;
             case '2':
                 //function2();
