@@ -1,168 +1,209 @@
 #include "UI.h"
+#include "Terminal.h"
+#include "Animation.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <fstream>
+#include <sstream>
+#include <algorithm>
 
 UI::UI() {
     // Constructor implementation if needed
 }
 
-UI::TerminalSize UI::getTerminalSize() const {
-    TerminalSize size;
-    #ifdef _WIN32
-        CONSOLE_SCREEN_BUFFER_INFO csbi;
-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-        size.width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-        size.height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    #else
-        struct winsize w;
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-        size.width = w.ws_col;
-        size.height = w.ws_row;
-    #endif
-    return size;
-}
-
-size_t UI::getVisualWidth(const std::string& str) const {
-    size_t width = 0;
-    for (size_t i = 0; i < str.length();) {
-        if ((str[i] & 0xC0) != 0x80) {  // Start of a new character
-            if ((str[i] & 0xF0) == 0xF0) {  // 4-byte UTF-8
-                i += 4;
-                width += 1;
-            } else if ((str[i] & 0xE0) == 0xE0) {  // 3-byte UTF-8
-                i += 3;
-                width += 1;
-            } else if ((str[i] & 0xC0) == 0xC0) {  // 2-byte UTF-8
-                i += 2;
-                width += 1;
-            } else {  // 1-byte character
-                i += 1;
-                width += 1;
-            }
-        } else {
-            i += 1;  // Skip continuation byte
-        }
+std::string UI::LoadUI(const std::string& filename) {
+    std::ifstream file("assets/" + filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("无法打开UI文件: " + filename);
     }
-    return width;
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
 }
 
-void UI::centerAndDisplay(const std::string& content) const {
-    TerminalSize terminal = getTerminalSize();
+void UI::DisplayUI(const std::string& content) {
+    auto& terminal = Terminal::GetInstance();
+    auto size = terminal.GetTerminalSize();
     std::vector<std::string> lines;
     size_t boxWidth = 0;
     size_t pos;
     std::string temp = content;
     
+    // 分割内容为行
     while ((pos = temp.find('\n')) != std::string::npos) {
         std::string line = temp.substr(0, pos);
-        boxWidth = std::max(boxWidth, getVisualWidth(line));
+        boxWidth = std::max(boxWidth, line.length());
         lines.push_back(line);
         temp.erase(0, pos + 1);
     }
     if (!temp.empty()) {
-        boxWidth = std::max(boxWidth, getVisualWidth(temp));
+        boxWidth = std::max(boxWidth, temp.length());
         lines.push_back(temp);
     }
     
-    int hPadding = (terminal.width - boxWidth) / 2;
-    int vPadding = (terminal.height - lines.size()) / 2;
+    // 计算水平和垂直填充
+    int hPadding = (size.width - boxWidth) / 2;
+    int vPadding = (size.height - lines.size()) / 2;
     
     if (hPadding < 0) hPadding = 0;
     if (vPadding < 0) vPadding = 0;
     
-    displayLines(lines, hPadding, vPadding);
-}
-
-void UI::displayLines(const std::vector<std::string>& lines, int hPadding, int vPadding) const {
-    // Add vertical padding before the box
+    // 显示内容
     for (int i = 0; i < vPadding; i++) {
         std::cout << std::endl;
     }
-    
-    // Display centered lines
     for (const auto& line : lines) {
         std::cout << std::string(hPadding, ' ') << line << std::endl;
     }
-    
-    // Add vertical padding after the box
     for (int i = 0; i < vPadding - 1; i++) {
         std::cout << std::endl;
     }
 }
 
-void UI::showMainMenu() const {
-    utils::ClearScreen();
-    std::string menu = 
-        "==================================\n"
-        "        Zombie Survival Game      \n"
-        "==================================\n"
-        "          1. Start Game           \n"
-        "          2. Exit                 \n"
-        "==================================\n";
-    centerAndDisplay(menu);
+void UI::DisplayUIFromFile(const std::string& filename) {
+    std::string content = LoadUI(filename);
+    DisplayUI(content);
 }
 
-void UI::showDifficultyMenu() const {
-    utils::ClearScreen();
-    std::string menu = 
-        "==================================\n"
-        "        Select Difficulty         \n"
-        "==================================\n"
-        "          1. Easy                 \n"
-        "          2. Medium               \n"
-        "          3. Hard                 \n"
-        "==================================\n";
-    centerAndDisplay(menu);
+void UI::ShowMainMenu() {
+    Terminal::GetInstance().Clear();
+    DisplayUIFromFile("main_menu.txt");
 }
 
-void UI::showHomeScreen() const {
-    utils::ClearScreen();
-    std::string homeUI = utils::LoadUI("assets/home.txt");
-    centerAndDisplay(homeUI);
+void UI::ShowDifficultyMenu() {
+    Terminal::GetInstance().Clear();
+    DisplayUIFromFile("difficulty_menu.txt");
 }
 
-void UI::showCombatScreen() const {
-    // TODO: Implement combat screen display
-    utils::ClearScreen();
-    std::string combatUI = "Combat Screen - To be implemented";
-    centerAndDisplay(combatUI);
+void UI::ShowHomeScreen(const Player& player, const WeekCycle& week) {
+    Terminal::GetInstance().Clear();
+    DrawStatusBar(player);
+    
+    // 显示主界面
+    DisplayUIFromFile("home.txt");
+    
+    // 更新计数器显示
+    Terminal::GetInstance().MoveCursor(5, 5);
+    std::cout << "[1] 种田 (" << player.getFarmingWorkers() << "人)";
+    Terminal::GetInstance().MoveCursor(5, 6);
+    std::cout << "[2] 采矿 (" << player.getMiningWorkers() << "人)";
+    Terminal::GetInstance().MoveCursor(5, 7);
+    std::cout << "[3] 建造 (" << player.getBuildingWorkers() << "人)";
+    Terminal::GetInstance().MoveCursor(5, 8);
+    std::cout << "[4] 研究 (" << player.getResearchWorkers() << "人)";
+    Terminal::GetInstance().MoveCursor(5, 9);
+    std::cout << "[5] 战斗 (" << player.getCombatWorkers() << "人)";
+    
+    // 日期显示
+    Terminal::GetInstance().MoveCursor(50, 3);
+    std::cout << "第 " << week.getCurrentDay() << " 天 - " << week.getDayName();
 }
 
-void UI::showGameOver() const {
-    utils::ClearScreen();
-    std::string gameOver = 
-        "==================================\n"
-        "           Game Over              \n"
-        "==================================\n"
-        "    Press any key to continue     \n"
-        "==================================\n";
-    centerAndDisplay(gameOver);
+void UI::ShowCounterMenu(const std::string& counterName) {
+    Terminal::GetInstance().Clear();
+    DisplayUIFromFile("counter_menu.txt");
+    Terminal::GetInstance().MoveCursor(15, 5);
+    std::cout << counterName << " 分配";
 }
 
-void UI::showVictory() const {
-    utils::ClearScreen();
-    std::string victory = 
-        "==================================\n"
-        "          Congratulations!        \n"
-        "==================================\n"
-        "    You have survived 10 weeks!   \n"
-        "    Press any key to continue     \n"
-        "==================================\n";
-    centerAndDisplay(victory);
-}
-
-char UI::getKey() const {
-    return utils::GetKey();
-}
-
-int UI::getNumberInput() const {
+int UI::GetWorkerAllocationInput(int maxAvailable) {
+    Terminal::GetInstance().MoveCursor(15, 7);
+    std::cout << "当前工人数: ";
+    Terminal::GetInstance().MoveCursor(15, 8);
+    std::cout << "请输入要分配的工人数: ";
+    
     int input;
     std::cin >> input;
+    while (input < 0 || input > maxAvailable) {
+        Terminal::GetInstance().MoveCursor(15, 9);
+        std::cout << "输入无效，请重新输入 (0-" << maxAvailable << "): ";
+        std::cin >> input;
+    }
     return input;
-} 
+}
+
+void UI::ShowCombatScreen(int playerHP, int zombieHP, int weaponLevel) {
+    Terminal::GetInstance().Clear();
+    DisplayUIFromFile("combat.txt");
+    
+    // 更新状态显示
+    Terminal::GetInstance().MoveCursor(10, 5);
+    std::cout << "玩家 HP: " << playerHP;
+    Terminal::GetInstance().MoveCursor(10, 6);
+    std::cout << "武器等级: " << weaponLevel;
+    Terminal::GetInstance().MoveCursor(40, 5);
+    std::cout << "僵尸 HP: " << zombieHP;
+}
+
+void UI::UpdateCombatScreen(int playerHP, int zombieHP) {
+    Terminal::GetInstance().MoveCursor(10, 5);
+    std::cout << "玩家 HP: " << playerHP;
+    Terminal::GetInstance().MoveCursor(40, 5);
+    std::cout << "僵尸 HP: " << zombieHP;
+}
+
+void UI::ShowGameOver(bool victory) {
+    Terminal::GetInstance().Clear();
+    if (victory) {
+        DisplayUIFromFile("victory.txt");
+    } else {
+        DisplayUIFromFile("game_over.txt");
+    }
+}
+
+void UI::ShowDayTransition(int day) {
+    Terminal::GetInstance().Clear();
+    DisplayUIFromFile("day_transition.txt");
+    Terminal::GetInstance().MoveCursor(15, 5);
+    std::cout << "第 " << day << " 天开始";
+    Animation::ProgressBar(2.0f);
+}
+
+void UI::DrawStatusBar(const Player& player) {
+    Terminal::GetInstance().MoveCursor(1, 1);
+    std::cout << "人数: " << player.getPeople() 
+              << " | 食物: " << UIUtils::FormatResource(player.getCrop())
+              << " | 金币: " << UIUtils::FormatResource(player.getGold())
+              << " | 武器: Lv." << player.getWeaponLevel();
+}
+
+void UI::DrawCounterIcons() {
+    Terminal::GetInstance().MoveCursor(5, 5);
+    std::cout << "[1] 种田";
+    Terminal::GetInstance().MoveCursor(5, 6);
+    std::cout << "[2] 采矿";
+    Terminal::GetInstance().MoveCursor(5, 7);
+    std::cout << "[3] 建造";
+    Terminal::GetInstance().MoveCursor(5, 8);
+    std::cout << "[4] 研究";
+    Terminal::GetInstance().MoveCursor(5, 9);
+    std::cout << "[5] 战斗";
+}
+
+namespace UIUtils {
+    std::string FormatResource(int value) {
+        if (value >= 1000) return std::to_string(value/1000) + "K";
+        return std::to_string(value);
+    }
+    
+    void DrawBox(int width, int height) {
+        std::cout << "+" << std::string(width-2, '-') << "+\n";
+        for (int i = 0; i < height-2; ++i) {
+            std::cout << "|" << std::string(width-2, ' ') << "|\n";
+        }
+        std::cout << "+" << std::string(width-2, '-') << "+";
+    }
+}
+
+// char UI::getKey() {
+//     return Terminal::GetInstance().GetKeyPress();
+// }
+
+// int UI::getNumberInput() {
+//     int input;
+//     std::cin >> input;
+//     return input;
+// } 

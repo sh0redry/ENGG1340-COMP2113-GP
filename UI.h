@@ -2,38 +2,49 @@
 #define UI_H
 
 #include <string>
+#include "Player.h"
+#include "WeekCycle.h"
+#include "Terminal.h"
 #include <vector>
-#include "utilities.h"
 
 class UI {
-private:
-    // Terminal dimensions
-    struct TerminalSize {
-        int width;
-        int height;
-    };
-
-    // Helper functions
-    TerminalSize getTerminalSize() const;
-    size_t getVisualWidth(const std::string& str) const;
-    void centerAndDisplay(const std::string& content) const;
-    void displayLines(const std::vector<std::string>& lines, int hPadding, int vPadding) const;
-
 public:
-    // Constructor
-    UI();
+    // 主界面
+    static void ShowMainMenu();
+    static void ShowDifficultyMenu();
+    static void ShowHomeScreen(const Player& player, const WeekCycle& week);
+    
+    // 计数器界面
+    static void ShowCounterMenu(const std::string& counterName);
+    static int GetWorkerAllocationInput(int maxAvailable);
+    
+    // 战斗界面
+    static void ShowCombatScreen(int playerHP, int zombieHP, int weaponLevel);
+    static void UpdateCombatScreen(int playerHP, int zombieHP);
+    
+    // 游戏状态
+    static void ShowGameOver(bool victory);
+    static void ShowDayTransition(int day);
+    
+    // 工具方法
+    static void DrawStatusBar(const Player& player);
+    static void DrawCounterIcons();
 
-    // Main menu screens
-    void showMainMenu() const;
-    void showDifficultyMenu() const;
-    void showHomeScreen() const;
-    void showCombatScreen() const;
-    void showGameOver() const;
-    void showVictory() const;
+    // 输入处理
+    static char getKey();
+    static int getNumberInput();
 
-    // Input handling
-    char getKey() const;
-    int getNumberInput() const;
+private:
+    // UI 辅助函数
+    static std::string LoadUI(const std::string& filename);
+    static void DisplayUI(const std::string& content);
+    static void DisplayUIFromFile(const std::string& filename);
 };
+
+// 独立工具函数
+namespace UIUtils {
+    std::string FormatResource(int value);
+    void DrawBox(int width, int height);
+}
 
 #endif // UI_H 
