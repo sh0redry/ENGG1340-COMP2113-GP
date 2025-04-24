@@ -3,48 +3,38 @@
 
 #include <string>
 #include "Player.h"
-#include "WeekCycle.h"
-#include "Terminal.h"
-#include <vector>
 
 class UI {
 public:
-    // 主界面
-    static void ShowMainMenu();
-    static void ShowDifficultyMenu();
-    static void ShowHomeScreen(const Player& player, const WeekCycle& week);
-    
-    // 计数器界面
-    static void ShowCounterMenu(const std::string& counterName);
-    static int GetWorkerAllocationInput(int maxAvailable);
-    
-    // 战斗界面
-    static void ShowCombatScreen(int playerHP, int zombieHP, int weaponLevel);
-    static void UpdateCombatScreen(int playerHP, int zombieHP);
+    static void ShowInterface(const std::string& filename);
     
     // 游戏状态
-    static void ShowGameOver(bool victory);
     static void ShowDayTransition(int day);
     
     // 工具方法
     static void DrawStatusBar(const Player& player);
-    static void DrawCounterIcons();
 
-    // 输入处理
-    static char getKey();
-    static int getNumberInput();
+    // 新增：在框内移动光标
+    static void MoveCursorInBox(int x, int y);
 
 private:
     // UI 辅助函数
     static std::string LoadUI(const std::string& filename);
     static void DisplayUI(const std::string& content);
     static void DisplayUIFromFile(const std::string& filename);
-};
 
-// 独立工具函数
-namespace UIUtils {
-    std::string FormatResource(int value);
-    void DrawBox(int width, int height);
-}
+    // 新增：获取UI框坐标
+    struct BoxCoordinates {
+        int top;
+        int bottom;
+        int left;
+        int right;
+    };
+    static BoxCoordinates GetBoxCoordinates(const std::string& content);
+
+    // 框的尺寸常量
+    static constexpr int BOX_WIDTH = 120;  // 从home.txt中获取的框宽度
+    static constexpr int BOX_HEIGHT = 40;  // 从home.txt中获取的框高度
+};
 
 #endif // UI_H 
