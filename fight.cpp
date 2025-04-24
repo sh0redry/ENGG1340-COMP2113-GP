@@ -5,16 +5,10 @@
 #include <random>
 #include <algorithm>
 #include <cstdlib>
-
-#ifdef _WIN32
-#include <conio.h>
-#include <windows.h>
-#else
 #include <termios.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#endif
 
 using namespace std;
 
@@ -75,11 +69,7 @@ struct Enemy {
 
 
 // 控制台句柄
-#ifdef _WIN32
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-#else
 struct termios originalTermios;
-#endif
 
 // 游戏状态
 int playerX = WIDTH / 2;
@@ -96,8 +86,6 @@ int random_range(int min, int max) {
     std::uniform_int_distribution<int> dist(min, max);
     return dist(rng);
 }
-// MAC系统下的控制台输入输出设置
-#ifndef _WIN32
 
 int _kbhit() {
     int bytesWaiting;
@@ -116,6 +104,7 @@ int _getch() {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return ch;
 }
+
 void setTerminalMode() {
     struct termios newt;
     tcgetattr(STDIN_FILENO, &originalTermios);
@@ -123,6 +112,7 @@ void setTerminalMode() {
     newt.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 }
+
 void restoreTerminalMode() {
     tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
 }
@@ -131,57 +121,23 @@ void InitConsole() {
     cout << "\033[?25l"; // 隐藏光标
     cout << "\033[2J\033[H"; // 清屏并移动光标到左上角
 }
+
 void RestoreConsole() {
     cout << "\033[?25h"; // 显示光标
 }
+
 void MoveCursor(short x, short y) {
     // ANSI escape sequence to move the cursor
     cout << "\033[" << (y + 1) << ";" << (x + 1) << "H";
 }
-#else
-
-void InitConsole()
-{
-    // 设置控制台缓冲区大小
-    COORD bufferSize = { WIDTH + 2, HEIGHT + 3 };
-    SetConsoleScreenBufferSize(hConsole, bufferSize);
-
-    // 设置窗口大小
-    SMALL_RECT windowRect = { 0, 0, WIDTH + 1, HEIGHT + 2 };
-    SetConsoleWindowInfo(hConsole, TRUE, &windowRect);
-
-    // 隐藏光标
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(hConsole, &cursorInfo);
-    cursorInfo.bVisible = false;
-    SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-void RestoreConsole() {
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(hConsole, &cursorInfo);
-    cursorInfo.bVisible = true;
-    SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-void MoveCursor(short x, short y) {
-    SetConsoleCursorPosition(hConsole, { x, y });
-}
-#endif
-
 
 void Draw()
 {   
     // 获取控制台宽度
-    int consoleWidth = 80; // 默认值为80 后面会更新
-#ifdef _WIN32
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
-        consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    }
-#else
+    int consoleWidth = 80;
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     consoleWidth = w.ws_col;
-#endif
     //计算所需的空格数
     int gameAreaWidth = WIDTH + 2;
     int padding = max(0, (consoleWidth - gameAreaWidth) / 2); 
@@ -340,65 +296,6 @@ void Update() {
 }
 // 处理用户输入
 void ProcessInput() {
-#ifdef _WIN32
-    if (_kbhit()) {
-        int ch = _getch();
-        if (ch == 0xE0) { // 处理方向键
-            ch = _getch();
-            switch (ch) {
-                case 75: // 左键
-                    if (playerX > 0) playerX--;
-                    break;
-                case 77: // 右键
-                    if (playerX < WIDTH-1) playerX++;
-                    break;
-            }
-        }
-        else {
-            switch (toupper(ch)) { // 新增AD键处理
-                case 'A': // 左移
-                    if (playerX > 0) playerX--;
-                    break;
-                case 'D': // 右移
-                    if (playerX < WIDTH-1) playerX++;
-                    break;
-                case 32:  // 空格键射击
-                    if (mutiple ==1 ){// 单发模式
-                    bullets.emplace_back(playerX, playerY-1);
-                    break;
-                    } else if (mutiple == 3 && playerX > 1 && playerX < WIDTH-2) { // 三连发模式
-                        bullets.emplace_back(playerX-1, playerY-1);
-                        bullets.emplace_back(playerX, playerY-1);
-                        bullets.emplace_back(playerX+1, playerY-1);
-                        break;
-                    } else if (mutiple == 5 && playerX > 2 && playerX < WIDTH-3) { // 五连发模式
-                        bullets.emplace_back(playerX-2, playerY-1);
-                        bullets.emplace_back(playerX-1, playerY-1);
-                        bullets.emplace_back(playerX, playerY-1);
-                        bullets.emplace_back(playerX+1, playerY-1);
-                        bullets.emplace_back(playerX+2, playerY-1);
-                        break;
-                    } else if (mutiple ==5 && (playerX == 2 || playerX == WIDTH-3)) { // 边界情况
-                        bullets.emplace_back(playerX-1, playerY-1);
-                        bullets.emplace_back(playerX, playerY-1);
-                        bullets.emplace_back(playerX+1, playerY-1);
-                        break;
-                    } else {
-                        bullets.emplace_back(playerX, playerY-1); // 剩余情况全部处理为单发模式
-                        break;
-                    }
-                case 'Z':
-                    if (playerX > 2) playerX-=3;
-                        break;
-                case 'C':
-                    if (playerX < WIDTH-3) playerX+=3;
-                        break;
-                
-
-            }
-        }
-    }
-#else
     if (_kbhit()) {
         int ch = _getch();
         if (ch == 0x1B) { // ESC或方向键
@@ -425,7 +322,25 @@ void ProcessInput() {
                     playerX = min(WIDTH - 1, playerX + 1);
                     break;
                 case ' ':
-                    bullets.emplace_back(playerX, playerY - 1);
+                    if (mutiple == 1) { // 单发模式
+                        bullets.emplace_back(playerX, playerY-1);
+                    } else if (mutiple == 3 && playerX > 1 && playerX < WIDTH-2) { // 三连发模式
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                    } else if (mutiple == 5 && playerX > 2 && playerX < WIDTH-3) { // 五连发模式
+                        bullets.emplace_back(playerX-2, playerY-1);
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                        bullets.emplace_back(playerX+2, playerY-1);
+                    } else if (mutiple == 5 && (playerX == 2 || playerX == WIDTH-3)) { // 边界情况
+                        bullets.emplace_back(playerX-1, playerY-1);
+                        bullets.emplace_back(playerX, playerY-1);
+                        bullets.emplace_back(playerX+1, playerY-1);
+                    } else {
+                        bullets.emplace_back(playerX, playerY-1); // 剩余情况全部处理为单发模式
+                    }
                     break;
                 case 'Z':
                     playerX = max(0, playerX - 3);
@@ -436,16 +351,13 @@ void ProcessInput() {
             }
         }
     }
-#endif
 }
 
 
 int main(){ 
     initGameData(); // 初始化游戏数据
     
- #ifndef _WIN32
     setTerminalMode();   // 进入非规范模式
-#endif
     InitConsole();
     
     auto lastTime = chrono::steady_clock::now();
@@ -486,9 +398,7 @@ int main(){
     
     // 恢复光标
     RestoreConsole();
-#ifndef _WIN32
     restoreTerminalMode();  // 恢复终端模式
-#endif
  
     return 0;
 }
