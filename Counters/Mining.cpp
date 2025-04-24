@@ -1,0 +1,50 @@
+#include "Mining.h"
+#include "../UI.h"
+#include "../Terminal.h"
+#include "../Player.h"
+#include "../Animation.h"
+#include <iostream>
+
+MiningCounter::MiningCounter(Player& player) 
+    : CounterBase(player, "Mining") {}
+
+void MiningCounter::OnEnter() {
+    // 之后修改为打字机效果
+    UI::ShowInterface("mining1.txt");
+    UI::WaitForEnter();
+}
+
+void MiningCounter::Process() {
+    const int yield = 10 + 10 * m_player.getDifficulty();
+    int workers = GetValidInput(m_player.getAvailablePeople());
+
+    m_player.addGold(yield * workers);
+    m_player.assignWorkers(0, workers, 0, 0, 0);
+    
+    UI::WaitForEnter();
+    // 之后修改为打字机效果
+    UI::ShowInterface("mining3.txt");
+    UI::WaitForEnter();
+
+    // 之后修改为打字机效果
+    UI::ShowInterface("mining4.txt");
+    UI::WaitForEnter("Press enter to return to home...");
+}
+
+int MiningCounter::GetValidInput(int max) {
+    while (true) {
+        UI::ShowInterface("mining2.txt");
+        Terminal::GetInstance().MoveCursor(18, 33);
+    
+        int input = Terminal::GetInstance().GetInteger();
+        Terminal::GetInstance().MoveCursor(18, 36);
+    
+        if (input >= 0 && input <= max) {
+            std::cout << "Successfully assigned " << input << " miners!" << std::endl;
+            return input;
+        }
+        else {
+            std::cout << "Invalid input! Must be between 0 and " << max << "!" << std::endl;
+        }
+    }
+}
