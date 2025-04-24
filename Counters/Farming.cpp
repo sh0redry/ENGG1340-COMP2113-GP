@@ -9,6 +9,9 @@ FarmingCounter::FarmingCounter(Player& player)
     : CounterBase(player, "Farming") {}
 
 void FarmingCounter::OnEnter() {
+    // 设置h键回调
+    setupHKeyCallback();
+    
     // 之后修改为打字机效果
     UI::ShowInterface("farming1.txt");
     UI::WaitForEnter();
@@ -29,15 +32,19 @@ void FarmingCounter::Process() {
     // 之后修改为打字机效果
     UI::ShowInterface("farming4.txt");
     UI::WaitForEnter("Press enter to return to home...");
+    
+    // 清除h键回调
+    clearHKeyCallback();
 }
 
 int FarmingCounter::GetValidInput(int max) {
     while (true) {
         UI::ShowInterface("farming2.txt");
         Terminal::GetInstance().MoveCursor(18, 33);
+        std::cout << "Assign farmers (0-" << max << "): " << std::endl;
     
         int input = Terminal::GetInstance().GetInteger();
-        Terminal::GetInstance().MoveCursor(18, 36);
+        Terminal::GetInstance().MoveCursor(18, 37);
     
         if (input >= 0 && input <= max) {
             std::cout << "Successfully assigned " << input << " farmers!" << std::endl;
@@ -47,6 +54,5 @@ int FarmingCounter::GetValidInput(int max) {
             std::cout << "Invalid input! Must be between 0 and " << max << "!" << std::endl;
         }
     }
-
 }
 

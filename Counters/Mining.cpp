@@ -9,6 +9,9 @@ MiningCounter::MiningCounter(Player& player)
     : CounterBase(player, "Mining") {}
 
 void MiningCounter::OnEnter() {
+    // 设置h键回调
+    setupHKeyCallback();
+    
     // 之后修改为打字机效果
     UI::ShowInterface("mining1.txt");
     UI::WaitForEnter();
@@ -29,15 +32,19 @@ void MiningCounter::Process() {
     // 之后修改为打字机效果
     UI::ShowInterface("mining4.txt");
     UI::WaitForEnter("Press enter to return to home...");
+    
+    // 清除h键回调
+    clearHKeyCallback();
 }
 
 int MiningCounter::GetValidInput(int max) {
     while (true) {
         UI::ShowInterface("mining2.txt");
         Terminal::GetInstance().MoveCursor(18, 33);
+        std::cout << "Assign miners (0-" << max << "): " << std::endl;
     
         int input = Terminal::GetInstance().GetInteger();
-        Terminal::GetInstance().MoveCursor(18, 36);
+        Terminal::GetInstance().MoveCursor(18, 37);
     
         if (input >= 0 && input <= max) {
             std::cout << "Successfully assigned " << input << " miners!" << std::endl;
