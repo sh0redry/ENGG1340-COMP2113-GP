@@ -87,12 +87,6 @@ int random_range(int min, int max) {
     return dist(rng);
 }
 
-int _kbhit() {
-    int bytesWaiting;
-    ioctl(STDIN_FILENO, FIONREAD, &bytesWaiting);
-    return bytesWaiting > 0;
-}
-
 void Draw()
 {   
     auto& terminal = Terminal::GetInstance();
@@ -289,10 +283,10 @@ void Update() {
 // 处理用户输入
 void ProcessInput() {
     auto& terminal = Terminal::GetInstance();
-    if (_kbhit()) {
+    if (terminal.CheckInput()) {
         int ch = terminal.GetKeyPress();
         if (ch == 0x1B) { // ESC或方向键
-            if (_kbhit()) {
+            if (terminal.CheckInput()) {
                 ch = terminal.GetKeyPress();
                 if (ch == '[') {   
                     ch = terminal.GetKeyPress();
