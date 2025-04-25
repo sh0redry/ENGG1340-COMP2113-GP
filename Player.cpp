@@ -6,12 +6,13 @@ const std::map<int, int> Player::WEAPON_UPGRADE_COST = {
     {6, 350}, {7, 400}, {8, 450}, {9, 500}, {10, 600}
 };
 
-Player::Player(int initialPeople, int initialCrop, int initialGold) 
+Player::Player(int initialPeople, int initialCrop, int initialGold, const std::string& difficulty) 
     : m_people(initialPeople), 
       m_availablePeople(initialPeople),
       m_crop(initialCrop),
       m_gold(initialGold),
-      m_weaponLevel(1) {}
+      m_weaponLevel(1),
+      m_difficulty(difficulty) {}
 
 // 资源增减
 void Player::addCrop(int amount) { 
@@ -67,6 +68,12 @@ void Player::consumeDailyFood() {
 }
 
 // Getter实现
+int Player::getDifficulty() const { 
+    if (m_difficulty == "EASY") return 1;
+    if (m_difficulty == "MEDIUM") return 2;
+    if (m_difficulty == "HARD") return 3;
+    return 2; // 默认返回中等难度
+}
 int Player::getPeople() const { return m_people; }
 int Player::getAvailablePeople() const { return m_availablePeople; }
 int Player::getCrop() const { return m_crop; }

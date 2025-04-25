@@ -34,7 +34,6 @@ bool WeekCycle::isThursday() const {
 int WeekCycle::getTotalDays() const {
     return GameConfig::TOTAL_DAYS;
 }
-
 int WeekCycle::getCurrentDay() const {
     return m_day;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <string>
 #include "Constants.h"
 
 class Player {
@@ -10,6 +11,7 @@ private:
     int m_crop;             // 食物资源
     int m_gold;             // 金币资源
     int m_weaponLevel;      // 武器等级（1-10）
+    std::string m_difficulty; // 游戏难度
 
     // 人员分配
     int m_farmingWorkers = 0;
@@ -22,7 +24,7 @@ private:
     static const std::map<int, int> WEAPON_UPGRADE_COST;
 
 public:
-    explicit Player(int initialPeople, int initialCrop, int initialGold);
+    explicit Player(int initialPeople, int initialCrop, int initialGold, const std::string& difficulty = "MEDIUM");
 
     // 资源获取
     void addCrop(int amount);
@@ -41,6 +43,7 @@ public:
     void consumeDailyFood();
 
     // 获取状态
+    int getDifficulty() const;
     int getPeople() const;
     int getAvailablePeople() const;
     int getCrop() const;
