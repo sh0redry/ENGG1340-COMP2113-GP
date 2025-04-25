@@ -81,10 +81,6 @@ public:
     };
     TerminalSize GetTerminalSize();
 
-    // 文本显示辅助函数
-    // size_t GetVisualWidth(const std::string& str);
-    // void CenterAndDisplay(const std::string& content);
-    // void DisplayLines(const std::vector<std::string>& lines, int hPadding, int vPadding);
 };
 
 #endif // TERMINAL_H 

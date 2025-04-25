@@ -43,38 +43,6 @@ void Animation::PulseText(const std::string& text, int x, int y) {
     Terminal::GetInstance().ResetColor();
 }
 
-void Animation::WeaponFire(int level) {
-    std::string weapon;
-    switch(level) {
-        case 1: weapon = ">"; break;
-        case 2: weapon = "=>"; break;
-        case 3: weapon = "==>"; break;
-        default: weapon = "===>"; break;
-    }
-    
-    for (int i = 0; i < 3; ++i) {
-        Terminal::GetInstance().MoveCursor(20 + i, 10);
-        Terminal::GetInstance().SetColor(Terminal::Color::Red, Terminal::Color::Default);
-        std::cout << weapon;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        Terminal::GetInstance().MoveCursor(20 + i, 10);
-        std::cout << "   ";
-    }
-    Terminal::GetInstance().ResetColor();
-}
-
-void Animation::ZombieAttack() {
-    for (int i = 0; i < 3; ++i) {
-        Terminal::GetInstance().MoveCursor(40, 10);
-        Terminal::GetInstance().SetColor(Terminal::Color::Green, Terminal::Color::Default);
-        std::cout << "Z";
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        Terminal::GetInstance().MoveCursor(40, 10);
-        std::cout << " ";
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    Terminal::GetInstance().ResetColor();
-}
 
 void Effects::FlashScreen(int times) {
     for (int i = 0; i < times; ++i) {
