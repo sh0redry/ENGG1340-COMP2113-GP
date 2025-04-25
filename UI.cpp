@@ -7,6 +7,30 @@
 #include <fstream>
 #include <sstream>
 
+// 计算字符串的视觉宽度（考虑UTF-8字符）
+size_t getVisualWidth(const std::string& str) {
+    size_t width = 0;
+    for (size_t i = 0; i < str.length();) {
+        if ((str[i] & 0xC0) != 0x80) {  // Start of a new character
+            if ((str[i] & 0xF0) == 0xF0) {  // 4-byte UTF-8
+                i += 4;
+                width += 1;
+            } else if ((str[i] & 0xE0) == 0xE0) {  // 3-byte UTF-8
+                i += 3;
+                width += 1;
+            } else if ((str[i] & 0xC0) == 0xC0) {  // 2-byte UTF-8
+                i += 2;
+                width += 1;
+            } else {  // 1-byte character
+                i += 1;
+                width += 1;
+            }
+        } else {
+            i += 1;  // Skip continuation byte
+        }
+    }
+    return width;
+}
 
 std::string UI::LoadUI(const std::string& filename) {
     std::ifstream file("assets/" + filename);
@@ -30,12 +54,12 @@ void UI::DisplayUI(const std::string& content) {
     // 分割内容为行
     while ((pos = temp.find('\n')) != std::string::npos) {
         std::string line = temp.substr(0, pos);
-        boxWidth = std::max(boxWidth, line.length());
+        boxWidth = std::max(boxWidth, getVisualWidth(line));
         lines.push_back(line);
         temp.erase(0, pos + 1);
     }
     if (!temp.empty()) {
-        boxWidth = std::max(boxWidth, temp.length());
+        boxWidth = std::max(boxWidth, getVisualWidth(temp));
         lines.push_back(temp);
     }
     
@@ -43,19 +67,31 @@ void UI::DisplayUI(const std::string& content) {
     int hPadding = (size.width - boxWidth) / 2;
     int vPadding = (size.height - lines.size()) / 2;
     
+    // 确保填充值不为负
     if (hPadding < 0) hPadding = 0;
     if (vPadding < 0) vPadding = 0;
+    
+    // 清除屏幕并移动光标到起始位置
+    terminal.Clear();
+    terminal.MoveCursor(1, 1);
     
     // 显示内容
     for (int i = 0; i < vPadding; i++) {
         std::cout << std::endl;
     }
     for (const auto& line : lines) {
-        std::cout << std::string(hPadding, ' ') << line << std::endl;
+        // 使用安全的字符串创建方式
+        if (hPadding > 0) {
+            std::cout << std::string(static_cast<size_t>(hPadding), ' ');
+        }
+        std::cout << line << std::endl;
     }
     for (int i = 0; i < vPadding - 1; i++) {
         std::cout << std::endl;
     }
+    
+    // 确保光标在最后一行
+    terminal.MoveCursor(1, size.height);
 }
 
 void UI::DisplayUIFromFile(const std::string& filename) {
@@ -68,6 +104,15 @@ void UI::ShowInterface(const std::string& filename) {
     DisplayUIFromFile(filename);
 }
 
+void UI::WaitForEnter(const std::string& message) {
+    // Calculate position for bottom right corner of the box
+    int x = BOX_WIDTH - message.length() - 2;  // -2 for padding
+    int y = BOX_HEIGHT - 2;  // -2 for padding from bottom
+    
+    MoveCursorInBox(x, y);
+    std::cout << message;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
 void UI::ShowDayTransition(int day) {
     Terminal::GetInstance().Clear();
