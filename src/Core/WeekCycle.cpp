@@ -1,5 +1,5 @@
 #include "WeekCycle.h"
-#include "Constants.h"
+#include "../Constants.h"
 
 const std::vector<std::string> WeekCycle::WEEKDAY_NAMES = {
     "Friday", "Monday", "Tuesday", "Wednesday", "Thursday"

@@ -1,11 +1,11 @@
 #pragma once
-#include "Counters/Farming.h"
-#include "Counters/Mining.h"
-#include "Counters/Recruit.h"
-#include "Counters/Shop.h"
-#include "Counters/Explore.h"
+#include "Farming.h"
+#include "Mining.h"
+#include "Recruit.h"
+#include "Shop.h"
+#include "Explore.h"
 #include <memory>
-#include "Player.h"
+#include "../Core/Player.h"
 #include "CounterBase.h"
 
 enum class CounterType {

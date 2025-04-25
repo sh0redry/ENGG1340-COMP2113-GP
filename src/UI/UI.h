@@ -2,7 +2,7 @@
 #define UI_H
 
 #include <string>
-#include "Player.h"
+#include "../Core/Player.h"
 
 class UI {
 public:

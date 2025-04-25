@@ -1,7 +1,7 @@
 #include "Recruit.h"
-#include "../UI.h"
-#include "../Terminal.h"
-#include "../Player.h"
+#include "../UI/UI.h"
+#include "../UI/Terminal.h"
+#include "../Core/Player.h"
 #include <iostream>
 
 RecruitCounter::RecruitCounter(Player& player) 

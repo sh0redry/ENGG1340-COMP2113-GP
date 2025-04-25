@@ -1,9 +1,9 @@
 #pragma once
 #include "WeekCycle.h"
 #include "Player.h"
-#include "Combat.h"
-#include "UI.h"
-#include "CounterBase.h"
+#include "../Combat/Combat.h"
+#include "../UI/UI.h"
+#include "../Counters/CounterBase.h"
 #include <memory>
 
 enum class GameState {

@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "Difficulty.h"
-#include "Counters/CounterFactory.h"
-#include "Animation.h"
-#include "Terminal.h"
+#include "../Counters/CounterFactory.h"
+#include "../UI/Animation.h"
+#include "../UI/Terminal.h"
 #include "Constants.h"
 
 #include <thread>

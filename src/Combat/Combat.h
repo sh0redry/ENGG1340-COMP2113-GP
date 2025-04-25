@@ -1,10 +1,10 @@
 #pragma once
 #include "Weapon.h"
 #include "Zombie.h"
-#include "Terminal.h"
-#include "UI.h"
-#include "Player.h"
-#include "WeekCycle.h"
+#include "../UI/Terminal.h"
+#include "../UI/UI.h"
+#include "../Core/Player.h"
+#include "../Core/WeekCycle.h"
 #include <vector>
 #include <chrono>
 

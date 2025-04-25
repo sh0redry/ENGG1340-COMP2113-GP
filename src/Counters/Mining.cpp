@@ -1,8 +1,8 @@
 #include "Mining.h"
-#include "../UI.h"
-#include "../Terminal.h"
-#include "../Player.h"
-#include "../Animation.h"
+#include "../UI/UI.h"
+#include "../UI/Terminal.h"
+#include "../Core/Player.h"
+#include "../UI/Animation.h"
 #include <iostream>
 
 MiningCounter::MiningCounter(Player& player) 

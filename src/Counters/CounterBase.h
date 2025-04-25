@@ -1,8 +1,8 @@
 #pragma once
-#include "../Player.h"
+#include "../Core/Player.h"
 #include <string>
-#include "../Terminal.h"
-#include "../UI.h"
+#include "../UI/Terminal.h"
+#include "../UI/UI.h"
 #include <stdexcept>
 
 // 用于中断Counter执行的异常类

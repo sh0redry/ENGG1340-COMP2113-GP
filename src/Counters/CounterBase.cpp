@@ -1,6 +1,6 @@
 #include "CounterBase.h"
-#include "../Terminal.h"
-#include "../UI.h"
+#include "../UI/Terminal.h"
+#include "../UI/UI.h"
 #include <iostream>
 #include <limits>
 
