@@ -3,14 +3,18 @@
 #include <thread>
 #include <iostream>
 
-Combat::Combat(int weaponLevel, int difficulty, int gameLevel, int people)
-    : weapon(weaponLevel), zombieManager(difficulty, gameLevel),
-      playerX(WIDTH / 2), playerY(HEIGHT - 1),
-      initialHP(people * 100), HP(people * 100) {
+Combat::Combat(Player& player, const WeekCycle& weekCycle)
+    : player(player),
+      weapon(player.getWeaponLevel()), 
+      zombieManager(player.getDifficulty(), weekCycle.getCurrentWeek()),
+      playerX(WIDTH / 2), 
+      playerY(HEIGHT - 1),
+      initialHP(player.getTotalHP()), 
+      HP(player.getTotalHP()) {
     
     // 设置游戏时长
     int gameDurationArr[5] = {40, 40, 50, 50, 60};
-    gameDuration = gameDurationArr[gameLevel - 1];
+    gameDuration = gameDurationArr[weekCycle.getCurrentWeek() - 1];
     startTime = std::chrono::steady_clock::now();
 }
 
@@ -32,7 +36,15 @@ bool Combat::run() {
     }
     
     terminal.ShowCursor();
-    return HP > 0;
+    
+    // 处理战斗结果
+    bool victory = HP > 0;
+    
+    // 显示战斗结果（需要修改）
+    UI::ShowInterface(victory ? "victory.txt" : "defeat.txt");
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+    
+    return victory;
 }
 
 void Combat::processInput() {

@@ -3,6 +3,8 @@
 #include "Zombie.h"
 #include "Terminal.h"
 #include "UI.h"
+#include "Player.h"
+#include "WeekCycle.h"
 #include <vector>
 #include <chrono>
 
@@ -24,6 +26,8 @@ private:
     int gameDuration;
     std::chrono::steady_clock::time_point startTime;
     
+    Player& player;
+    
     void processInput();
     void update();
     void draw() const;
@@ -31,6 +35,6 @@ private:
     int getRemainingTime() const;
     
 public:
-    Combat(int weaponLevel, int difficulty, int gameLevel, int people);
+    Combat(Player& player, const WeekCycle& weekCycle);
     bool run();
 }; 
