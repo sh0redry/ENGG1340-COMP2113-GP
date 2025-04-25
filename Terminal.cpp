@@ -11,7 +11,8 @@
 // 静态成员定义
 std::unique_ptr<Terminal> Terminal::instance = nullptr;
 std::mutex Terminal::mutex;
-
+Terminal::KeyCallback Terminal::qKeyCallback = nullptr;
+Terminal::KeyCallback Terminal::hKeyCallback = nullptr;
 // Terminal 类实现
 Terminal& Terminal::GetInstance() {
     if (!instance) {
@@ -51,17 +52,99 @@ void Terminal::ShowCursor() {
     std::cout << "\033[?25h";
 }
 
+void Terminal::SetQKeyCallback(KeyCallback callback) {
+    qKeyCallback = callback;
+}
+
+void Terminal::SetHKeyCallback(KeyCallback callback) {
+    hKeyCallback = callback;
+}
+
+void Terminal::ClearHKeyCallback() {
+    hKeyCallback = nullptr;
+}
+
 int Terminal::GetKeyPress() {
-    return getchar();
+    int ch = getchar();
+    if (ch == 'q' || ch == 'Q') {
+        if (qKeyCallback) {
+            qKeyCallback();
+        }
+    } else if (ch == 'h' || ch == 'H') {
+        if (hKeyCallback) {
+            hKeyCallback();
+        }
+    }
+    return ch;
+}
+
+int Terminal::GetYN() {
+    int ch = getchar();
+    if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N') {
+        std::cout << ch << std::endl;
+        return ch;
+    } else if (ch == 'q' || ch == 'Q') {
+        if (qKeyCallback) {
+            qKeyCallback();
+        }
+    } else if (ch == 'h' || ch == 'H') {
+        if (hKeyCallback) {
+            hKeyCallback();
+        }
+    }
+    return 0; // 返回0表示无效输入
 }
 
 std::string Terminal::GetLine(int maxLength) {
     std::string input;
-    std::getline(std::cin, input);
-    if (input.length() > maxLength) {
-        input = input.substr(0, maxLength);
+    char ch;
+    
+    while ((ch = getchar()) != '\n') {
+        if (ch == 'q' || ch == 'Q') {
+            if (qKeyCallback) {
+                qKeyCallback();
+            }
+        } else if (ch == 'h' || ch == 'H') {
+            if (hKeyCallback) {
+                hKeyCallback();
+            }
+        }
+        if (input.length() < maxLength) {
+            input += ch;
+        }
     }
     return input;
+}
+
+int Terminal::GetInteger() {
+    std::string input;
+    int result = 0;
+    char ch;
+    
+    while ((ch = getchar()) != '\n') {
+        if (ch == 'q' || ch == 'Q') {
+            if (qKeyCallback) {
+                qKeyCallback();
+            }
+        } else if (ch == 'h' || ch == 'H') {
+            if (hKeyCallback) {
+                hKeyCallback();
+            }
+        }
+        if (ch >= '0' && ch <= '9') {
+            input += ch;
+            std::cout << ch;  // 只显示数字
+            result = result * 10 + (ch - '0');
+        }
+    }
+    std::cout << std::endl;  // 输入结束后换行
+    return result;
+}
+
+bool Terminal::CheckInput() {
+    int bytesWaiting;
+    ioctl(STDIN_FILENO, FIONREAD, &bytesWaiting);
+    return bytesWaiting > 0;
 }
 
 void Terminal::SetColor(Color foreground, Color background) {

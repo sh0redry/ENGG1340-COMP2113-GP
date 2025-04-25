@@ -15,6 +15,11 @@ private:
     // 终端状态
     struct termios oldt, newt;
     std::string defaultColor = "\033[0m";
+    
+    // 回调函数
+    using KeyCallback = void(*)();
+    static KeyCallback qKeyCallback;
+    static KeyCallback hKeyCallback;
 
     // 私有构造函数
     Terminal();
@@ -33,6 +38,13 @@ public:
     // 获取单例实例
     static Terminal& GetInstance();
     
+    // 设置q键回调函数
+    static void SetQKeyCallback(KeyCallback callback);
+    
+    // 设置和清除h键回调函数
+    static void SetHKeyCallback(KeyCallback callback);
+    static void ClearHKeyCallback();
+    
     // 显示控制
     void Clear();
     void MoveCursor(int x, int y);
@@ -41,7 +53,10 @@ public:
     
     // 输入处理
     int GetKeyPress();
+    int GetYN();
     std::string GetLine(int maxLength = 50);
+    int GetInteger();  // 新增函数：只接受整数输入
+    bool CheckInput();     // 检查是否有按键输入
     
     // 颜色控制
     enum class Color {
