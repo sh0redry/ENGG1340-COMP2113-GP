@@ -17,30 +17,27 @@ namespace Difficulty {
     // 预设难度配置（EASY/MEDIUM/HARD）
     const std::unordered_map<std::string, Config> PRESETS = {
         { "EASY", 
-            { 
-                .initialPeople = 5,
-                .cropYield = 20,
-                .goldYield = 20,
-                .exploreRisk = 0.05f,
-                .zombieDamageMultiplier = 0.8f 
+            Config{ 
+                5,  // initialPeople
+                20, // cropYield
+                20, // goldYield
+                0.05f, // exploreRisk
             } 
         },
         { "MEDIUM", 
-            { 
-                .initialPeople = 3,
-                .cropYield = 30,
-                .goldYield = 30,
-                .exploreRisk = 0.10f,
-                .zombieDamageMultiplier = 1.0f 
+            Config{ 
+                3,  // initialPeople
+                30, // cropYield
+                30, // goldYield
+                0.10f, // exploreRisk
             } 
         },
         { "HARD", 
-            { 
-                .initialPeople = 2,
-                .cropYield = 40,
-                .goldYield = 40,
-                .exploreRisk = 0.20f,
-                .zombieDamageMultiplier = 1.2f 
+            Config{ 
+                2,  // initialPeople
+                40, // cropYield
+                40, // goldYield
+                0.20f, // exploreRisk
             } 
         }
     };
