@@ -12,36 +12,6 @@ Combat::Combat(int weaponLevel, int difficulty, int gameLevel, int people)
     int gameDurationArr[5] = {40, 40, 50, 50, 60};
     gameDuration = gameDurationArr[gameLevel - 1];
     startTime = std::chrono::steady_clock::now();
-    lastFireTime = startTime;
-}
-
-bool Combat::canFire() const {
-    auto now = std::chrono::steady_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFireTime).count();
-    return elapsed >= FIRE_COOLDOWN_MS;
-}
-
-void Combat::fireBullets() {
-    if (weapon.getMultiple() == 1) {
-        bullets.emplace_back(playerX, playerY - 1);
-    } else if (weapon.getMultiple() == 3 && playerX > 1 && playerX < WIDTH - 2) {
-        bullets.emplace_back(playerX - 1, playerY - 1);
-        bullets.emplace_back(playerX, playerY - 1);
-        bullets.emplace_back(playerX + 1, playerY - 1);
-    } else if (weapon.getMultiple() == 5 && playerX > 2 && playerX < WIDTH - 3) {
-        bullets.emplace_back(playerX - 2, playerY - 1);
-        bullets.emplace_back(playerX - 1, playerY - 1);
-        bullets.emplace_back(playerX, playerY - 1);
-        bullets.emplace_back(playerX + 1, playerY - 1);
-        bullets.emplace_back(playerX + 2, playerY - 1);
-    } else if (weapon.getMultiple() == 5 && (playerX == 2 || playerX == WIDTH - 3)) {
-        bullets.emplace_back(playerX - 1, playerY - 1);
-        bullets.emplace_back(playerX, playerY - 1);
-        bullets.emplace_back(playerX + 1, playerY - 1);
-    } else {
-        bullets.emplace_back(playerX, playerY - 1);
-    }
-    lastFireTime = std::chrono::steady_clock::now();
 }
 
 bool Combat::run() {
@@ -93,8 +63,24 @@ void Combat::processInput() {
                     playerX = std::min(WIDTH - 1, playerX + 1);
                     break;
                 case ' ':
-                    if (canFire()) {
-                        fireBullets();
+                    if (weapon.getMultiple() == 1) {
+                        bullets.emplace_back(playerX, playerY - 1);
+                    } else if (weapon.getMultiple() == 3 && playerX > 1 && playerX < WIDTH - 2) {
+                        bullets.emplace_back(playerX - 1, playerY - 1);
+                        bullets.emplace_back(playerX, playerY - 1);
+                        bullets.emplace_back(playerX + 1, playerY - 1);
+                    } else if (weapon.getMultiple() == 5 && playerX > 2 && playerX < WIDTH - 3) {
+                        bullets.emplace_back(playerX - 2, playerY - 1);
+                        bullets.emplace_back(playerX - 1, playerY - 1);
+                        bullets.emplace_back(playerX, playerY - 1);
+                        bullets.emplace_back(playerX + 1, playerY - 1);
+                        bullets.emplace_back(playerX + 2, playerY - 1);
+                    } else if (weapon.getMultiple() == 5 && (playerX == 2 || playerX == WIDTH - 3)) {
+                        bullets.emplace_back(playerX - 1, playerY - 1);
+                        bullets.emplace_back(playerX, playerY - 1);
+                        bullets.emplace_back(playerX + 1, playerY - 1);
+                    } else {
+                        bullets.emplace_back(playerX, playerY - 1);
                     }
                     break;
                 case 'Z':

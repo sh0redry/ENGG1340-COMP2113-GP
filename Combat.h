@@ -24,12 +24,6 @@ private:
     int gameDuration;
     std::chrono::steady_clock::time_point startTime;
     
-    // 发射冷却相关
-    static const int FIRE_COOLDOWN_MS = 200; // 发射冷却时间（毫秒）
-    std::chrono::steady_clock::time_point lastFireTime;
-    bool canFire() const;
-    void fireBullets();
-    
     void processInput();
     void update();
     void draw() const;
