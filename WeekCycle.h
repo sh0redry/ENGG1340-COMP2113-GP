@@ -26,4 +26,7 @@ public:
     
     // 获取当前是第几天
     int getCurrentDay() const;
+
+    // 获取当前是第几周
+    int getCurrentWeek() const;
 };

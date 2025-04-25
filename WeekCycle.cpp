@@ -37,3 +37,8 @@ int WeekCycle::getTotalDays() const {
 int WeekCycle::getCurrentDay() const {
     return m_day;
 }
+
+int WeekCycle::getCurrentWeek() const {
+    // 每周有5个工作日 (周五到周四)
+    return (m_day - 1) / 5 + 1;
+}
