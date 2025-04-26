@@ -20,8 +20,6 @@ private:
     int m_shoppingWorkers = 0;
     int m_exploringWorkers = 0;
 
-    // 常量配置
-    static const std::map<int, int> WEAPON_UPGRADE_COST;
 
 public:
     explicit Player(int initialPeople, int initialCrop, int initialGold, const std::string& difficulty = "MEDIUM");
@@ -57,4 +55,6 @@ public:
     int getRecruitingWorkers() const;
     int getShoppingWorkers() const;
     int getExploringWorkers() const;
+
+    static const std::map<int, int> WEAPON_UPGRADE_COST;
 };
