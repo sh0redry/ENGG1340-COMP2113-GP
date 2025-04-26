@@ -49,4 +49,12 @@ public:
     void clearHKeyCallback() {
         Terminal::GetInstance().ClearHKeyCallback();
     }
+
+    // 设置和清除w键回调
+    void setupWKeyCallback(void (*callback)()) {
+        Terminal::GetInstance().SetWKeyCallback(callback);
+    }
+    void clearWKeyCallback() {
+        Terminal::GetInstance().ClearWKeyCallback();
+    }
 };

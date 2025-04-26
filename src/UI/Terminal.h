@@ -20,6 +20,7 @@ private:
     using KeyCallback = void(*)();
     static KeyCallback qKeyCallback;
     static KeyCallback hKeyCallback;
+    static KeyCallback wKeyCallback;
 
     // 私有构造函数
     Terminal();
@@ -44,6 +45,10 @@ public:
     // 设置和清除h键回调函数
     static void SetHKeyCallback(KeyCallback callback);
     static void ClearHKeyCallback();
+    
+    // 设置w键回调函数
+    static void SetWKeyCallback(KeyCallback callback);
+    static void ClearWKeyCallback();
     
     // 显示控制
     void Clear();

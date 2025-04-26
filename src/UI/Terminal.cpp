@@ -13,6 +13,7 @@ std::unique_ptr<Terminal> Terminal::instance = nullptr;
 std::mutex Terminal::mutex;
 Terminal::KeyCallback Terminal::qKeyCallback = nullptr;
 Terminal::KeyCallback Terminal::hKeyCallback = nullptr;
+Terminal::KeyCallback Terminal::wKeyCallback = nullptr;
 // Terminal 类实现
 Terminal& Terminal::GetInstance() {
     if (!instance) {
@@ -64,6 +65,14 @@ void Terminal::ClearHKeyCallback() {
     hKeyCallback = nullptr;
 }
 
+void Terminal::SetWKeyCallback(KeyCallback callback) {
+    wKeyCallback = callback;
+}
+
+void Terminal::ClearWKeyCallback() {
+    wKeyCallback = nullptr;
+}
+
 int Terminal::GetKeyPress() {
     int ch = getchar();
     if (ch == 'q' || ch == 'Q') {
@@ -73,6 +82,10 @@ int Terminal::GetKeyPress() {
     } else if (ch == 'h' || ch == 'H') {
         if (hKeyCallback) {
             hKeyCallback();
+        }
+    } else if (ch == 'w' || ch == 'W') {
+        if (wKeyCallback) {
+            wKeyCallback();
         }
     }
     return ch;
@@ -91,6 +104,10 @@ int Terminal::GetYN() {
         if (hKeyCallback) {
             hKeyCallback();
         }
+    } else if (ch == 'w' || ch == 'W') {
+        if (wKeyCallback) {
+            wKeyCallback();
+        }
     }
     return 0; // 返回0表示无效输入
 }
@@ -107,6 +124,10 @@ std::string Terminal::GetLine(int maxLength) {
         } else if (ch == 'h' || ch == 'H') {
             if (hKeyCallback) {
                 hKeyCallback();
+            }
+        } else if (ch == 'w' || ch == 'W') {
+            if (wKeyCallback) {
+                wKeyCallback();
             }
         }
         if (input.length() < maxLength) {
@@ -129,6 +150,10 @@ int Terminal::GetInteger() {
         } else if (ch == 'h' || ch == 'H') {
             if (hKeyCallback) {
                 hKeyCallback();
+            }
+        } else if (ch == 'w' || ch == 'W') {
+            if (wKeyCallback) {
+                wKeyCallback();
             }
         }
         if (ch >= '0' && ch <= '9') {
