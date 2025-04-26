@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.pyc": "python",
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -57,6 +58,11 @@
         "text_encoding": "cpp",
         "thread": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.tcc": "cpp",
+        "condition_variable": "cpp",
+        "cstring": "cpp",
+        "map": "cpp",
+        "mutex": "cpp"
     }
 }
