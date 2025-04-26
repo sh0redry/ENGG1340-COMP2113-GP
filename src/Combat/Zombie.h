@@ -20,8 +20,6 @@ private:
     int enemySpawnInterval;
     int spawnProbability;
     
-    int randomRange(int min, int max) const;
-    
 public:
     ZombieManager(int difficulty, int gameLevel);
     

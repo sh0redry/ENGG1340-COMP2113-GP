@@ -1,17 +1,10 @@
 #include "Zombie.h"
-#include <chrono>
-#include <random>
+#include "../Random.h"
 
 Zombie::Zombie(int x, int y, int health) : x(x), y(y), health(health) {}
 
 char Zombie::getDisplayChar() const {
     return health >= 45 ? '*' : '+';
-}
-
-int ZombieManager::randomRange(int min, int max) const {
-    static std::mt19937 rng(std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<int> dist(min, max);
-    return dist(rng);
 }
 
 ZombieManager::ZombieManager(int difficulty, int gameLevel) 
@@ -46,8 +39,8 @@ void ZombieManager::update() {
 }
 
 void ZombieManager::spawnZombie() {
-    if (randomRange(0, 99) < spawnProbability) {
-        int x = randomRange(0, 24); // WIDTH - 1
+    if (Random::Chance(spawnProbability / 100.0f)) {
+        int x = Random::Range(0, 24); // WIDTH - 1
         zombies.emplace_back(x, 0, enemyInitHP);
     }
 }
