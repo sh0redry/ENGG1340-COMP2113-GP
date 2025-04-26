@@ -3,6 +3,7 @@
 #include "../UI/Terminal.h"
 #include "../Core/Player.h"
 #include "../UI/Animation.h"
+#include "../Core/Difficulty.h"
 #include <iostream>
 
 FarmingCounter::FarmingCounter(Player& player) 
@@ -18,7 +19,7 @@ void FarmingCounter::OnEnter() {
 }
 
 void FarmingCounter::Process() {
-    const int yield = 10 + 10 * m_player.getDifficulty();
+    const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).cropYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
 
     m_player.addCrop(yield * workers);

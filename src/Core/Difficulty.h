@@ -11,7 +11,6 @@ namespace Difficulty {
         int cropYield;       // 每人每天种田产量
         int goldYield;       // 每人每天挖矿产量
         float exploreRisk;   // 探索损失概率 (0.05 = 5%)
-        float zombieDamageMultiplier; // 僵尸伤害倍率
     };
 
     // 预设难度配置（EASY/MEDIUM/HARD）

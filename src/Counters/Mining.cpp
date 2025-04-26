@@ -4,6 +4,7 @@
 #include "../Core/Player.h"
 #include "../UI/Animation.h"
 #include <iostream>
+#include "../Core/Difficulty.h"
 
 MiningCounter::MiningCounter(Player& player) 
     : CounterBase(player, "Mining") {}
@@ -18,7 +19,7 @@ void MiningCounter::OnEnter() {
 }
 
 void MiningCounter::Process() {
-    const int yield = 10 + 10 * m_player.getDifficulty();
+    const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).goldYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
 
     m_player.addGold(yield * workers);

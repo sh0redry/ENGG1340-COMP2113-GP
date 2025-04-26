@@ -34,7 +34,6 @@ public:
     void resetDailyWorkers();
 
     // 商店操作
-    bool canUpgradeWeapon() const;
     void upgradeWeapon();
 
     // 每日消耗
@@ -42,6 +41,7 @@ public:
 
     // 获取状态
     int getDifficulty() const;
+    std::string getStringDifficulty() const;
     int getPeople() const;
     int getAvailablePeople() const;
     int getCrop() const;

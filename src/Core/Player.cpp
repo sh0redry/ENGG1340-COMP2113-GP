@@ -47,16 +47,9 @@ void Player::resetDailyWorkers() {
 }
 
 // 武器升级
-bool Player::canUpgradeWeapon() const {
-    if (m_weaponLevel >= 10) return false;
-    return m_gold >= WEAPON_UPGRADE_COST.at(m_weaponLevel);
-}
-
 void Player::upgradeWeapon() {
-    if (canUpgradeWeapon()) {
-        m_gold -= WEAPON_UPGRADE_COST.at(m_weaponLevel);
-        m_weaponLevel++;
-    }
+    m_gold -= WEAPON_UPGRADE_COST.at(m_weaponLevel);
+    m_weaponLevel++;
 }
 
 // 每日食物消耗
@@ -72,8 +65,8 @@ int Player::getDifficulty() const {
     if (m_difficulty == "EASY") return 1;
     if (m_difficulty == "MEDIUM") return 2;
     if (m_difficulty == "HARD") return 3;
-    return 2; // 默认返回中等难度
 }
+std::string Player::getStringDifficulty() const { return m_difficulty; }
 int Player::getPeople() const { return m_people; }
 int Player::getAvailablePeople() const { return m_availablePeople; }
 int Player::getCrop() const { return m_crop; }
