@@ -19,6 +19,7 @@ void RecruitCounter::OnEnter() {
 void RecruitCounter::Process() {
     int maxPossible = calculateMaxRecruits();
     if (maxPossible <= 0) {
+        // to be modified
         UI::ShowInterface("recruit2_failed.txt");
         Terminal::GetInstance().MoveCursor(18, 33);
         std::cout << "No enough food!" << std::endl;
@@ -26,7 +27,7 @@ void RecruitCounter::Process() {
         std::cout << "Minimum required: " << std::to_string(BASE_COST + COST_PER_MEMBER) << " food" << std::endl;
         Terminal::GetInstance().MoveCursor(18, 35);
         std::cout << "Current food: " << std::to_string(m_player.getCrop()) << " food" << std::endl;
-        UI::WaitForEnter();
+        UI::WaitForEnter("Press enter to return to home...");
         return;
     }
     
@@ -45,7 +46,7 @@ void RecruitCounter::Process() {
         // 之后修改为打字机效果
         UI::ShowInterface("recruit4.txt");
         Terminal::GetInstance().MoveCursor(18, 33);
-        std::cout << "Successfully recruited " << recruits << " members" << std::endl;
+        std::cout << "Now you have " << recruits << " more members!" << std::endl;
         Terminal::GetInstance().MoveCursor(18, 34);
         std::cout << "Consumed food: " << totalCost << std::endl;
     }
