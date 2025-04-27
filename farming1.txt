@@ -1,31 +1,30 @@
 ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                                                                      ║
-║                                                                                                                                      ║
-║                                                                                                                                      ║ 
-║                                                                                                                                      ║ 
-║                                                                                                                                      ║ 
 ║                                                                                                                                      ║ 
 ║                                                                                                                                      ║ 
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                                                                                                                      ║
-║                                           ***** Select Your Difficulty *****                                                         ║
-║                                                                                                                                      ║
-║                                           -> Easy                                                                                    ║
-║                                              Medium                                                                                  ║
-║                                              Difficult                                                                               ║
-║                                                                                                                                      ║
-║                             [ w / s ] to move up/down                                                                                ║
-║                             [ Enter ] to select        [ i ] Info                                                                    ║
-║                                                                                                                                      ║
-║                             ************************************************************                                             ║
-║                                     Enjoy the game, and remember to have fun!                                                        ║
-║                             ************************************************************                                             ║
+║                                                                     X                                                                ║  
+║                                                                   XX X                                                               ║  
+║                                                                 X█X                                                                  ║  
+║                                                                XX█XX                                                                 ║  
+║                                                              X██XX                                                                   ║  
+║                                                               ██X    XX  X                                                           ║  
+║                                                               ██   ██ ██ █ █XX                                                       ║  
+║                                                               ██  ██  XXXXX  X█ X                                                    ║  
+║                                                               ██ ██             X█X                                                  ║  
+║                                                               ██ █                XX                                                 ║  
+║                                                               ██                   X                                                 ║  
+║                                                               ██                                                                     ║
 ║                                                                                                                                      ║  
+║                                        Here is a farm, the crops you get from here                                                   ║  
+║                                   can be used to recruit new members and grow your team!                                             ║ 
 ║                                                                                                                                      ║ 
 ║                                                                                                                                      ║ 
+║                                                                                                                                      ║ 
+║                                                                                                                                      ║
+║                                                                                                                                      ║
 ║                                                                                                                                      ║ 
 ║                                                                                                                                      ║ 
 ║                                                                                                                                      ║ 

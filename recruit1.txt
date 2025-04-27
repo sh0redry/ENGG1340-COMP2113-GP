@@ -3,34 +3,34 @@
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
+║                                                           ████████                                                                   ║  
+║                                                          █        █                                                                  ║  
+║                                                          █        █                                                                  ║ 
+║                                                          █        █                                                                  ║ 
+║                                               ████████    ████████    ████████                                                       ║ 
+║                                              █        █  █   ██   █  █        █                                                      ║ 
+║                                              █        █   █ ████ █   █        █                                                      ║ 
+║                                              █        █      ██      █        █                                                      ║ 
+║                                               ████████      █  █      ████████                                                       ║ 
+║                                              █   ██   █   ██    ██   █   ██   █                                                      ║ 
+║                                               █ █  █ █                █ █  █ █                                                       ║ 
+║                                                  ██                      ██                                                          ║ 
+║                                                 █  █                    █  █                                                         ║ 
+║                                               ██    ██                ██    ██                                                       ║ 
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                        _...._                                                                                        ║
-║                                    _.dMMMMMMMMMb.                                                                                   ║
-║                                ..dMMMMMMMMMMMMMMMb                                                                                  ║
-║                              .dMMMMMMMMMMMMMMMMMMMMb.                                                                               ║
-║                             dMMMMMMMMMMMMMMMMMMMMMMMM.                                                                               ║
-║                            MMMMMMMP'`YMMMMMMMMMMMMMMMb                                                                               ║
-║                            MMMMMMP    MMMMMMMMMMMMMMMM                                                                              ║
-║                           dMMMMMP     `MMMMMMMMMMMMMMMb                                                                              ║
-║                           MMMMMM~=,,_  `MMMMMMMMMMMMMMM                                                                             ║
-║                           MMMMMMP,6;    `MMMMMMMMMMMMMMb                                                                            ║
-║                           MMMMMM|         ```^YMMMMMMMMM                                                                            ║
-║                           MMMMMM:   -~        / |MMMMMMMb                                                                           ║
-║                           `MMMMM/\  _.._     /  |MMMMMMMM                                                                           ║
-║                             `YMM\_`.`~--'    \__/MMMMMMMM!                                                                          ║
-║                               MMMMMM\       _.' _sS}MMMMMb                                                                          ║
-║                               `YMMMMMb.__.sP.---.  MMMMMMM                                                                          ║
-║                                 ``YMMMMMMMP'        \MMMMMb                                                                         ║
-║                                     ``MMMd;          MMMMMM                                                                         ║
-║                                         dP|          :MMMMMb.                                                                       ║
-║                                     _.s88P'           :MMMMMM                                                                      ║
-║                                 _.s888888P',          |MMMMM}                                                                      ║
-║                                ---------------------------------------                                                              ║
-║                                |    Hey! Come to hire someone, huh?    |                                                           ║
-║                                |       Is the pay sweet enough?        |                                                            ║
-║                                |  I'll pick some capable ones for you  |                                                            ║
-║                                ---------------------------------------                                                               ║
+║                               This is the recruiting office. You can use crops to recruit new members.                               ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
+║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
