@@ -46,7 +46,7 @@ void ShopCounter::Process() {
 
     if (GetValidInput()) {
         m_player.upgradeWeapon();
-
+        m_player.assignWorkers(0, 0, 0, 1, 0);
         UI::WaitForEnter();
         // 之后修改为打字机效果
         UI::ShowInterface("shop3.txt");

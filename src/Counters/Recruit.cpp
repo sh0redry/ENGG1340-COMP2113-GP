@@ -37,6 +37,7 @@ void RecruitCounter::Process() {
         int totalCost = BASE_COST + COST_PER_MEMBER * recruits;
         m_player.addCrop(-totalCost);
         m_player.addPeople(recruits);
+        m_player.assignWorkers(0, 0, 1, 0, 0);
         
         UI::WaitForEnter();
         // 之后修改为打字机效果
