@@ -22,16 +22,19 @@ void FarmingCounter::Process() {
     const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).cropYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
 
-    m_player.addCrop(yield * workers);
-    m_player.assignWorkers(workers, 0, 0, 0, 0);
-    
-    UI::WaitForEnter();
-    // 之后修改为打字机效果
-    UI::ShowInterface("farming3.txt");
-    UI::WaitForEnter();
+    if (workers > 0) {
+        m_player.addCrop(yield * workers);
+        m_player.assignWorkers(workers, 0, 0, 0, 0);
+        
+        UI::WaitForEnter();
+        // 之后修改为打字机效果
+        UI::ShowInterface("farming3.txt");
+        UI::WaitForEnter();
 
-    // 之后修改为打字机效果
-    UI::ShowInterface("farming4.txt");
+        // 之后修改为打字机效果
+        UI::ShowInterface("farming4.txt");
+    }
+    
     UI::WaitForEnter("Press enter to return to home...");
     
     // 清除h键回调

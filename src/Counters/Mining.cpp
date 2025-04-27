@@ -22,16 +22,19 @@ void MiningCounter::Process() {
     const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).goldYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
 
-    m_player.addGold(yield * workers);
-    m_player.assignWorkers(0, workers, 0, 0, 0);
-    
-    UI::WaitForEnter();
-    // 之后修改为打字机效果
-    UI::ShowInterface("mining3.txt");
-    UI::WaitForEnter();
+    if (workers > 0) {
+        m_player.addGold(yield * workers);
+        m_player.assignWorkers(0, workers, 0, 0, 0);
+        
+        UI::WaitForEnter();
+        // 之后修改为打字机效果
+        UI::ShowInterface("mining3.txt");
+        UI::WaitForEnter();
 
-    // 之后修改为打字机效果
-    UI::ShowInterface("mining4.txt");
+        // 之后修改为打字机效果
+        UI::ShowInterface("mining4.txt");
+    }
+
     UI::WaitForEnter("Press enter to return to home...");
     
     // 清除h键回调
