@@ -112,7 +112,7 @@ void wait_any_key() {
 
 int main() {
     //set path way
-    string target_dir = "/home/d003/h3628967/GP/Ani/Title"; 
+    string target_dir = "anim/Title"; 
     //print game name
     print_Ani(target_dir, 30);
 
@@ -120,7 +120,7 @@ int main() {
     enable_raw_mode();
     wait_any_key();
 
-    target_dir = "/home/d003/h3628967/GP/Ani/Loading";
+    target_dir = "anim/Loading";
     print_Ani(target_dir, 80);
 
     return 0;

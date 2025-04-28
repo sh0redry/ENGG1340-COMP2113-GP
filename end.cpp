@@ -111,9 +111,9 @@ void wait_any_key() {
 }
 
 int main() {
-    if (false){ //lose
+    if (true){ //lose
       //set path way
-      string target_dir = "/home/d003/h3628967/GP/Ani/Lose1";
+      string target_dir = "anim/Lose1";
       //print 'lose'
       print_Ani(target_dir, 50);
 
@@ -121,11 +121,11 @@ int main() {
       enable_raw_mode();
       wait_any_key();
 
-      target_dir = "/home/d003/h3628967/GP/Ani/Lose2";
+      target_dir = "anim/Lose2";
       print_Ani(target_dir, 100);
     }
     else{ 
-      string target_dir = "/home/d003/h3628967/GP/Ani/Win1";
+      string target_dir = "anim/Win1";
       print_Ani(target_dir, 80);
 
       TerminalSettings _;
@@ -133,7 +133,7 @@ int main() {
       wait_any_key();
       
 
-      target_dir = "/home/d003/h3628967/GP/Ani/Win3";
+      target_dir = "anim/Win3";
       print_Ani(target_dir, 80);
     }
 
