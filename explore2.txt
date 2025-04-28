@@ -18,7 +18,7 @@
 ║                          ║                                                                                  ║                        ║
 ║                          ║          Type in the number of people you want to assign to this land!           ║                        ║
 ║                          ║                          Think twice before you decide!                          ║                        ║
-║			   ║	           The rewards are tempting, but you could die for it.                ║                        ║
+║			               ║	           The rewards are tempting, but you could die for it.                ║                        ║
 ║                          ║                                                                                  ║                        ║
 ║                          ╚══════════════════════════════════════════════════════════════════════════════════╝                        ║
 ║                                                                                                                                      ║
