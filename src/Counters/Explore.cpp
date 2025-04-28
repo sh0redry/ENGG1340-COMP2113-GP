@@ -23,6 +23,7 @@ void ExploreCounter::Process() {
     int peopleSent = getValidPeopleInput(m_player.getAvailablePeople());
     
     if (peopleSent > 0) {
+        m_player.assignWorkers(0, 0, 0, 0, peopleSent);
         ExploreResult result = executeExplore(peopleSent);
         int value = 0;
         applyResult(result, peopleSent, value);
@@ -53,21 +54,22 @@ ExploreCounter::ExploreResult ExploreCounter::executeExplore(int peopleSent) {
         return ExploreResult::PEOPLE_LOST;
     }
 
-    // If not lost, evenly distribute remaining probability among three outcomes
-    float remainingProbability = (1.0f - lossProbability) / 3.0f;
+    // If not lost, distribute probability according to 2:2:2:1 ratio
+    float remainingProbability = (1.0f - lossProbability) / 7.0f; // Total parts = 2+2+2+1 = 7
     float randomValue = Random::RangeReal(0.0f, 1.0f);
 
-    if (randomValue < remainingProbability) {
+    if (randomValue < 2 * remainingProbability) {
         return ExploreResult::GOLD_FOUND;
-    } else if (randomValue < 2 * remainingProbability) {
+    } else if (randomValue < 4 * remainingProbability) {
         return ExploreResult::CROP_FOUND;
-    } else {
+    } else if (randomValue < 6 * remainingProbability) {
         return ExploreResult::PEOPLE_JOINED;
+    } else {
+        return ExploreResult::NOTHING_FOUND;
     }
 }
 
 void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& value) {
-
     switch (result) {
         case ExploreResult::GOLD_FOUND:
             value = Random::Range(MIN_GOLD_REWARD, MAX_GOLD_REWARD) * peopleSent;
@@ -80,13 +82,17 @@ void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& valu
             break;
             
         case ExploreResult::PEOPLE_JOINED:
-            value = Random::Range(MIN_PEOPLE_REWARD, MAX_PEOPLE_REWARD) * peopleSent;
+            value = Random::Range(MIN_PEOPLE_REWARD, MAX_PEOPLE_REWARD);
             m_player.addPeople(value);
             break;
             
         case ExploreResult::PEOPLE_LOST:
             value = peopleSent; // 损失全部探索成员
             m_player.addPeople(-value);
+            break;
+            
+        case ExploreResult::NOTHING_FOUND:
+            value = 0;
             break;
             
         default: break;
@@ -108,6 +114,9 @@ std::string ExploreCounter::showResultMessage(ExploreResult result, int value) {
             break;
         case ExploreResult::PEOPLE_LOST:
             message = "Zombies Encountered! Members Lost: " + std::to_string(value);
+            break;
+        case ExploreResult::NOTHING_FOUND:
+            message = "Exploration Completed. Nothing was found.";
             break;
         default:
             break;
