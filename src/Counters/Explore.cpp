@@ -1,7 +1,7 @@
 #include "Explore.h"
 #include "../UI/Terminal.h"
 #include "../UI/UI.h"
-#include "../Random.h"
+#include "../Utils/Random.h"
 #include "../Core/Difficulty.h"
 #include <iostream>
 #include <string>

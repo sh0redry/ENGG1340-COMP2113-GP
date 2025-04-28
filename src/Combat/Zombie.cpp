@@ -1,5 +1,5 @@
 #include "Zombie.h"
-#include "../Random.h"
+#include "../Utils/Random.h"
 
 Zombie::Zombie(int x, int y, int health) : x(x), y(y), health(health) {}
 
