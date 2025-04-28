@@ -41,10 +41,3 @@ private:
     // UI相关
     int getValidPeopleInput(int max);
 };
-
-// 难度配置表实现
-inline const std::unordered_map<int, float> ExploreCounter::DIFFICULTY_CONFIGS = {
-    {1, 0.05f},  // EASY: 5% loss, 3x resources
-    {2, 0.10f},  // MEDIUM: 10% loss, 2x resources
-    {3, 0.20f}   // HARD: 20% loss, 1x resources
-};

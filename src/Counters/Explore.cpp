@@ -46,7 +46,7 @@ void ExploreCounter::Process() {
 // --- 私有方法实现 ---
 ExploreCounter::ExploreResult ExploreCounter::executeExplore(int peopleSent) {
     // Get difficulty configuration
-    const float lossProbability = DIFFICULTY_CONFIGS.at(m_player.getDifficulty());
+    const float lossProbability = Difficulty::GetConfig(m_player.getStringDifficulty()).exploreRisk;
 
     // Check if people are lost
     if (Random::Chance(lossProbability)) {
