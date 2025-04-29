@@ -44,10 +44,12 @@ bool Combat::run() {
         Animation::PlaySequence("anim/Win1", 80);
         UI::WaitForEnter("Press Enter to return to home...");
         Animation::PlaySequence("anim/Win2", 80);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     } else {
         Animation::PlaySequence("anim/Lose1", 50);
         UI::WaitForEnter("Press Enter to quit...");
         Animation::PlaySequence("anim/Lose2", 100);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     
     return victory;
