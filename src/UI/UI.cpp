@@ -129,12 +129,12 @@ void UI::ShowDayTransition(std::string dayName, int currentWeek) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     Animation::TypewriterInBox("Today is .....", 100, 17);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 
     std::string filename = dayName + std::to_string(currentWeek) + ".txt";
     ShowInterface("ui/Days/" + filename);
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     WaitForEnter("Press Enter to continue...");
 }
 
