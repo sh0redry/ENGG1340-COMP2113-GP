@@ -15,7 +15,7 @@ void FarmingCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
     
-    UI::ShowInterface("farming1.txt");
+    UI::ShowInterface("ui/Counters/Farming/farming1.txt");
     Animation::TypewriterInBox("Welcome to my farm, guys.", 50, 26);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
@@ -35,13 +35,13 @@ void FarmingCounter::Process() {
         
         UI::WaitForEnter();
         // 之后修改为打字机效果
-        UI::ShowInterface("farming3.txt");
+        UI::ShowInterface("ui/Counters/Farming/farming3.txt");
         Animation::TypewriterInBox("Your guys are working hard to harvest more crops!", 50, 31);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
         // 之后修改为打字机效果
-        UI::ShowInterface("farming2.txt");
+        UI::ShowInterface("ui/Counters/Farming/farming2.txt");
         UI::DisplayCenterText("You got " + std::to_string(yield * workers) + " crops!", 25);
         UI::DisplayCenterText("You can use the crops to recruit new members and grow your team!", 27);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -55,7 +55,7 @@ void FarmingCounter::Process() {
 
 int FarmingCounter::GetValidInput(int max) {
     while (true) {
-        UI::ShowInterface("farming2.txt");
+        UI::ShowInterface("ui/Counters/Farming/farming2.txt");
         UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
         UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
         UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information", 31);
