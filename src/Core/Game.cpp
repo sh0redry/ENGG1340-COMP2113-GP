@@ -42,7 +42,7 @@ void Game::initNewGame() {
         m_difficulty              // 传递难度参数
     );
     m_weekCycle = WeekCycle();
-    Animation::PlaySequence("anim/Loading", 30);
+    Animation::PlaySequence("anim/Loading", 70);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
@@ -52,7 +52,7 @@ void Game::processMainMenu() {
     std::cout << "Please adjust your terminal size to make the box fit the screen" << std::endl;
     UI::WaitForEnter("Press Enter to start...");
 
-    Animation::PlaySequence("anim/Title", 30);
+    Animation::PlaySequence("anim/Title", 50);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int selectedOption = 0; // 0表示Play Game，1表示Quit
@@ -66,7 +66,7 @@ void Game::processMainMenu() {
             case 0: UI::ShowInterface("ui/Menu/menu_play.txt"); break;
             case 1: UI::ShowInterface("ui/Menu/menu_quit.txt"); break;
         }
-                
+        
         char input = Terminal::GetInstance().GetKeyPress();
         
         switch (input) {
