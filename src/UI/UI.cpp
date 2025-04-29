@@ -117,7 +117,15 @@ void UI::WaitForEnter(const std::string& message) {
     
     MoveCursorInBox(x, y);
     std::cout << message;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    
+    // Clear any existing input in the buffer
+    std::cin.clear();
+    std::cin.sync();
+    
+    // Wait for a new Enter key press
+    while (std::cin.get() != '\n') {
+        // Keep waiting until Enter is pressed
+    }
 }
 
 void UI::ShowDayTransition(std::string dayName, int currentWeek) {
