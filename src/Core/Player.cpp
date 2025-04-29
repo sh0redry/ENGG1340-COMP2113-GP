@@ -65,6 +65,7 @@ int Player::getDifficulty() const {
     if (m_difficulty == "EASY") return 1;
     if (m_difficulty == "MEDIUM") return 2;
     if (m_difficulty == "HARD") return 3;
+    return 2; // 默认返回 EASY 难度
 }
 std::string Player::getStringDifficulty() const { return m_difficulty; }
 int Player::getPeople() const { return m_people; }

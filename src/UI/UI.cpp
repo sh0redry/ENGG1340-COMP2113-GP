@@ -33,7 +33,7 @@ size_t getVisualWidth(const std::string& str) {
 }
 
 std::string UI::LoadUI(const std::string& filename) {
-    std::ifstream file("assets/" + filename);
+    std::ifstream file(filename);
     if (!file.is_open()) {
         throw std::runtime_error("无法打开UI文件: " + filename);
     }
@@ -99,6 +99,7 @@ void UI::DisplayUIFromFile(const std::string& filename) {
     DisplayUI(content);
 }
 
+// 输入完整路径
 void UI::ShowInterface(const std::string& filename) {
     Terminal::GetInstance().Clear();
     DisplayUIFromFile(filename);
@@ -106,8 +107,10 @@ void UI::ShowInterface(const std::string& filename) {
 
 void UI::WaitForEnter(const std::string& message) {
     // Calculate position for bottom right corner of the box
-    int x = BOX_WIDTH - message.length() - 2;  // -2 for padding
-    int y = BOX_HEIGHT - 2;  // -2 for padding from bottom
+    // 从边框内侧开始计算，所以x从1开始
+    // 考虑双线边框，所以需要+2
+    int x = BOX_WIDTH - message.length() - 3;  // -3 for padding (2 for border, 1 for spacing)
+    int y = BOX_HEIGHT - 4;  // -3 for padding (2 for border, 1 for spacing)
     
     MoveCursorInBox(x, y);
     std::cout << message;
@@ -178,9 +181,10 @@ void UI::MoveCursorInBox(int x, int y) {
     if (vPadding < 0) vPadding = 0;
     
     // 计算实际的光标位置
-    // 注意：框的边框占用了第一行和第一列，所以需要+1
-    int actualX = hPadding + x + 1;
-    int actualY = vPadding + y + 1;
+    // 注意：双线边框占用了第一行和第一列，所以需要+1
+    // 由于是双线边框，内部内容区域从(2,2)开始
+    int actualX = hPadding + x + 2;  // 从2开始而不是1
+    int actualY = vPadding + y + 2;  // 从2开始而不是1
     
     // 移动光标
     terminal.MoveCursor(actualX, actualY);

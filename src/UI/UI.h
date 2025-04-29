@@ -38,8 +38,8 @@ private:
     static void DisplayUIFromFile(const std::string& filename);
 
     // 框的尺寸常量
-    static constexpr int BOX_WIDTH = 120;  // 从home.txt中获取的框宽度
-    static constexpr int BOX_HEIGHT = 40;  // 从home.txt中获取的框高度
+    static constexpr int BOX_WIDTH = 122;  // 从empty.txt中获取的框宽度 (120个═ + 2个边框字符)
+    static constexpr int BOX_HEIGHT = 40;  // 从empty.txt中获取的框高度
 };
 
 #endif // UI_H 
