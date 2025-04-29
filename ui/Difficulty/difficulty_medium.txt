@@ -21,18 +21,18 @@
 ║                                                    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝   ╚═╝                     ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                              ##### Select Your Difficulty #####                                                      ║
+║                                                 ##### Select Your Difficulty #####                                                   ║
 ║                                                                                                                                      ║
-║                                                              EASY                                                                    ║
-║                                                        **** MEDIUM ****                                                              ║
-║                                                              HARD                                                                    ║
+║                                                                                                                                      ║
+║                                                               EASY                                                                   ║
+║                                                         **** MEDIUM ****                                                             ║
+║                                                               HARD                                                                   ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                    [w / s] to move up / down                                                         ║
 ║                                                        [Enter] to select                                                             ║
-║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
