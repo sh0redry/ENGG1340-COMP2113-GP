@@ -6,6 +6,9 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include "../Core/WeekCycle.h"
+#include <thread>
+#include <chrono>
 
 // 计算字符串的视觉宽度（考虑UTF-8字符）
 size_t getVisualWidth(const std::string& str) {
@@ -110,28 +113,31 @@ void UI::WaitForEnter(const std::string& message) {
     // 从边框内侧开始计算，所以x从1开始
     // 考虑双线边框，所以需要+2
     int x = BOX_WIDTH - message.length() - 3;  // -3 for padding (2 for border, 1 for spacing)
-    int y = BOX_HEIGHT - 4;  // -3 for padding (2 for border, 1 for spacing)
+    int y = BOX_HEIGHT - 5;  // -3 for padding (2 for border, 1 for spacing)
     
     MoveCursorInBox(x, y);
     std::cout << message;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void UI::ShowDayTransition(int day) {
-    Terminal::GetInstance().Clear();
-    DisplayUIFromFile("day_transition.txt");
-    Terminal::GetInstance().MoveCursor(15, 5);
-    std::cout << "第 " << day << " 天开始";
-    Animation::ProgressBar(2.0f);
+void UI::ShowDayTransition(std::string dayName, int currentWeek) {
+    ShowInterface("ui/empty.txt");
+    Animation::TypewriterInBox("Congratulations! You survived one more day!", 100, 13);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    Animation::TypewriterInBox("Now, let's start a new day!", 100, 15);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    Animation::TypewriterInBox("Today is .....", 100, 17);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    std::string filename = dayName + std::to_string(currentWeek) + ".txt";
+    ShowInterface("ui/Days/" + filename);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    WaitForEnter("Press Enter to continue...");
 }
 
-void UI::DrawStatusBar(const Player& player) {
-    Terminal::GetInstance().MoveCursor(1, 1);
-    std::cout << "人数: " << player.getPeople() 
-              << " | 食物: " << player.getCrop()
-              << " | 金币: " << player.getGold()
-              << " | 武器: Lv." << player.getWeaponLevel();
-}
 
 UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
     auto& terminal = Terminal::GetInstance();
@@ -188,4 +194,19 @@ void UI::MoveCursorInBox(int x, int y) {
     
     // 移动光标
     terminal.MoveCursor(actualX, actualY);
+}
+
+void UI::MoveCursorToCenter(const std::string& text, int lineNumber) {
+    // Calculate the width of the box (excluding borders)
+    int boxContentWidth = BOX_WIDTH - 4;  // -4 for borders (2 on each side)
+    
+    // Calculate horizontal padding to center the text
+    int hPadding = (boxContentWidth - getVisualWidth(text)) / 2;
+    
+    // Calculate the vertical position
+    // lineNumber is 1-based, and we need to account for the top border
+    int y = lineNumber + 1;  // +1 to account for the top border
+    
+    // Move cursor to the calculated position
+    MoveCursorInBox(hPadding, y);
 } 
