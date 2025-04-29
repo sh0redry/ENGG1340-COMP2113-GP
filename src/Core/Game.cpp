@@ -42,11 +42,18 @@ void Game::initNewGame() {
         m_difficulty              // 传递难度参数
     );
     m_weekCycle = WeekCycle();
-    Animation::ProgressBar(2.0f);
+    Animation::PlaySequence("anim/Loading", 30);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 void Game::processMainMenu() {
+    UI::ShowInterface("ui/empty.txt");
+    UI::MoveCursorToCenter("Please adjust your terminal size to make the box fit the screen", 18);
+    std::cout << "Please adjust your terminal size to make the box fit the screen" << std::endl;
+    UI::WaitForEnter("Press Enter to start...");
+
     Animation::PlaySequence("anim/Title", 30);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int selectedOption = 0; // 0表示Play Game，1表示Quit
     bool selectionMade = false;
@@ -56,8 +63,8 @@ void Game::processMainMenu() {
         
         // 根据当前选择显示对应的界面
         switch (selectedOption) {
-            case 0: UI::ShowInterface("menu_play.txt"); break;
-            case 1: UI::ShowInterface("menu_quit.txt"); break;
+            case 0: UI::ShowInterface("ui/Menu/menu_play.txt"); break;
+            case 1: UI::ShowInterface("ui/Menu/menu_quit.txt"); break;
         }
                 
         char input = Terminal::GetInstance().GetKeyPress();
@@ -93,9 +100,9 @@ void Game::processDifficultySelect() {
         
         // 根据当前选择显示对应的界面
         switch (selectedOption) {
-            case 0: UI::ShowInterface("difficulty_easy.txt"); break;
-            case 1: UI::ShowInterface("difficulty_medium.txt"); break;
-            case 2: UI::ShowInterface("difficulty_hard.txt"); break;
+            case 0: UI::ShowInterface("ui/Difficulty/difficulty_easy.txt"); break;
+            case 1: UI::ShowInterface("ui/Difficulty/difficulty_medium.txt"); break;
+            case 2: UI::ShowInterface("ui/Difficulty/difficulty_hard.txt"); break;
         }
                 
         char input = Terminal::GetInstance().GetKeyPress();
@@ -126,7 +133,7 @@ void Game::processDifficultySelect() {
 }
 
 void Game::processDay() {
-    // 对第一天需进行特殊处理
+    // 对第一天需进行特殊处理（增加故事情节）
     UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
 
     // 每日开始重置
@@ -166,11 +173,11 @@ void Game::handleCounterAction() {
         
         // 根据当前选择显示对应的界面
         switch (selectedOption) {
-            case 0: UI::ShowInterface("home_mining.txt"); break;
-            case 1: UI::ShowInterface("home_farming.txt"); break;
-            case 2: UI::ShowInterface("home_shop.txt"); break;
-            case 3: UI::ShowInterface("home_explore.txt"); break;
-            case 5: UI::ShowInterface("home_recruit.txt"); break;
+            case 0: UI::ShowInterface("ui/Home/home_mining.txt"); break;
+            case 1: UI::ShowInterface("ui/Home/home_farming.txt"); break;
+            case 2: UI::ShowInterface("ui/Home/home_shop.txt"); break;
+            case 3: UI::ShowInterface("ui/Home/home_explore.txt"); break;
+            case 5: UI::ShowInterface("ui/Home/home_recruit.txt"); break;
         }
                 
         char input = Terminal::GetInstance().GetKeyPress();
@@ -195,7 +202,7 @@ void Game::handleCounterAction() {
             case 'D':
                 if (selectedOption < 2) selectedOption++; // 第一行正常右移
                 else if (selectedOption == 3) selectedOption = 5; // 从3直接到5
-                else if (selectedOption != 5) selectedOption++; // 其他情况正常右移，但5不能右移
+                else if (selectedOption != 5 && selectedOption != 2) selectedOption++; // 其他情况正常右移，但5和2不能右移
                 break;
             case '\n': // Enter键
                 selectionMade = true;
