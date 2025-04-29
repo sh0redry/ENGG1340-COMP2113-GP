@@ -23,7 +23,7 @@ bool Combat::run() {
     terminal.HideCursor();
     
     // 初始绘制
-    UI::ShowInterface("empty.txt");
+    UI::ShowInterface("ui/empty.txt");
     draw();
     
     while (HP > 0 && !isTimeUp()) {
@@ -40,9 +40,15 @@ bool Combat::run() {
     // 处理战斗结果
     bool victory = HP > 0;
     
-    // 显示战斗结果（需要修改）
-    UI::ShowInterface(victory ? "victory.txt" : "defeat.txt");
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    if (victory) {
+        Animation::PlaySequence("anim/Win1", 80);
+        UI::WaitForEnter("Press Enter to return to home...");
+        Animation::PlaySequence("anim/Win2", 80);
+    } else {
+        Animation::PlaySequence("anim/Lose1", 50);
+        UI::WaitForEnter("Press Enter to quit...");
+        Animation::PlaySequence("anim/Lose2", 100);
+    }
     
     return victory;
 }
@@ -197,7 +203,7 @@ void Combat::draw() const {
         std::cout << std::string(WIDTH, ' ');
     }
     
-    std::string statusLine = "=== GAME STATUS ===";
+    std::string statusLine = "=== YOUR HOME ===";
     terminal.MoveCursor(gameLeft + (WIDTH - statusLine.length()) / 2, statusY);
     std::cout << statusLine;
     
@@ -221,6 +227,10 @@ void Combat::draw() const {
     terminal.MoveCursor(gameLeft + (WIDTH - enemyLine.length()) / 2, statusY + 4);
     std::cout << enemyLine;
     
+    std::string hintLine = "Press A/D to move left/right, Space to shoot, Z/C to move faster.";
+    terminal.MoveCursor(gameLeft + (WIDTH - hintLine.length()) / 2, statusY + 5);
+    std::cout << hintLine;
+
     // 强制刷新输出
     std::cout.flush();
 }

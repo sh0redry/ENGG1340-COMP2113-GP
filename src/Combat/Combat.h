@@ -3,6 +3,7 @@
 #include "Zombie.h"
 #include "../UI/Terminal.h"
 #include "../UI/UI.h"
+#include "../UI/Animation.h"
 #include "../Core/Player.h"
 #include "../Core/WeekCycle.h"
 #include <vector>
