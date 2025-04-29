@@ -32,6 +32,11 @@ void Animation::Typewriter(const std::string& text, int delayMs) {
     }
 }
 
+void Animation::TypewriterInBox(const std::string& text, int delayMs, int lineNumber) {
+    UI::MoveCursorToCenter(text, lineNumber);
+    Typewriter(text, delayMs);
+}
+
 void Animation::PulseText(const std::string& text, int x, int y) {
     Terminal::GetInstance().MoveCursor(x, y);
     for (int i = 0; i < 3; ++i) {

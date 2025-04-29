@@ -14,7 +14,7 @@ public:
     // 文字动画
     static void Typewriter(const std::string& text, int delayMs = 50);
     static void PulseText(const std::string& text, int x, int y);
-
+    static void TypewriterInBox(const std::string& text, int delayMs, int lineNumber);
     // 播放动画序列
     static void PlaySequence(const std::string& dirPath, int frameDelayMs);
 
