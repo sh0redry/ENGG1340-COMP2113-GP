@@ -142,7 +142,7 @@ void Game::processDay() {
     // 推进到下一天
     m_weekCycle.advanceDay();
     
-    // 检查星期四战斗
+    // 检查明天是否是星期四
     if (m_weekCycle.isThursday()) {
         m_state = GameState::COMBAT;
     }
@@ -229,19 +229,28 @@ void Game::handleCounterAction() {
 }
 
 void Game::triggerCombat() {
-    // 待修改
+    Animation::PlaySequence("anim/Protect", 150);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    Animation::PlaySequence("anim/Fight", 150);
+    UI::WaitForEnter("Press Enter to start fight...");
+
     Combat combat(*m_player, m_weekCycle);
     bool victory = combat.run();
-    m_state = victory ? GameState::PLAYING : GameState::GAME_OVER;
+    if (victory) {
+        m_weekCycle.advanceDay();  // 战斗胜利后推进到下一天
+        m_state = GameState::PLAYING;
+    } else {
+        m_state = GameState::GAME_OVER;
+    }
 }
 
 void Game::showEndScreen(bool victory) {
     if (victory) {
         Animation::PlaySequence("anim/Win1", 80);
         UI::WaitForEnter("Press Enter to quit...");
-        Animation::PlaySequence("anim/Win2", 80);
+        Animation::PlaySequence("anim/Win2", 100);
     } else {
-        Animation::PlaySequence("anim/Lose1", 50);
+        Animation::PlaySequence("anim/Lose1", 80);
         UI::WaitForEnter("Press Enter to quit...");
         Animation::PlaySequence("anim/Lose2", 100);
     }
