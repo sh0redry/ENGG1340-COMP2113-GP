@@ -126,10 +126,9 @@ void Game::processDifficultySelect() {
 }
 
 void Game::processDay() {
-    // 显示天数过渡（待修改）
-    UI::ShowDayTransition(m_weekCycle.getCurrentDay());
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    
+    // 对第一天需进行特殊处理
+    UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
+
     // 每日开始重置
     m_player->resetDailyWorkers();
     m_player->consumeDailyFood();
@@ -229,9 +228,22 @@ void Game::handleCounterAction() {
 }
 
 void Game::triggerCombat() {
-    Animation::PlaySequence("anim/Protect", 150);
+    UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
+
+    UI::ShowInterface("ui/empty.txt");
+    Animation::TypewriterInBox("You are under attack by a horde of zombies! ! !", 60, 13);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    Animation::TypewriterInBox("You must defend your home! ! !", 60, 15);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    Animation::TypewriterInBox("The horde is approaching ......", 150, 17);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    UI::WaitForEnter("Press Enter to continue...");
+
+    Animation::PlaySequence("anim/Protect", 100);
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    Animation::PlaySequence("anim/Fight", 150);
+    Animation::PlaySequence("anim/Fight", 180);
     UI::WaitForEnter("Press Enter to start fight...");
 
     Combat combat(*m_player, m_weekCycle);
