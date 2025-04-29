@@ -21,10 +21,10 @@
 ║                                                    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝   ╚═╝                     ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                              ***** Select Your Difficulty *****                                                      ║
+║                                              ##### Select Your Difficulty #####                                                      ║
 ║                                                                                                                                      ║
 ║                                                              EASY                                                                    ║
-║                                                      ✿ ❀ ✿ MEDIUM ✿ ❀ ✿                                                           ║
+║                                                        **** MEDIUM ****                                                              ║
 ║                                                              HARD                                                                    ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║

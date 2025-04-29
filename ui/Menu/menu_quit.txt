@@ -22,8 +22,9 @@
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                                             play game                                                                ║
-║                                                        ✿ ❀ ✿ quit ✿ ❀ ✿                                                           ║
+║                                                             PLAY GAME                                                                ║
+║                                                                                                                                      ║
+║                                                           **** QUIT ****                                                             ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
@@ -31,7 +32,6 @@
 ║                                                                                                                                      ║
 ║                                                    [w / s] to move up / down                                                         ║
 ║                                                        [Enter] to select                                                             ║
-║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║

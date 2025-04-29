@@ -21,9 +21,9 @@
 ║                                                    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝   ╚═╝                     ║
 ║                                                                                                                                      ║
 ║                                                                                                                                      ║
-║                                              ***** Select Your Difficulty *****                                                      ║
+║                                              ##### Select Your Difficulty #####                                                      ║
 ║                                                                                                                                      ║
-║                                                       ✿ ❀ ✿ EASY ✿ ❀ ✿                                                            ║
+║                                                         **** EASY ****                                                               ║
 ║                                                             MEDIUM                                                                   ║
 ║                                                              HARD                                                                    ║
 ║                                                                                                                                      ║
