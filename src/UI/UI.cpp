@@ -115,17 +115,25 @@ void UI::WaitForEnter(const std::string& message) {
     int x = BOX_WIDTH - message.length() - 3;  // -3 for padding (2 for border, 1 for spacing)
     int y = BOX_HEIGHT - 5;  // -3 for padding (2 for border, 1 for spacing)
     
+    // Display the message
     MoveCursorInBox(x, y);
     std::cout << message;
     
-    // Clear any existing input in the buffer
+    // Completely clear the input buffer and ignore any previous input
     std::cin.clear();
-    std::cin.sync();
+    while (std::cin.rdbuf()->in_avail()) {
+        std::cin.ignore();
+    }
     
     // Wait for a new Enter key press
-    while (std::cin.get() != '\n') {
-        // Keep waiting until Enter is pressed
-    }
+    char c;
+    do {
+        c = std::cin.get();
+        // If we get any character other than Enter, ignore it
+        if (c != '\n') {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    } while (c != '\n');
 }
 
 void UI::ShowDayTransition(std::string dayName, int currentWeek) {
@@ -218,3 +226,8 @@ void UI::MoveCursorToCenter(const std::string& text, int lineNumber) {
     // Move cursor to the calculated position
     MoveCursorInBox(hPadding, y);
 } 
+
+void UI::DisplayCenterText(const std::string& text, int lineNumber) {
+    MoveCursorToCenter(text, lineNumber);
+    std::cout << text;
+}
