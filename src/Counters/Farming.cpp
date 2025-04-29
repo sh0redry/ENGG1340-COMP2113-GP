@@ -58,7 +58,7 @@ int FarmingCounter::GetValidInput(int max) {
         UI::ShowInterface("ui/Counters/Farming/farming2.txt");
         UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
         UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
-        UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information", 31);
+        UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
         UI::DisplayCenterText("Assign farmers (0-" + std::to_string(max) + "): ", 27);
     
         int input = Terminal::GetInstance().GetInteger();
