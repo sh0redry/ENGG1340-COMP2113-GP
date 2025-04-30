@@ -2,8 +2,8 @@
 #include "Difficulty.h"
 
 const std::map<int, int> Player::WEAPON_UPGRADE_COST = {
-    {1, 100}, {2, 150}, {3, 200}, {4, 250}, {5, 300},
-    {6, 350}, {7, 400}, {8, 450}, {9, 500}, {10, 600}
+    {1, 30}, {2, 30}, {3, 30}, {4, 40}, {5, 40},
+    {6, 40}, {7, 50}, {8, 50}, {9, 50}
 };
 
 Player::Player(int initialPeople, int initialCrop, int initialGold, const std::string& difficulty) 
