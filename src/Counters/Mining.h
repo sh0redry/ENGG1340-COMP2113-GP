@@ -1,10 +1,24 @@
 #pragma once
 #include "CounterBase.h"
+#include "../Core/WeekCycle.h"
 
 class MiningCounter : public CounterBase {
+private:
+    // 内部方法
+    int GetValidInput(int max);
+    
+    // 当前MiningCounter实例的指针
+    static MiningCounter* currentInstance;
+    
+    // 显示玩家信息相关方法
+    void ShowPlayerInfo();
+    static void ShowPlayerInfoCallback();
+
+    // 周循环引用
+    WeekCycle& m_weekCycle;
+
 public:
-    explicit MiningCounter(Player& player);
+    explicit MiningCounter(Player& player, WeekCycle& weekCycle);
     void OnEnter() override;
     void Process() override;
-    int GetValidInput(int max);
 };

@@ -3,17 +3,25 @@
 #include "../UI/Terminal.h"
 #include "../Core/Player.h"
 #include "../UI/Animation.h"
+#include "../Core/Difficulty.h"
+#include "../Utils/SpecialFunctions.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "../Core/Difficulty.h"
 
-MiningCounter::MiningCounter(Player& player) 
-    : CounterBase(player, "Mining") {}
+// 初始化静态成员
+MiningCounter* MiningCounter::currentInstance = nullptr;
+
+MiningCounter::MiningCounter(Player& player, WeekCycle& weekCycle) 
+    : CounterBase(player, "Mining"), m_weekCycle(weekCycle) {
+    currentInstance = this;
+}
 
 void MiningCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
+    // 设置l键回调
+    setupLKeyCallback(ShowPlayerInfoCallback);
     
     UI::ShowInterface("ui/Counters/Mining/mining1.txt");
     Animation::TypewriterInBox("Oh! My dear owner, ", 50, 23);
@@ -53,6 +61,24 @@ void MiningCounter::Process() {
     
     // 清除h键回调
     clearHKeyCallback();
+    // 清除l键回调
+    clearLKeyCallback();
+}
+
+void MiningCounter::ShowPlayerInfoCallback() {
+    if (currentInstance) {
+        currentInstance->ShowPlayerInfo();
+    }
+}
+
+void MiningCounter::ShowPlayerInfo() {
+    SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Mining/mining2.txt");
+    UI::DisplayCenterText("Here is a mine, the minerals you get from here", 24);
+    UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign miners (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }
 
 int MiningCounter::GetValidInput(int max) {
