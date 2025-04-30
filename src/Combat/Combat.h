@@ -16,18 +16,17 @@ private:
     static const char PLAYER_CHAR = 'A';
     static const char BULLET_CHAR = '|';
     
+    Player& player;
     Weapon weapon;
     ZombieManager zombieManager;
     std::vector<std::pair<int, int>> bullets;
     
     int playerX;
     int playerY;
-    int HP;
     int initialHP;
+    int HP;
     int gameDuration;
     std::chrono::steady_clock::time_point startTime;
-    
-    Player& player;
     
     void processInput();
     void update();

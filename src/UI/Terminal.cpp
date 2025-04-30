@@ -153,7 +153,7 @@ std::string Terminal::GetLine(int maxLength) {
                 lKeyCallback();
             }
         }
-        if (input.length() < maxLength) {
+        if (input.length() < static_cast<size_t>(maxLength)) {
             input += ch;
         }
     }

@@ -74,7 +74,7 @@ void ExploreCounter::Process() {
 }
 
 // --- 私有方法实现 ---
-ExploreCounter::ExploreResult ExploreCounter::executeExplore(int peopleSent) {
+ExploreCounter::ExploreResult ExploreCounter::executeExplore(int _peopleSent) {
     // Get difficulty configuration
     const float lossProbability = Difficulty::GetConfig(m_player.getStringDifficulty()).exploreRisk;
 
