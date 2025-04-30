@@ -7,7 +7,7 @@
 
 int main() {
     // 初始化系统
-    Terminal::GetInstance().HideCursor();
+    // Terminal::GetInstance().HideCursor();
     
     try {
         Game game;
@@ -19,6 +19,6 @@ int main() {
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
     
-    Terminal::GetInstance().ShowCursor();
+    // Terminal::GetInstance().ShowCursor();
     return 0;
 }

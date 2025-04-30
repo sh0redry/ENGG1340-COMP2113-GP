@@ -45,7 +45,6 @@ obj/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 
 # OS generated files
 .DS_Store
