@@ -92,21 +92,23 @@ int Terminal::GetKeyPress() {
 }
 
 char Terminal::GetYN() {
-    char ch = getchar();
-    if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N') {
-        std::cout << ch << std::endl;
-        return ch;
-    } else if (ch == 'q' || ch == 'Q') {
-        if (qKeyCallback) {
-            qKeyCallback();
-        }
-    } else if (ch == 'h' || ch == 'H') {
-        if (hKeyCallback) {
-            hKeyCallback();
-        }
-    } else if (ch == 'w' || ch == 'W') {
-        if (wKeyCallback) {
-            wKeyCallback();
+    char ch;
+    while ((ch = getchar()) != '\n') {
+        if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N') {
+            std::cout << ch << std::endl;
+            return ch;
+        } else if (ch == 'q' || ch == 'Q') {
+            if (qKeyCallback) {
+                qKeyCallback();
+            }
+        } else if (ch == 'h' || ch == 'H') {
+            if (hKeyCallback) {
+                hKeyCallback();
+            }
+        } else if (ch == 'w' || ch == 'W') {
+            if (wKeyCallback) {
+                wKeyCallback();
+            }
         }
     }
     return 0; // 返回0表示无效输入
@@ -162,7 +164,6 @@ int Terminal::GetInteger() {
             result = result * 10 + (ch - '0');
         }
     }
-    std::cout << std::endl;  // 输入结束后换行
     return result;
 }
 
