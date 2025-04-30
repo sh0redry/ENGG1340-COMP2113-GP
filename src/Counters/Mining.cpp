@@ -4,6 +4,8 @@
 #include "../Core/Player.h"
 #include "../UI/Animation.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "../Core/Difficulty.h"
 
 MiningCounter::MiningCounter(Player& player) 
@@ -13,8 +15,15 @@ void MiningCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
     
-    // 之后修改为打字机效果
-    UI::ShowInterface("mining1.txt");
+    UI::ShowInterface("ui/Counters/Mining/mining1.txt");
+    Animation::TypewriterInBox("Oh! My dear owner, ", 50, 23);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("I've been waiting for you here for a long time!", 50, 24);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("The gold mine seems to have brightened up with your arrival.", 50, 25);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("I'll lead the way for you right away.", 50, 26);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     UI::WaitForEnter();
 }
 
@@ -28,14 +37,19 @@ void MiningCounter::Process() {
         
         UI::WaitForEnter();
         // 之后修改为打字机效果
-        UI::ShowInterface("mining3.txt");
+        UI::ShowInterface("ui/Counters/Mining/mining3.txt");
+        Animation::TypewriterInBox("Your guys are working hard to get more golds!", 50, 23);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
         // 之后修改为打字机效果
-        UI::ShowInterface("mining4.txt");
+        UI::ShowInterface("ui/Counters/Mining/mining2.txt");
+        UI::DisplayCenterText("You got " + std::to_string(yield * workers) + " golds!", 24);
+        UI::DisplayCenterText("You can use the golds to upgrade your weapons and defend yourself against the zombies!", 26);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
-    UI::WaitForEnter("Press enter to return to home...");
+    UI::WaitForEnter("Press Enter to return to home...");
     
     // 清除h键回调
     clearHKeyCallback();
@@ -43,19 +57,23 @@ void MiningCounter::Process() {
 
 int MiningCounter::GetValidInput(int max) {
     while (true) {
-        UI::ShowInterface("mining2.txt");
-        Terminal::GetInstance().MoveCursor(18, 33);
-        std::cout << "Assign miners (0-" << max << "): " << std::endl;
+        UI::ShowInterface("ui/Counters/Mining/mining2.txt");
+        UI::DisplayCenterText("Here is a gold mine, and the gold you get from here can be used to upgrade your weapons", 24);
+        UI::DisplayCenterText("to better defend yourself against the zombies.", 25);
+        UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+        UI::DisplayCenterText("Assign miners (0-" + std::to_string(max) + "): ", 27);
     
         int input = Terminal::GetInstance().GetInteger();
-        Terminal::GetInstance().MoveCursor(18, 37);
     
         if (input >= 0 && input <= max) {
-            std::cout << "Successfully assigned " << input << " miners!" << std::endl;
+            UI::DisplayCenterText("Successfully assigned " + std::to_string(input) + " miners!", 28);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             return input;
         }
         else {
-            std::cout << "Invalid input! Must be between 0 and " << max << "!" << std::endl;
+            UI::DisplayCenterText("Invalid input! Must be between 0 and " + std::to_string(max) + "!", 28);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            UI::WaitForEnter("Press Enter to try again...");
         }
     }
 }
