@@ -8,8 +8,8 @@ public:
     void Process() override;
     
 private:
-    static constexpr int BASE_COST = 100;
-    static constexpr int COST_PER_MEMBER = 100;
+    static constexpr int BASE_COST = 0;
+    static constexpr int COST_PER_MEMBER = 30;
     
     int GetValidInput(int max);
     int calculateMaxRecruits() const;

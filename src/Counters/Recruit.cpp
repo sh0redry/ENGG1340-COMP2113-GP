@@ -3,6 +3,9 @@
 #include "../UI/Terminal.h"
 #include "../Core/Player.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include "../UI/Animation.h"
 
 RecruitCounter::RecruitCounter(Player& player) 
     : CounterBase(player, "Recruit") {}
@@ -12,7 +15,13 @@ void RecruitCounter::OnEnter() {
     setupHKeyCallback();
     
     // 之后修改为打字机效果
-    UI::ShowInterface("recruit1.txt");
+    UI::ShowInterface("ui/Counters/Recruit/recruit1.txt");
+    Animation::TypewriterInBox("Hey! Come to hire someone, huh?", 50, 26);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("Is the pay sweet enough?", 50, 27);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("I'll pick some capable ones for you.", 50, 28);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     UI::WaitForEnter();
 }
 
@@ -20,14 +29,11 @@ void RecruitCounter::Process() {
     int maxPossible = calculateMaxRecruits();
     if (maxPossible <= 0) {
         // to be modified
-        UI::ShowInterface("recruit2_failed.txt");
-        Terminal::GetInstance().MoveCursor(18, 33);
-        std::cout << "No enough food!" << std::endl;
-        Terminal::GetInstance().MoveCursor(18, 34);
-        std::cout << "Minimum required: " << std::to_string(BASE_COST + COST_PER_MEMBER) << " food" << std::endl;
-        Terminal::GetInstance().MoveCursor(18, 35);
-        std::cout << "Current food: " << std::to_string(m_player.getCrop()) << " food" << std::endl;
-        UI::WaitForEnter("Press enter to return to home...");
+        UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
+        UI::DisplayCenterText("No enough crops to recruit new members!", 25);
+        UI::DisplayCenterText("Minimum required: " + std::to_string(BASE_COST + COST_PER_MEMBER) + " crops", 26);
+        UI::DisplayCenterText("Current crops: " + std::to_string(m_player.getCrop()) + " crops", 27);
+        UI::WaitForEnter("Press Enter to return to home...");
         return;
     }
     
@@ -41,18 +47,20 @@ void RecruitCounter::Process() {
         
         UI::WaitForEnter();
         // 之后修改为打字机效果
-        UI::ShowInterface("recruit3.txt");
+        UI::ShowInterface("ui/Counters/Recruit/recruit3.txt");
+        Animation::TypewriterInBox("Your soldiers are ready for fight!", 50, 25);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
         // 之后修改为打字机效果
-        UI::ShowInterface("recruit4.txt");
-        Terminal::GetInstance().MoveCursor(18, 33);
-        std::cout << "Now you have " << recruits << " more members!" << std::endl;
-        Terminal::GetInstance().MoveCursor(18, 34);
-        std::cout << "Consumed food: " << totalCost << std::endl;
+        UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
+        UI::DisplayCenterText("Now you have " + std::to_string(recruits) + " more members!", 25);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        UI::DisplayCenterText("Consumed crops: " + std::to_string(totalCost), 27);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     
-    UI::WaitForEnter("Press enter to return to home...");
+    UI::WaitForEnter("Press Enter to return to home...");
     
     // 清除h键回调
     clearHKeyCallback();
@@ -60,32 +68,36 @@ void RecruitCounter::Process() {
 
 int RecruitCounter::GetValidInput(int max) {
     while (true) {
-        UI::ShowInterface("recruit2.txt");
-        Terminal::GetInstance().MoveCursor(18, 27);
-        int yn = Terminal::GetInstance().GetYN();
-        if (!yn){
-            Terminal::GetInstance().MoveCursor(18, 30);
-            std::cout << "Invalid input! Please enter y or n" << std::endl;
+        UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
+        UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
+        UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
+        UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] ", 26);
+        char yn = Terminal::GetInstance().GetYN();
+        if (yn != 'y' && yn != 'Y' && yn != 'n' && yn != 'N'){
+            UI::DisplayCenterText("Invalid input! Please enter y or n", 28);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            UI::WaitForEnter("Press Enter to try again...");
             continue;
         }else if (yn == 'y' || yn == 'Y'){
             while (true) {
-                UI::ShowInterface("recruit2_yes.txt");
                 // 这个txt文件的第一个框里有一个y
-                Terminal::GetInstance().MoveCursor(18, 33);
-                std::cout << "Recruit how many members? (0-" << max << "): " << std::endl;
+                UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(max) + "): ", 28);
 
                 int input = Terminal::GetInstance().GetInteger();
-                Terminal::GetInstance().MoveCursor(18, 37);
 
                 if (input >= 0 && input <= max) {
-                    std::cout << "Successfully recruited " << input << " members!" << std::endl;
+                    UI::DisplayCenterText("Successfully recruited " + std::to_string(input) + " members!", 29);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     return input;
                 } else {
-                    std::cout << "Must be between 0 and " << max << "!" << std::endl;
+                    UI::DisplayCenterText("Must be between 0 and " + std::to_string(max) + "!", 29);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    UI::WaitForEnter("Press Enter to try again...");
                 }
            }
         }else if (yn == 'n' || yn == 'N'){
-            std::cout << "You will not recruit any member." << std::endl;
+            UI::DisplayCenterText("You will not recruit any member.", 28);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             return 0;
         }
     }
