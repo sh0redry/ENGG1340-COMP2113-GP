@@ -18,3 +18,11 @@
 make
 ./bin/game
 ```
+
+- Press *Enter* to start/continue.
+- Press *W/A/S/D*  to move or change the selection in the home or in the fight.
+- Press *L* to show the game status and data.
+- Press *H* to delete all the change and return to home.
+- Tips:
+    - DO NOT press *enter* for mutiple times, otherwise may cause skipping the scene unexpectedly.
+
