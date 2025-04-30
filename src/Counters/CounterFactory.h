@@ -6,6 +6,7 @@
 #include "Explore.h"
 #include <memory>
 #include "../Core/Player.h"
+#include "../Core/WeekCycle.h"
 #include "CounterBase.h"
 
 enum class CounterType {
@@ -18,13 +19,13 @@ enum class CounterType {
 
 class CounterFactory {
 public:
-    static std::unique_ptr<CounterBase> Create(CounterType type, Player& player) {
+    static std::unique_ptr<CounterBase> Create(CounterType type, Player& player, WeekCycle& weekCycle) {
         switch (type) {
-            case CounterType::FARMING: return std::make_unique<FarmingCounter>(player);
-            case CounterType::MINING: return std::make_unique<MiningCounter>(player);
-            case CounterType::RECRUIT: return std::make_unique<RecruitCounter>(player);
-            case CounterType::SHOP: return std::make_unique<ShopCounter>(player);
-            case CounterType::EXPLORE: return std::make_unique<ExploreCounter>(player);
+            case CounterType::FARMING: return std::make_unique<FarmingCounter>(player, weekCycle);
+            case CounterType::MINING: return std::make_unique<MiningCounter>(player, weekCycle);
+            case CounterType::RECRUIT: return std::make_unique<RecruitCounter>(player, weekCycle);
+            case CounterType::SHOP: return std::make_unique<ShopCounter>(player, weekCycle);
+            case CounterType::EXPLORE: return std::make_unique<ExploreCounter>(player, weekCycle);
             default: return nullptr;
         }
     }

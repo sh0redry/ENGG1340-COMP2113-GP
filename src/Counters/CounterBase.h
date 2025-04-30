@@ -57,4 +57,12 @@ public:
     void clearWKeyCallback() {
         Terminal::GetInstance().ClearWKeyCallback();
     }
+
+    // 设置和清除l键回调
+    void setupLKeyCallback(void (*callback)()) {
+        Terminal::GetInstance().SetLKeyCallback(callback);
+    }
+    void clearLKeyCallback() {
+        Terminal::GetInstance().ClearLKeyCallback();
+    }
 };
