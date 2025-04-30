@@ -3,21 +3,30 @@
 #include "../UI/UI.h"
 #include "../Utils/Random.h"
 #include "../Core/Difficulty.h"
+#include "../Core/Player.h"
+#include "../UI/Animation.h"
+#include "../Core/WeekCycle.h"
+#include "../Utils/SpecialFunctions.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <thread>
 #include <chrono>
-#include "../UI/Animation.h"
 
-ExploreCounter::ExploreCounter(Player& player) 
-    : CounterBase(player, "Explore") {}
+// 初始化静态成员
+ExploreCounter* ExploreCounter::currentInstance = nullptr;
+
+ExploreCounter::ExploreCounter(Player& player, WeekCycle& weekCycle) 
+    : CounterBase(player, "Explore"), m_weekCycle(weekCycle) {
+    currentInstance = this;
+}
 
 void ExploreCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
+    // 设置l键回调
+    setupLKeyCallback(ShowPlayerInfoCallback);
     
-    // 之后修改为打字机效果
     UI::ShowInterface("ui/Counters/Explore/explore1.txt");
     Animation::TypewriterInBox("Step into this land, and ahead lies the mysterious and uncharted territory,", 50, 16);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -55,11 +64,13 @@ void ExploreCounter::Process() {
         UI::DisplayCenterText(messages[1], 25);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-
+    
     UI::WaitForEnter("Press Enter to return to home...");
     
     // 清除h键回调
     clearHKeyCallback();
+    // 清除l键回调
+    clearLKeyCallback();
 }
 
 // --- 私有方法实现 ---
@@ -145,6 +156,23 @@ std::vector<std::string> ExploreCounter::showResultMessage(ExploreResult result,
             break;
     }
     return messages;
+}
+
+void ExploreCounter::ShowPlayerInfoCallback() {
+    if (currentInstance) {
+        currentInstance->ShowPlayerInfo();
+    }
+}
+
+void ExploreCounter::ShowPlayerInfo() {
+    SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Explore/explore2.txt");
+    UI::DisplayCenterText("Type in the number of people you want to assign to this land!", 22);
+    UI::DisplayCenterText("Think twice before you decide!", 23);
+    UI::DisplayCenterText("The rewards are tempting, but you could die for it.", 24);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign people to explore (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 26);
 }
 
 int ExploreCounter::getValidPeopleInput(int max) {
