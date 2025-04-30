@@ -4,16 +4,24 @@
 #include "../Core/Player.h"
 #include "../UI/Animation.h"
 #include "../Core/Difficulty.h"
+#include "../Utils/SpecialFunctions.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
-FarmingCounter::FarmingCounter(Player& player) 
-    : CounterBase(player, "Farming") {}
+// 初始化静态成员
+FarmingCounter* FarmingCounter::currentInstance = nullptr;
+
+FarmingCounter::FarmingCounter(Player& player, WeekCycle& weekCycle) 
+    : CounterBase(player, "Farming"), m_weekCycle(weekCycle) {
+    currentInstance = this;
+}
 
 void FarmingCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
+    // 设置l键回调
+    setupLKeyCallback(ShowPlayerInfoCallback);
     
     UI::ShowInterface("ui/Counters/Farming/farming1.txt");
     Animation::TypewriterInBox("Welcome to my farm, guys.", 50, 26);
@@ -22,7 +30,6 @@ void FarmingCounter::OnEnter() {
     Animation::TypewriterInBox("It's time to work hard for your survival.", 50, 27);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     UI::WaitForEnter();
-    
 }
 
 void FarmingCounter::Process() {
@@ -51,6 +58,24 @@ void FarmingCounter::Process() {
     
     // 清除h键回调
     clearHKeyCallback();
+    // 清除l键回调
+    clearLKeyCallback();
+}
+
+void FarmingCounter::ShowPlayerInfoCallback() {
+    if (currentInstance) {
+        currentInstance->ShowPlayerInfo();
+    }
+}
+
+void FarmingCounter::ShowPlayerInfo() {
+    SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Farming/farming2.txt");
+    UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
+    UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign farmers (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }
 
 int FarmingCounter::GetValidInput(int max) {
