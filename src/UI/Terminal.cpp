@@ -91,8 +91,8 @@ int Terminal::GetKeyPress() {
     return ch;
 }
 
-int Terminal::GetYN() {
-    int ch = getchar();
+char Terminal::GetYN() {
+    char ch = getchar();
     if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N') {
         std::cout << ch << std::endl;
         return ch;

@@ -58,7 +58,7 @@ public:
     
     // 输入处理
     int GetKeyPress();
-    int GetYN();
+    char GetYN();
     std::string GetLine(int maxLength = 50);
     int GetInteger();  // 新增函数：只接受整数输入
     bool CheckInput();     // 检查是否有按键输入
