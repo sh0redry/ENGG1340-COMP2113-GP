@@ -37,7 +37,7 @@ private:
     
     // 结果处理
     void applyResult(ExploreResult result, int peopleSent, int& value);
-    std::string showResultMessage(ExploreResult result, int value);
+    std::vector<std::string> showResultMessage(ExploreResult result, int value);
     
     // UI相关
     int getValidPeopleInput(int max);

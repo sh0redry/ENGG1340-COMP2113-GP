@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <thread>
+#include <chrono>
+#include "../UI/Animation.h"
 
 ExploreCounter::ExploreCounter(Player& player) 
     : CounterBase(player, "Explore") {}
@@ -15,7 +18,13 @@ void ExploreCounter::OnEnter() {
     setupHKeyCallback();
     
     // 之后修改为打字机效果
-    UI::ShowInterface("explore1.txt");
+    UI::ShowInterface("ui/Counters/Explore/explore1.txt");
+    Animation::TypewriterInBox("Step into this land, and ahead lies the mysterious and uncharted territory,", 50, 16);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("fraught with perils yet hiding endless treasures,", 50, 17);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Animation::TypewriterInBox("where high risks and high rewards go hand in hand ~", 50, 18);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     UI::WaitForEnter();
 }
 
@@ -30,15 +39,24 @@ void ExploreCounter::Process() {
 
         UI::WaitForEnter();
         // 之后修改为打字机效果
-        UI::ShowInterface("explore3.txt");
+        UI::ShowInterface("ui/Counters/Explore/explore1.txt");
+        Animation::TypewriterInBox("Your guys are exploring the land, which is full of perils and treasures!", 50, 16);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Will they return with treasures or in pieces?", 50, 17);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Let's pray for them ......", 50, 18);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
         // 之后修改为打字机效果
-        std::string message = showResultMessage(result, value);
-        UI::ShowInterface("explore4.txt");
+        std::vector<std::string> messages = showResultMessage(result, value);
+        UI::ShowInterface("ui/Counters/Explore/explore2.txt");
+        UI::DisplayCenterText(messages[0], 23);
+        UI::DisplayCenterText(messages[1], 25);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
-    UI::WaitForEnter("Press enter to return to home...");
+    UI::WaitForEnter("Press Enter to return to home...");
     
     // 清除h键回调
     clearHKeyCallback();
@@ -99,46 +117,56 @@ void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& valu
     }
 }
 
-std::string ExploreCounter::showResultMessage(ExploreResult result, int value) {
-    std::string message;
+std::vector<std::string> ExploreCounter::showResultMessage(ExploreResult result, int value) {
+    std::vector<std::string> messages;
     
     switch (result) {
         case ExploreResult::GOLD_FOUND:
-            message = "Exploration Successful! Gold Found: " + std::to_string(value);
+            messages.push_back("Exploration Successful! Congratulations!");
+            messages.push_back("Gold Found: " + std::to_string(value));
             break;
         case ExploreResult::CROP_FOUND:
-            message = "Exploration Successful! Food Found: " + std::to_string(value);
+            messages.push_back("Exploration Successful! Congratulations!");
+            messages.push_back("Food Found: " + std::to_string(value));
             break;
         case ExploreResult::PEOPLE_JOINED:
-            message = "Survivors Found! New Members: " + std::to_string(value);
+            messages.push_back("Congratulations! Survivors Found!");
+            messages.push_back("New Members: " + std::to_string(value));
             break;
         case ExploreResult::PEOPLE_LOST:
-            message = "Zombies Encountered! Members Lost: " + std::to_string(value);
+            messages.push_back("OHHH NO!!! They sacrificed!");
+            messages.push_back("Members Lost: " + std::to_string(value));
             break;
         case ExploreResult::NOTHING_FOUND:
-            message = "Exploration Completed. Nothing was found.";
+            messages.push_back("Exploration Completed.");
+            messages.push_back("Nothing was found.");
             break;
         default:
             break;
     }
-    return message;
+    return messages;
 }
 
 int ExploreCounter::getValidPeopleInput(int max) {
     while (true) {
-        UI::ShowInterface("explore2.txt");
-        Terminal::GetInstance().MoveCursor(18, 33);
-        std::cout << "Assign people to explore (0-" << max << "): " << std::endl;
+        UI::ShowInterface("ui/Counters/Explore/explore2.txt");
+        UI::DisplayCenterText("Type in the number of people you want to assign to this land!", 22);
+        UI::DisplayCenterText("Think twice before you decide!", 23);
+        UI::DisplayCenterText("The rewards are tempting, but you could die for it.", 24);
+        UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+        UI::DisplayCenterText("Assign people to explore (0-" + std::to_string(max) + "): ", 26);
     
         int input = Terminal::GetInstance().GetInteger();
-        Terminal::GetInstance().MoveCursor(18, 37);
     
         if (input >= 0 && input <= max) {
-            std::cout << "Successfully assigned " << input << " people to explore!" << std::endl;
+            UI::DisplayCenterText("Successfully assigned " + std::to_string(input)  + " people to explore!", 27);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             return input;
         }
         else {
-            std::cout << "Invalid input! Must be between 0 and " << max << "!" << std::endl;
+            UI::DisplayCenterText("Invalid input! Must be between 0 and " + std::to_string(max) + "!", 27);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            UI::WaitForEnter("Press Enter to try again...");
         }
     }
 }
