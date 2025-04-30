@@ -3,7 +3,7 @@
 ## Team members 
 [Li Yitong](https://github.com/Lyt060814)&ensp;&ensp;(3036098003)
 
-[Qu Sijin](https://github.com/Rosette2048)&ensp;&ensp;(3036052190)
+[Qu Sijin](https://github.com/Rosette2048)&ensp;&ensp;&ensp;(3036052190)
 
 [Xue Hengtai](https://github.com/R1card0xht)&ensp;&ensp;&ensp; (3036094605)
 
