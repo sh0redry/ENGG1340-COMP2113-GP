@@ -6,13 +6,21 @@
 #include <thread>
 #include <chrono>
 #include "../UI/Animation.h"
+#include "../Utils/SpecialFunctions.h"
 
-RecruitCounter::RecruitCounter(Player& player) 
-    : CounterBase(player, "Recruit") {}
+// 初始化静态成员
+RecruitCounter* RecruitCounter::currentInstance = nullptr;
+
+RecruitCounter::RecruitCounter(Player& player, WeekCycle& weekCycle) 
+    : CounterBase(player, "Recruit"), m_weekCycle(weekCycle), m_currentState(InputState::WAITING_YN) {
+    currentInstance = this;
+}
 
 void RecruitCounter::OnEnter() {
     // 设置h键回调
     setupHKeyCallback();
+    // 设置l键回调
+    setupLKeyCallback(ShowPlayerInfoCallback);
     
     // 之后修改为打字机效果
     UI::ShowInterface("ui/Counters/Recruit/recruit1.txt");
@@ -63,10 +71,34 @@ void RecruitCounter::Process() {
     
     // 清除h键回调
     clearHKeyCallback();
+    // 清除l键回调
+    clearLKeyCallback();
+}
+
+void RecruitCounter::ShowPlayerInfoCallback() {
+    if (currentInstance) {
+        currentInstance->ShowPlayerInfo();
+    }
+}
+
+void RecruitCounter::ShowPlayerInfo() {
+    SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
+    // 根据当前状态重新显示对应的界面
+    UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
+    UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
+    
+    if (m_currentState == InputState::WAITING_YN) {
+        UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] ", 26);
+    } else {
+        UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] y", 26);
+        UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(calculateMaxRecruits()) + "): ", 28);
+    }
 }
 
 int RecruitCounter::GetValidInput(int max) {
     while (true) {
+        m_currentState = InputState::WAITING_YN;
         UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
         UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
         UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
@@ -79,6 +111,7 @@ int RecruitCounter::GetValidInput(int max) {
             continue;
         }else if (yn == 'y' || yn == 'Y'){
             while (true) {
+                m_currentState = InputState::WAITING_NUMBER;
                 // 这个txt文件的第一个框里有一个y
                 UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(max) + "): ", 28);
 
