@@ -5,6 +5,7 @@
 #include "../UI/Terminal.h"
 #include "../Utils/Constants.h"
 #include "../UI/UI.h"
+#include "../Utils/SpecialFunctions.h"
 #include <thread>
 #include <iostream>
 
@@ -204,6 +205,10 @@ void Game::handleCounterAction() {
                 else if (selectedOption == 3) selectedOption = 5; // 从3直接到5
                 else if (selectedOption != 5 && selectedOption != 2) selectedOption++; // 其他情况正常右移，但5和2不能右移
                 break;
+            case 'l':
+            case 'L':
+                SpecialFunctions::showPlayerInfo(m_weekCycle, *m_player);
+                break;
             case '\n': // Enter键
                 selectionMade = true;
                 break;
@@ -221,7 +226,7 @@ void Game::handleCounterAction() {
         default: return;
     }
     
-    auto counter = CounterFactory::Create(type, *m_player);
+    auto counter = CounterFactory::Create(type, *m_player, m_weekCycle);
     if (!counter) return;
     
     try {
