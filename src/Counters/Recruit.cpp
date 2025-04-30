@@ -31,8 +31,8 @@ void RecruitCounter::Process() {
         // to be modified
         UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
         UI::DisplayCenterText("No enough crops to recruit new members!", 25);
-        UI::DisplayCenterText("Minimum required: " + std::to_string(BASE_COST + COST_PER_MEMBER) + " crops", 26);
-        UI::DisplayCenterText("Current crops: " + std::to_string(m_player.getCrop()) + " crops", 27);
+        UI::DisplayCenterText("Minimum required: " + std::to_string(BASE_COST + COST_PER_MEMBER) + " crops", 27);
+        UI::DisplayCenterText("Current crops: " + std::to_string(m_player.getCrop()) + " crops", 28);
         UI::WaitForEnter("Press Enter to return to home...");
         return;
     }
@@ -55,7 +55,6 @@ void RecruitCounter::Process() {
         // 之后修改为打字机效果
         UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
         UI::DisplayCenterText("Now you have " + std::to_string(recruits) + " more members!", 25);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::DisplayCenterText("Consumed crops: " + std::to_string(totalCost), 27);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
