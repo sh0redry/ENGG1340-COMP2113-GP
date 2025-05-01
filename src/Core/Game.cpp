@@ -135,7 +135,30 @@ void Game::processDifficultySelect() {
 
 void Game::processDay() {
     // 对第一天需进行特殊处理（增加故事情节）
-    UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
+    if (m_weekCycle.getCurrentDay() == 1) {
+        UI::ShowInterface("ui/empty.txt");
+        Animation::TypewriterInBox("The year is 2025. ", 50, 10);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("A zombie outbreak has ravaged HKU, and you must lead a group of survivors ", 50, 13);
+        Animation::TypewriterInBox("to gather resources, fortify defenses, and endure relentless Thursday hordes. ", 50, 15);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Every day brings critical choices ———— shop for upgrades, farm for food, ", 50, 18);
+        Animation::TypewriterInBox("mine for gold, recruiting center, or risk expeditions into the wasteland. ", 50, 20);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Will you last long enough for rescue... or fall to the undead?", 100, 23);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        UI::WaitForEnter("Press Enter to continue...");
+        UI::ShowInterface("ui/empty.txt");
+        Animation::TypewriterInBox("Now, let's start the first day.", 50, 15);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Today is ......", 50, 17);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        UI::ShowInterface("ui/Days/Friday1.txt");
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        UI::WaitForEnter("Press Enter to continue...");
+    } else {
+        UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
+    }
 
     // 每日开始重置
     m_player->resetDailyWorkers();
