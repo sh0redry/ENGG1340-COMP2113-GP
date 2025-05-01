@@ -42,7 +42,7 @@ void ExploreCounter::Process() {
     
     if (peopleSent > 0) {
         m_player.assignWorkers(0, 0, 0, 0, peopleSent);
-        ExploreResult result = executeExplore(peopleSent);
+        ExploreResult result = executeExplore();
         int value = 0;
         applyResult(result, peopleSent, value);
 
@@ -74,7 +74,8 @@ void ExploreCounter::Process() {
 }
 
 // --- 私有方法实现 ---
-ExploreCounter::ExploreResult ExploreCounter::executeExplore(int _peopleSent) {
+ExploreCounter::ExploreResult ExploreCounter::executeExplore() {
+    
     // Get difficulty configuration
     const float lossProbability = Difficulty::GetConfig(m_player.getStringDifficulty()).exploreRisk;
 

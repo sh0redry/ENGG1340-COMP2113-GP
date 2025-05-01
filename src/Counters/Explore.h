@@ -45,7 +45,7 @@ private:
     static constexpr int MAX_PEOPLE_REWARD = 3;
 
     // 核心探索逻辑
-    ExploreResult executeExplore(int peopleSent);
+    ExploreResult executeExplore();
     
     // 结果处理
     void applyResult(ExploreResult result, int peopleSent, int& value);
