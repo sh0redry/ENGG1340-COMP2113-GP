@@ -5,10 +5,7 @@
 #include <thread>
 #include <chrono>
 
-int main() {
-    // 初始化系统
-    // Terminal::GetInstance().HideCursor();
-    
+int main() {    
     try {
         Game game;
         game.run();
@@ -19,6 +16,5 @@ int main() {
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
     
-    // Terminal::GetInstance().ShowCursor();
     return 0;
 }
