@@ -138,13 +138,13 @@ void UI::WaitForEnter(const std::string& message) {
 
 void UI::ShowDayTransition(std::string dayName, int currentWeek) {
     ShowInterface("ui/empty.txt");
-    Animation::TypewriterInBox("Congratulations! You survived one more day!", 100, 13);
+    Animation::TypewriterInBox("Congratulations! You survived one more day!", 50, 13);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    Animation::TypewriterInBox("Now, let's start a new day!", 100, 15);
+    Animation::TypewriterInBox("Now, let's start a new day!", 50, 15);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    Animation::TypewriterInBox("Today is .....", 100, 17);
+    Animation::TypewriterInBox("Today is ......", 50, 17);
     std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 
     std::string filename = dayName + std::to_string(currentWeek) + ".txt";
