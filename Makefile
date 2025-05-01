@@ -1,6 +1,6 @@
 # Compiler settings
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./src
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic-errors -I./src
 
 # Directories
 SRC_DIR = src
