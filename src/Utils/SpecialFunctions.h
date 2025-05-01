@@ -9,4 +9,5 @@ public:
     static void showWeaponInfo();
     static void showPlayerInfo(const WeekCycle& weekCycle, const Player& player);
     static void showQuitMessage();
+    static bool showPauseScreen();
 }; 

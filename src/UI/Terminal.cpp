@@ -15,6 +15,7 @@ Terminal::KeyCallback Terminal::qKeyCallback = nullptr;
 Terminal::KeyCallback Terminal::hKeyCallback = nullptr;
 Terminal::KeyCallback Terminal::wKeyCallback = nullptr;
 Terminal::KeyCallback Terminal::lKeyCallback = nullptr;
+Terminal::KeyCallback Terminal::pKeyCallback = nullptr;
 // Terminal 类实现
 Terminal& Terminal::GetInstance() {
     if (!instance) {
@@ -86,6 +87,14 @@ void Terminal::ClearLKeyCallback() {
     lKeyCallback = nullptr;
 }
 
+void Terminal::SetPKeyCallback(KeyCallback callback) {
+    pKeyCallback = callback;
+}
+
+void Terminal::ClearPKeyCallback() {
+    pKeyCallback = nullptr;
+}
+
 int Terminal::GetKeyPress() {
     int ch = getchar();
     if (ch == 'q' || ch == 'Q') {
@@ -103,6 +112,10 @@ int Terminal::GetKeyPress() {
     } else if (ch == 'l' || ch == 'L') {
         if (lKeyCallback) {
             lKeyCallback();
+        }
+    } else if (ch == 'p' || ch == 'P') {
+        if (pKeyCallback) {
+            pKeyCallback();
         }
     }
     return ch;

@@ -3,6 +3,9 @@
 #include <thread>
 #include <iostream>
 
+// 初始化静态成员
+Combat* Combat::currentInstance = nullptr;
+
 Combat::Combat(Player& player, const WeekCycle& weekCycle)
     : player(player),
       weapon(player.getWeaponLevel()), 
@@ -10,12 +13,48 @@ Combat::Combat(Player& player, const WeekCycle& weekCycle)
       playerX(WIDTH / 2), 
       playerY(HEIGHT - 1),
       initialHP(player.getTotalHP()), 
-      HP(player.getTotalHP()) {
+      HP(player.getTotalHP()),
+      isPaused(false),
+      pausedDuration(std::chrono::steady_clock::duration::zero()) {
+    
+    currentInstance = this;
+    setupPauseCallback();
     
     // 设置游戏时长
     int gameDurationArr[5] = {40, 40, 50, 50, 60};
     gameDuration = gameDurationArr[weekCycle.getCurrentWeek() - 1];
     startTime = std::chrono::steady_clock::now();
+}
+
+void Combat::setupPauseCallback() {
+    Terminal::GetInstance().SetPKeyCallback(togglePauseCallback);
+}
+
+void Combat::clearPauseCallback() {
+    Terminal::GetInstance().ClearPKeyCallback();
+}
+
+void Combat::togglePauseCallback() {
+    if (currentInstance) {
+        currentInstance->togglePause();
+    }
+}
+
+void Combat::togglePause() {
+    if (!isPaused) {
+        // 进入暂停状态
+        isPaused = true;
+        pauseStartTime = std::chrono::steady_clock::now();
+        if (SpecialFunctions::showPauseScreen()) {
+            // 如果用户按p继续，计算暂停时间并继续游戏
+            pausedDuration += std::chrono::steady_clock::now() - pauseStartTime;
+            isPaused = false;
+        }
+    } else {
+        // 继续游戏
+        isPaused = false;
+        pausedDuration += std::chrono::steady_clock::now() - pauseStartTime;
+    }
 }
 
 bool Combat::run() {
@@ -27,6 +66,11 @@ bool Combat::run() {
     draw();
     
     while (HP > 0 && !isTimeUp()) {
+        if (isPaused) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            continue;
+        }
+        
         processInput();
         update();
         draw();
@@ -36,6 +80,7 @@ bool Combat::run() {
     }
     
     terminal.ShowCursor();
+    clearPauseCallback();
     
     // 处理战斗结果
     bool victory = HP > 0;
@@ -238,13 +283,13 @@ void Combat::draw() const {
 }
 
 bool Combat::isTimeUp() const {
-    auto elapsed = std::chrono::steady_clock::now() - startTime;
+    auto elapsed = std::chrono::steady_clock::now() - startTime - pausedDuration;
     return std::chrono::duration_cast<std::chrono::seconds>(elapsed).count() >= gameDuration;
 }
 
 int Combat::getRemainingTime() const {
     auto remaining = gameDuration - 
         std::chrono::duration_cast<std::chrono::seconds>(
-            std::chrono::steady_clock::now() - startTime).count();
+            std::chrono::steady_clock::now() - startTime - pausedDuration).count();
     return std::max(0, static_cast<int>(remaining));
 } 

@@ -21,7 +21,8 @@ private:
     static KeyCallback qKeyCallback;
     static KeyCallback hKeyCallback;
     static KeyCallback wKeyCallback;
-    static KeyCallback lKeyCallback;  // Add l key callback
+    static KeyCallback lKeyCallback;
+    static KeyCallback pKeyCallback;  // Add p key callback
 
     // 私有构造函数
     Terminal();
@@ -55,6 +56,10 @@ public:
     // 设置l键回调函数
     static void SetLKeyCallback(KeyCallback callback);
     static void ClearLKeyCallback();
+    
+    // 设置p键回调函数
+    static void SetPKeyCallback(KeyCallback callback);
+    static void ClearPKeyCallback();
     
     // 显示控制
     void Clear();

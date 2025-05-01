@@ -68,3 +68,17 @@ void SpecialFunctions::showQuitMessage() {
         }
     }
 }
+
+bool SpecialFunctions::showPauseScreen() {
+    UI::ShowInterface("ui/empty.txt");
+    UI::DisplayCenterText("Game Paused", 16);
+    UI::DisplayCenterText("----------------", 17);
+    UI::DisplayCenterText("Press p to continue", 20);
+    
+    while (true) {
+        int ch = getchar();
+        if (ch == 'p' || ch == 'P') {
+            return true;  // 返回true表示继续游戏
+        }
+    }
+}

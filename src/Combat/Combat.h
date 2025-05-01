@@ -6,6 +6,7 @@
 #include "../UI/Animation.h"
 #include "../Core/Player.h"
 #include "../Core/WeekCycle.h"
+#include "../Utils/SpecialFunctions.h"
 #include <vector>
 #include <chrono>
 
@@ -27,6 +28,16 @@ private:
     int HP;
     int gameDuration;
     std::chrono::steady_clock::time_point startTime;
+    
+    // 暂停相关
+    bool isPaused;
+    static Combat* currentInstance;
+    std::chrono::steady_clock::time_point pauseStartTime;  // 记录暂停开始时间
+    std::chrono::steady_clock::duration pausedDuration;    // 记录总暂停时间
+    void setupPauseCallback();
+    void clearPauseCallback();
+    static void togglePauseCallback();
+    void togglePause();
     
     void processInput();
     void update();
