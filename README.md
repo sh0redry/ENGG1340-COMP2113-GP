@@ -24,7 +24,7 @@ make
 - Press *L* to show the game status and data.
 - Press *H* to delete all the change and return to home.
 - Tips:
-    - DO NOT press *enter* for mutiple times, otherwise may cause skipping the scene unexpectedly.
+    - DO NOT press *enter* many times, otherwise it may cause unexpected scene skipping.
 
 ## Description
 > Welcome to this post-apocalyptic world built with C++ code. Here, you'll play as the leader of a shelter in a world ravaged by a zombie outbreak, guiding survivors to gather resources and explore the environment. Your ultimate goal is to strive to survive for until the day rescue arrives!  
