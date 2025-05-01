@@ -2,6 +2,7 @@
 #include "../UI/UI.h"
 #include "../Core/Player.h"
 #include "../Core/WeekCycle.h"
+#include "../Combat/Weapon.h"
 #include <iostream>
 
 
@@ -12,8 +13,9 @@ void SpecialFunctions::showWeaponInfo() {
     UI::DisplayCenterText("Weapon Level | Power | Fire Count", 12);
     UI::DisplayCenterText("--------------------------------", 13);
     for (int level = 1; level <= 10; ++level) {
-        int power = 10 + level * 5; // 示例：威力随等级线性增长
-        int count = 1 + (level - 1) / 3; // 示例：每3级增加一次发射数量
+        Weapon weapon(level);
+        int power = weapon.getDamage();
+        int count = weapon.getMultiple();
         UI::DisplayCenterText(std::to_string(level) + "      |  " + std::to_string(power) + "   |     " + std::to_string(count), 13 + level);
     }
     UI::DisplayCenterText("Press w to return...", 26);
