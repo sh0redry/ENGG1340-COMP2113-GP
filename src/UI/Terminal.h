@@ -1,6 +1,4 @@
-#ifndef TERMINAL_H
-#define TERMINAL_H
-
+#pragma once
 #include <string>
 #include <vector>
 #include <termios.h>
@@ -74,22 +72,6 @@ public:
     int GetInteger();  // 新增函数：只接受整数输入
     bool CheckInput();     // 检查是否有按键输入
     
-    // 颜色控制
-    enum class Color {
-        Black = 0,
-        Red,
-        Green,
-        Yellow,
-        Blue,
-        Magenta,
-        Cyan,
-        White,
-        Default = 9
-    };
-
-    void SetColor(Color foreground, Color background = Color::Default);
-    void ResetColor();
-
     // 终端尺寸
     struct TerminalSize {
         int width;
@@ -98,5 +80,3 @@ public:
     TerminalSize GetTerminalSize();
 
 };
-
-#endif // TERMINAL_H 

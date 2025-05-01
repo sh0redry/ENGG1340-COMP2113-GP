@@ -215,15 +215,6 @@ bool Terminal::CheckInput() {
     return bytesWaiting > 0;
 }
 
-void Terminal::SetColor(Color foreground, Color background) {
-    std::cout << "\033[" << static_cast<int>(foreground) << ";" 
-              << static_cast<int>(background) + 10 << "m";
-}
-
-void Terminal::ResetColor() {
-    std::cout << defaultColor;
-}
-
 Terminal::TerminalSize Terminal::GetTerminalSize() {
     TerminalSize size;
     struct winsize w;
