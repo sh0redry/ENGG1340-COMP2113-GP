@@ -151,7 +151,7 @@ void Game::processDay() {
         UI::ShowInterface("ui/empty.txt");
         Animation::TypewriterInBox("Now, let's start the first day.", 50, 15);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        Animation::TypewriterInBox("Today is ......", 50, 17);
+        Animation::TypewriterInBox("Today is ......", 50, 18);
         std::this_thread::sleep_for(std::chrono::milliseconds(1500));
         UI::ShowInterface("ui/Days/Friday1.txt");
         std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -197,13 +197,18 @@ void Game::handleCounterAction() {
         
         // 根据当前选择显示对应的界面
         switch (selectedOption) {
-            case 0: UI::ShowInterface("ui/Home/home_mining.txt"); break;
-            case 1: UI::ShowInterface("ui/Home/home_farming.txt"); break;
-            case 2: UI::ShowInterface("ui/Home/home_shop.txt"); break;
-            case 3: UI::ShowInterface("ui/Home/home_explore.txt"); break;
-            case 5: UI::ShowInterface("ui/Home/home_recruit.txt"); break;
+            case 0: UI::ShowInterface("ui/Home/home_mining.txt");
+                    break;
+            case 1: UI::ShowInterface("ui/Home/home_farming.txt");
+                    break;
+            case 2: UI::ShowInterface("ui/Home/home_shop.txt");
+                    break;
+            case 3: UI::ShowInterface("ui/Home/home_explore.txt");
+                    break;
+            case 5: UI::ShowInterface("ui/Home/home_recruit.txt");
+                    break;
         }
-                
+        
         char input = Terminal::GetInstance().GetKeyPress();
         
         switch (input) {
