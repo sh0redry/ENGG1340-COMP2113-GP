@@ -274,7 +274,7 @@ void Combat::draw() const {
     terminal.MoveCursor(gameLeft + (WIDTH - enemyLine.length()) / 2, statusY + 4);
     std::cout << enemyLine;
     
-    std::string hintLine = "Press A/D to move left/right, Space to shoot, Z/C to move faster.";
+    std::string hintLine = "A/D: move left/right | Space: shoot | Z/C: move faster | P: pause";
     terminal.MoveCursor(gameLeft + (WIDTH - hintLine.length()) / 2, statusY + 5);
     std::cout << hintLine;
 
