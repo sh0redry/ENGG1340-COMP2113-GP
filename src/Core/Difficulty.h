@@ -18,8 +18,8 @@ namespace Difficulty {
         { "EASY", 
             Config{ 
                 5,  // initialPeople
-                20, // cropYield
-                20, // goldYield
+                40, // cropYield
+                40, // goldYield
                 0.05f, // exploreRisk
             } 
         },
@@ -34,8 +34,8 @@ namespace Difficulty {
         { "HARD", 
             Config{ 
                 2,  // initialPeople
-                40, // cropYield
-                40, // goldYield
+                20, // cropYield
+                20, // goldYield
                 0.20f, // exploreRisk
             } 
         }
