@@ -146,3 +146,10 @@ void ShopCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("W: show weapon information | H: return to home | L: show information | Q: quit", 32);
     UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
 }
+
+void ShopCounter::OnExit() {
+    // 清除所有回调
+    clearHKeyCallback();
+    clearWKeyCallback();
+    clearLKeyCallback();
+}

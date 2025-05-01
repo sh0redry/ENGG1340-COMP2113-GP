@@ -234,7 +234,8 @@ void Game::handleCounterAction() {
         counter->Process();
         counter->OnExit();
     } catch (const ReturnToHomeException&) {
-        // 捕获返回主菜单的异常，直接返回
+        // 捕获返回主菜单的异常，确保调用OnExit
+        counter->OnExit();
         return;
     }
 }
