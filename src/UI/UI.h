@@ -1,6 +1,4 @@
-#ifndef UI_H
-#define UI_H
-
+#pragma once
 #include <string>
 
 class UI {
@@ -44,5 +42,3 @@ private:
     static void DisplayUI(const std::string& content);
     static void DisplayUIFromFile(const std::string& filename);
 };
-
-#endif // UI_H 
