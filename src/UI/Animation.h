@@ -1,6 +1,4 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
-
+#pragma once
 #include <string>
 #include <chrono>
 #include <functional>
@@ -8,12 +6,8 @@
 
 class Animation {
 public:
-    // 进度条
-    static void ProgressBar(float seconds, int width = 50);
-    
     // 文字动画
     static void Typewriter(const std::string& text, int delayMs = 50);
-    static void PulseText(const std::string& text, int x, int y);
     static void TypewriterInBox(const std::string& text, int delayMs, int lineNumber);
     // 播放动画序列
     static void PlaySequence(const std::string& dirPath, int frameDelayMs);
@@ -28,10 +22,3 @@ private:
     // 比较动画文件
     static bool CompareAnimationFiles(const std::string& a, const std::string& b);
 };
-
-// 独立动画效果
-namespace Effects {
-    void FlashScreen(int times);
-}
-
-#endif // ANIMATION_H 
