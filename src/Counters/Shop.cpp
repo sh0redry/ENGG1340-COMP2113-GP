@@ -28,7 +28,7 @@ void ShopCounter::OnEnter() {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     Animation::TypewriterInBox("Gotta see if you've got the skills and the dough.", 50, 25);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    Animation::TypewriterInBox("That'll cost ya 30kg of the shiny gold per level.", 50, 26);
+    Animation::TypewriterInBox("That'll cost ya quite a lot of gold per level.", 50, 26);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     Animation::TypewriterInBox("If you can't afford, don't waste my smoke time.", 50, 27);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
