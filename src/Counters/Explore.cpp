@@ -26,6 +26,8 @@ void ExploreCounter::OnEnter() {
     setupHKeyCallback();
     // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
+    // 设置q键回调
+    setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Explore/explore1.txt");
     Animation::TypewriterInBox("Step into this land, and ahead lies the mysterious and uncharted territory,", 50, 16);
@@ -71,6 +73,8 @@ void ExploreCounter::Process() {
     clearHKeyCallback();
     // 清除l键回调
     clearLKeyCallback();
+    // 清除q键回调
+    clearQKeyCallback();
 }
 
 // --- 私有方法实现 ---
@@ -198,4 +202,21 @@ int ExploreCounter::getValidPeopleInput(int max) {
             UI::WaitForEnter("Press Enter to try again...");
         }
     }
+}
+
+void ExploreCounter::ShowQuitMessageCallback() {
+    if (currentInstance) {
+        currentInstance->ShowQuitMessage();
+    }
+}
+
+void ExploreCounter::ShowQuitMessage() {
+    SpecialFunctions::showQuitMessage();
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Explore/explore2.txt");
+    UI::DisplayCenterText("Type in the number of people you want to assign to this land!", 22);
+    UI::DisplayCenterText("Think twice before you decide!", 23);
+    UI::DisplayCenterText("The rewards are tempting, but you could die for it.", 24);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign people to explore (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 26);
 }

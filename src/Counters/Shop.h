@@ -18,6 +18,10 @@ private:
     void ShowPlayerInfo();
     static void ShowPlayerInfoCallback();
 
+    // 显示退出信息相关方法
+    void ShowQuitMessage();
+    static void ShowQuitMessageCallback();
+
     // 周循环引用
     WeekCycle& m_weekCycle;
 

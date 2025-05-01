@@ -42,6 +42,7 @@ public:
     
     // 设置q键回调函数
     static void SetQKeyCallback(KeyCallback callback);
+    static void ClearQKeyCallback();
     
     // 设置和清除h键回调函数
     static void SetHKeyCallback(KeyCallback callback);

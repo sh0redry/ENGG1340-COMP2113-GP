@@ -58,6 +58,10 @@ void Terminal::SetQKeyCallback(KeyCallback callback) {
     qKeyCallback = callback;
 }
 
+void Terminal::ClearQKeyCallback() {
+    qKeyCallback = nullptr;
+}
+
 void Terminal::SetHKeyCallback(KeyCallback callback) {
     hKeyCallback = callback;
 }

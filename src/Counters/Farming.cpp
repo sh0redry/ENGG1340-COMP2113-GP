@@ -22,6 +22,8 @@ void FarmingCounter::OnEnter() {
     setupHKeyCallback();
     // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
+    // 设置q键回调
+    setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Farming/farming1.txt");
     Animation::TypewriterInBox("Welcome to my farm, guys.", 50, 26);
@@ -60,6 +62,8 @@ void FarmingCounter::Process() {
     clearHKeyCallback();
     // 清除l键回调
     clearLKeyCallback();
+    // 清除q键回调
+    clearQKeyCallback();
 }
 
 void FarmingCounter::ShowPlayerInfoCallback() {
@@ -70,6 +74,22 @@ void FarmingCounter::ShowPlayerInfoCallback() {
 
 void FarmingCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Farming/farming2.txt");
+    UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
+    UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign farmers (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
+}
+
+void FarmingCounter::ShowQuitMessageCallback() {
+    if (currentInstance) {
+        currentInstance->ShowQuitMessage();
+    }
+}
+
+void FarmingCounter::ShowQuitMessage() {
+    SpecialFunctions::showQuitMessage();
     // 重新显示之前的界面
     UI::ShowInterface("ui/Counters/Farming/farming2.txt");
     UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);

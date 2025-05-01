@@ -65,4 +65,12 @@ public:
     void clearLKeyCallback() {
         Terminal::GetInstance().ClearLKeyCallback();
     }
+
+    // 设置和清除q键回调
+    void setupQKeyCallback(void (*callback)()) {
+        Terminal::GetInstance().SetQKeyCallback(callback);
+    }
+    void clearQKeyCallback() {
+        Terminal::GetInstance().ClearQKeyCallback();
+    }
 };

@@ -22,7 +22,9 @@ void ShopCounter::OnEnter() {
     setupWKeyCallback(ShowWeaponPowerAndLevelInfoCallback);
     // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 之后修改为打字机效果
+    // 设置q键回调
+    setupQKeyCallback(ShowQuitMessageCallback);
+    
     UI::ShowInterface("ui/Counters/Shop/shop1.txt");
     Animation::TypewriterInBox("Yo, what's up? Wanna upgrade your weapon?", 50, 24);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -147,9 +149,27 @@ void ShopCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
 }
 
+void ShopCounter::ShowQuitMessageCallback() {
+    if (currentInstance) {
+        currentInstance->ShowQuitMessage();
+    }
+}
+
+void ShopCounter::ShowQuitMessage() {
+    SpecialFunctions::showQuitMessage();
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Shop/shop2.txt");
+    UI::DisplayCenterText("Here you can upgrade your weapon to increase its power and fire count.", 24);
+    UI::DisplayCenterText("The better your weapon, the longer you can survive!", 25);
+    UI::DisplayCenterText("You can only upgrade one level at a time.", 31);
+    UI::DisplayCenterText("W: show weapon information | H: return to home | L: show information | Q: quit", 32);
+    UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
+}
+
 void ShopCounter::OnExit() {
     // 清除所有回调
     clearHKeyCallback();
     clearWKeyCallback();
     clearLKeyCallback();
+    clearQKeyCallback();
 }

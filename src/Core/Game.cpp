@@ -209,6 +209,10 @@ void Game::handleCounterAction() {
             case 'L':
                 SpecialFunctions::showPlayerInfo(m_weekCycle, *m_player);
                 break;
+            case 'q':
+            case 'Q':
+                SpecialFunctions::showQuitMessage();
+                break;
             case '\n': // Enter键
                 selectionMade = true;
                 break;

@@ -22,6 +22,8 @@ void MiningCounter::OnEnter() {
     setupHKeyCallback();
     // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
+    // 设置q键回调
+    setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Mining/mining1.txt");
     Animation::TypewriterInBox("Oh! My dear owner, ", 50, 23);
@@ -63,6 +65,8 @@ void MiningCounter::Process() {
     clearHKeyCallback();
     // 清除l键回调
     clearLKeyCallback();
+    // 清除q键回调
+    clearQKeyCallback();
 }
 
 void MiningCounter::ShowPlayerInfoCallback() {
@@ -102,4 +106,20 @@ int MiningCounter::GetValidInput(int max) {
             UI::WaitForEnter("Press Enter to try again...");
         }
     }
+}
+
+void MiningCounter::ShowQuitMessageCallback() {
+    if (currentInstance) {
+        currentInstance->ShowQuitMessage();
+    }
+}
+
+void MiningCounter::ShowQuitMessage() {
+    SpecialFunctions::showQuitMessage();
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Mining/mining2.txt");
+    UI::DisplayCenterText("Here is a mine, the minerals you get from here", 24);
+    UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 31);
+    UI::DisplayCenterText("Assign miners (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }

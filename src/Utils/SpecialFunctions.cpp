@@ -50,4 +50,21 @@ void SpecialFunctions::showPlayerInfo(const WeekCycle& weekCycle, const Player& 
         }
     }
 }
- 
+
+void SpecialFunctions::showQuitMessage() {
+    // 实现退出信息显示
+    UI::ShowInterface("ui/empty.txt");
+    UI::DisplayCenterText("Are you sure you want to quit?", 15);
+    UI::DisplayCenterText("----------------", 16);
+    UI::DisplayCenterText("Press q to confirm quit", 19);
+    UI::DisplayCenterText("Press any other key to return", 21);
+    
+    while (true) {
+        int ch = getchar();
+        if (ch == 'q' || ch == 'Q') {
+            exit(0);  // 直接退出游戏
+        } else {
+            break;
+        }
+    }
+}

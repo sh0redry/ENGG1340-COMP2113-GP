@@ -21,6 +21,8 @@ void RecruitCounter::OnEnter() {
     setupHKeyCallback();
     // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
+    // 设置q键回调
+    setupQKeyCallback(ShowQuitMessageCallback);
     
     // 之后修改为打字机效果
     UI::ShowInterface("ui/Counters/Recruit/recruit1.txt");
@@ -73,6 +75,8 @@ void RecruitCounter::Process() {
     clearHKeyCallback();
     // 清除l键回调
     clearLKeyCallback();
+    // 清除q键回调
+    clearQKeyCallback();
 }
 
 void RecruitCounter::ShowPlayerInfoCallback() {
@@ -137,4 +141,25 @@ int RecruitCounter::GetValidInput(int max) {
 
 int RecruitCounter::calculateMaxRecruits() const {
     return std::max(0, (m_player.getCrop() - BASE_COST) / COST_PER_MEMBER);
+}
+
+void RecruitCounter::ShowQuitMessageCallback() {
+    if (currentInstance) {
+        currentInstance->ShowQuitMessage();
+    }
+}
+
+void RecruitCounter::ShowQuitMessage() {
+    SpecialFunctions::showQuitMessage();
+    // 重新显示之前的界面
+    UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
+    UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
+    UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
+    
+    if (m_currentState == InputState::WAITING_YN) {
+        UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] ", 26);
+    } else {
+        UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] y", 26);
+        UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(calculateMaxRecruits()) + "): ", 28);
+    }
 }
