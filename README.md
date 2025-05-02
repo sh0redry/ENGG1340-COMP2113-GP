@@ -132,7 +132,7 @@ make run
 - Press *Z/C* to move faster.
 - Press *Space* to shoot.
 - Press *P* to pause the fight.
->**Tips:** DO NOT press *Enter* many times, otherwise it may cause unexpected scene skipping.
+>**Tips:** DO NOT press *ENTER* many times, otherwise it may cause unexpected scene skipping.
 
 
 # Game Implementation
