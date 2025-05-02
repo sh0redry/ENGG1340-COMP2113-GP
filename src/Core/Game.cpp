@@ -137,13 +137,13 @@ void Game::processDay() {
     // 对第一天需进行特殊处理（增加故事情节）
     if (m_weekCycle.getCurrentDay() == 1) {
         UI::ShowInterface("ui/empty.txt");
-        Animation::TypewriterInBox("The year is 2025. ", 50, 10);
+        Animation::TypewriterInBox("The year is 2025.", 50, 10);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        Animation::TypewriterInBox("A zombie outbreak has ravaged HKU, and you must lead a group of survivors ", 50, 13);
+        Animation::TypewriterInBox("A zombie outbreak has ravaged HKU, and you must lead a group of survivors", 50, 13);
         Animation::TypewriterInBox("to gather resources, fortify defenses, and endure relentless Thursday hordes. ", 50, 15);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        Animation::TypewriterInBox("Every day brings critical choices ———— shop for upgrades, farm for food, ", 50, 18);
-        Animation::TypewriterInBox("mine for gold, recruiting center, or risk expeditions into the wasteland. ", 50, 20);
+        Animation::TypewriterInBox("Every day brings critical choices ———— shop for upgrades, farm for food,", 50, 18);
+        Animation::TypewriterInBox("mine for gold, recruiting center, or risk expeditions into the wasteland.", 50, 20);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         Animation::TypewriterInBox("Will you last long enough for rescue... or fall to the undead?", 100, 23);
         std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -294,8 +294,12 @@ void Game::triggerCombat() {
     Combat combat(*m_player, m_weekCycle);
     bool victory = combat.run();
     if (victory) {
-        m_weekCycle.advanceDay();  // 战斗胜利后推进到下一天
-        m_state = GameState::PLAYING;
+        if (m_weekCycle.getCurrentDay() >= GameConfig::TOTAL_DAYS) {
+            showEndScreen(true);
+        } else {
+            m_weekCycle.advanceDay();  // 战斗胜利后推进到下一天
+            m_state = GameState::PLAYING;
+        }
     } else {
         m_state = GameState::GAME_OVER;
     }
@@ -303,13 +307,26 @@ void Game::triggerCombat() {
 
 void Game::showEndScreen(bool victory) {
     if (victory) {
-        Animation::PlaySequence("anim/Win1", 80);
+        UI::ShowInterface("ui/empty.txt");
+        Animation::TypewriterInBox("Congratulations! You have survived the zombie apocalypse!", 50, 13);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("The rescue team is coming soon.", 50, 15);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("You have saved HKU!", 50, 18);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("Thank you for your bravery, my hero!", 50, 20);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
         UI::WaitForEnter("Press Enter to quit...");
-        Animation::PlaySequence("anim/Win2", 100);
     } else {
+        UI::ShowInterface("ui/empty.txt");
+        Animation::TypewriterInBox("Sorry, you have no people left.", 50, 15);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        Animation::TypewriterInBox("You have failed to survive the zombie apocalypse.", 50, 18);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
         Animation::PlaySequence("anim/Lose1", 80);
         UI::WaitForEnter("Press Enter to quit...");
         Animation::PlaySequence("anim/Lose2", 100);
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     m_state = GameState::GAME_OVER;
 }
