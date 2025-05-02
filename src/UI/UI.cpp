@@ -1,3 +1,9 @@
+/**
+ * @file UI.cpp
+ * @brief Implementation of the UI class functionality
+ * @details Handles UI rendering, text positioning, and user interaction
+ *          in a terminal-based interface.
+ */
 #include "UI.h"
 #include "Terminal.h"
 #include "Animation.h"
@@ -10,7 +16,13 @@
 #include <thread>
 #include <chrono>
 
-// 计算字符串的视觉宽度（考虑UTF-8字符）
+/**
+ * @brief Calculates the visual width of a string considering UTF-8 characters
+ * 
+ * Handles multi-byte UTF-8 characters correctly when calculating display width.
+ * @param str The input string to measure
+ * @return size_t The visual width of the string
+ */
 size_t getVisualWidth(const std::string& str) {
     size_t width = 0;
     for (size_t i = 0; i < str.length();) {
@@ -35,10 +47,18 @@ size_t getVisualWidth(const std::string& str) {
     return width;
 }
 
+/**
+ * @brief Loads UI content from a file
+ * 
+ * Reads the entire contents of a UI file into a string.
+ * @param filename Path to the UI file
+ * @return std::string The file contents
+ * @throw std::runtime_error if file cannot be opened
+ */
 std::string UI::LoadUI(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        throw std::runtime_error("无法打开UI文件: " + filename);
+        throw std::runtime_error("Failed to open UI file: " + filename);
     }
 
     std::stringstream buffer;
@@ -46,6 +66,13 @@ std::string UI::LoadUI(const std::string& filename) {
     return buffer.str();
 }
 
+/**
+ * @brief Displays UI content with proper centering
+ * 
+ * Centers the content both horizontally and vertically in the terminal,
+ * handling UTF-8 characters correctly.
+ * @param content The content to display
+ */
 void UI::DisplayUI(const std::string& content) {
     auto& terminal = Terminal::GetInstance();
     auto size = terminal.GetTerminalSize();
@@ -54,7 +81,7 @@ void UI::DisplayUI(const std::string& content) {
     size_t pos;
     std::string temp = content;
     
-    // 分割内容为行
+    // Split content into lines
     while ((pos = temp.find('\n')) != std::string::npos) {
         std::string line = temp.substr(0, pos);
         boxWidth = std::max(boxWidth, getVisualWidth(line));
@@ -66,24 +93,24 @@ void UI::DisplayUI(const std::string& content) {
         lines.push_back(temp);
     }
     
-    // 计算水平和垂直填充
+    // Calculate horizontal and vertical padding
     int hPadding = (size.width - boxWidth) / 2;
     int vPadding = (size.height - lines.size()) / 2;
     
-    // 确保填充值不为负
+    // Ensure padding values are not negative
     if (hPadding < 0) hPadding = 0;
     if (vPadding < 0) vPadding = 0;
     
-    // 清除屏幕并移动光标到起始位置
+    // Clear screen and move cursor to start position
     terminal.Clear();
     terminal.MoveCursor(1, 1);
     
-    // 显示内容
+    // Display content
     for (int i = 0; i < vPadding; i++) {
         std::cout << std::endl;
     }
     for (const auto& line : lines) {
-        // 使用安全的字符串创建方式
+        // Use safe string creation method
         if (hPadding > 0) {
             std::cout << std::string(static_cast<size_t>(hPadding), ' ');
         }
@@ -93,25 +120,43 @@ void UI::DisplayUI(const std::string& content) {
         std::cout << std::endl;
     }
     
-    // 确保光标在最后一行
+    // Ensure cursor is on the last line
     terminal.MoveCursor(1, size.height);
 }
 
+/**
+ * @brief Displays UI content from a file
+ * 
+ * Loads and displays the contents of a UI file.
+ * @param filename Path to the UI file
+ */
 void UI::DisplayUIFromFile(const std::string& filename) {
     std::string content = LoadUI(filename);
     DisplayUI(content);
 }
 
-// 输入完整路径
+/**
+ * @brief Shows a UI interface from a file
+ * 
+ * Clears the screen and displays the specified UI file.
+ * @param filename Path to the UI file
+ */
 void UI::ShowInterface(const std::string& filename) {
     Terminal::GetInstance().Clear();
     DisplayUIFromFile(filename);
 }
 
+/**
+ * @brief Waits for user to press Enter
+ * 
+ * Displays a message and waits for Enter key press,
+ * handling input buffer clearing and validation.
+ * @param message The message to display
+ */
 void UI::WaitForEnter(const std::string& message) {
     // Calculate position for bottom right corner of the box
-    // 从边框内侧开始计算，所以x从1开始
-    // 考虑双线边框，所以需要+2
+    // Start from inside the border, so x starts from 1
+    // Consider double-line border, so need +2
     int x = BOX_WIDTH - message.length() - 3;  // -3 for padding (2 for border, 1 for spacing)
     int y = BOX_HEIGHT - 5;  // -3 for padding (2 for border, 1 for spacing)
     
@@ -136,6 +181,14 @@ void UI::WaitForEnter(const std::string& message) {
     } while (c != '\n');
 }
 
+/**
+ * @brief Shows the day transition screen
+ * 
+ * Displays an animated transition between game days,
+ * including congratulations message and next day information.
+ * @param dayName Name of the current day
+ * @param currentWeek Current week number
+ */
 void UI::ShowDayTransition(std::string dayName, int currentWeek) {
     ShowInterface("ui/empty.txt");
     Animation::TypewriterInBox("Congratulations! You survived one more day!", 50, 13);
@@ -154,7 +207,14 @@ void UI::ShowDayTransition(std::string dayName, int currentWeek) {
     WaitForEnter("Press Enter to continue...");
 }
 
-
+/**
+ * @brief Gets the coordinates of the UI box
+ * 
+ * Calculates the boundary coordinates of the UI box based on content
+ * and terminal size.
+ * @param content The content to calculate box coordinates for
+ * @return BoxCoordinates containing the box boundaries
+ */
 UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
     auto& terminal = Terminal::GetInstance();
     auto size = terminal.GetTerminalSize();
@@ -163,7 +223,7 @@ UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
     size_t pos;
     std::string temp = content;
     
-    // 分割内容为行
+    // Split content into lines
     while ((pos = temp.find('\n')) != std::string::npos) {
         std::string line = temp.substr(0, pos);
         boxWidth = std::max(boxWidth, line.length());
@@ -175,7 +235,7 @@ UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
         lines.push_back(temp);
     }
     
-    // 计算水平和垂直填充
+    // Calculate horizontal and vertical padding
     int hPadding = (size.width - boxWidth) / 2;
     int vPadding = (size.height - lines.size()) / 2;
     
@@ -191,27 +251,42 @@ UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
     return coords;
 }
 
+/**
+ * @brief Moves cursor to position within UI box
+ * 
+ * Positions the cursor at specified coordinates relative to
+ * the UI box boundaries.
+ * @param x X coordinate within the box
+ * @param y Y coordinate within the box
+ */
 void UI::MoveCursorInBox(int x, int y) {
     auto& terminal = Terminal::GetInstance();
     auto size = terminal.GetTerminalSize();
     
-    // 计算框在终端中的位置
+    // Calculate box position in terminal
     int hPadding = (size.width - BOX_WIDTH) / 2;
     int vPadding = (size.height - BOX_HEIGHT) / 2;
     
     if (hPadding < 0) hPadding = 0;
     if (vPadding < 0) vPadding = 0;
     
-    // 计算实际的光标位置
-    // 注意：双线边框占用了第一行和第一列，所以需要+1
-    // 由于是双线边框，内部内容区域从(2,2)开始
-    int actualX = hPadding + x + 2;  // 从2开始而不是1
-    int actualY = vPadding + y + 2;  // 从2开始而不是1
+    // Calculate actual cursor position
+    // Note: Double-line border occupies first row and column, so need +1
+    // Due to double-line border, inner content area starts from (2,2)
+    int actualX = hPadding + x + 2;  // Start from 2 instead of 1
+    int actualY = vPadding + y + 2;  // Start from 2 instead of 1
     
-    // 移动光标
+    // Move cursor
     terminal.MoveCursor(actualX, actualY);
 }
 
+/**
+ * @brief Centers cursor for text display
+ * 
+ * Moves the cursor to center a text string within the UI box.
+ * @param text The text to center
+ * @param lineNumber The line number to center the text on
+ */
 void UI::MoveCursorToCenter(const std::string& text, int lineNumber) {
     // Calculate the width of the box (excluding borders)
     int boxContentWidth = BOX_WIDTH - 4;  // -4 for borders (2 on each side)
@@ -225,8 +300,15 @@ void UI::MoveCursorToCenter(const std::string& text, int lineNumber) {
     
     // Move cursor to the calculated position
     MoveCursorInBox(hPadding, y);
-} 
+}
 
+/**
+ * @brief Displays centered text in UI box
+ * 
+ * Centers and displays text at the specified line number.
+ * @param text The text to display
+ * @param lineNumber The line number to display the text on
+ */
 void UI::DisplayCenterText(const std::string& text, int lineNumber) {
     MoveCursorToCenter(text, lineNumber);
     std::cout << text;
