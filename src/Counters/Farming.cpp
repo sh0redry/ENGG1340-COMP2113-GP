@@ -9,20 +9,32 @@
 #include <thread>
 #include <chrono>
 
-// 初始化静态成员
+// Initialize static member
 FarmingCounter* FarmingCounter::currentInstance = nullptr;
 
+/**
+ * @brief Constructor for FarmingCounter
+ * @param player Reference to the player object
+ * @param weekCycle Reference to the week cycle system
+ * 
+ * Initializes the farming counter with player and week cycle references,
+ * and sets up the current instance pointer.
+ */
 FarmingCounter::FarmingCounter(Player& player, WeekCycle& weekCycle) 
     : CounterBase(player, "Farming"), m_weekCycle(weekCycle) {
     currentInstance = this;
 }
 
+/**
+ * @brief Called when entering the farming system
+ * 
+ * Sets up key callbacks and displays the initial farming interface
+ * with animated introduction text.
+ */
 void FarmingCounter::OnEnter() {
-    // 设置h键回调
+    // Set up key callbacks
     setupHKeyCallback();
-    // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 设置q键回调
     setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Farming/farming1.txt");
@@ -34,6 +46,15 @@ void FarmingCounter::OnEnter() {
     UI::WaitForEnter();
 }
 
+/**
+ * @brief Main processing loop for farming
+ * 
+ * Handles the core farming mechanics including:
+ * 1. Getting valid input for number of farmers to assign
+ * 2. Calculating crop yield based on difficulty
+ * 3. Updating player resources
+ * 4. Displaying results with animations
+ */
 void FarmingCounter::Process() {
     const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).cropYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
@@ -43,13 +64,13 @@ void FarmingCounter::Process() {
         m_player.assignWorkers(workers, 0, 0, 0, 0);
         
         UI::WaitForEnter();
-        // 之后修改为打字机效果
+        // Display farming in progress message with typewriter effect
         UI::ShowInterface("ui/Counters/Farming/farming3.txt");
         Animation::TypewriterInBox("Your guys are working hard to harvest more crops!", 50, 31);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
-        // 之后修改为打字机效果
+        // Display results with typewriter effect
         UI::ShowInterface("ui/Counters/Farming/farming2.txt");
         UI::DisplayCenterText("You got " + std::to_string(yield * workers) + " crops!", 25);
         UI::DisplayCenterText("You can use the crops to recruit new members and grow your team!", 27);
@@ -59,24 +80,40 @@ void FarmingCounter::Process() {
     UI::WaitForEnter("Press Enter to return to home...");
 }
 
+/**
+ * @brief Called when exiting the farming system
+ * 
+ * Cleans up by removing all key callbacks and resetting the current instance pointer.
+ */
 void FarmingCounter::OnExit() {
-    // 清除所有回调
+    // Clear all callbacks
     clearHKeyCallback();
     clearLKeyCallback();
     clearQKeyCallback();
-    // 清除当前实例
+    // Clear current instance
     currentInstance = nullptr;
 }
 
+/**
+ * @brief Static callback for showing player information
+ * 
+ * Called when 'L' key is pressed to display player stats.
+ */
 void FarmingCounter::ShowPlayerInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowPlayerInfo();
     }
 }
 
+/**
+ * @brief Display player information and restore farming interface
+ * 
+ * Shows player stats and resources, then restores the farming interface
+ * with appropriate prompts and instructions.
+ */
 void FarmingCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Farming/farming2.txt");
     UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
     UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
@@ -84,15 +121,26 @@ void FarmingCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("Assign farmers (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }
 
+/**
+ * @brief Static callback for showing quit message
+ * 
+ * Called when 'Q' key is pressed to display quit confirmation.
+ */
 void FarmingCounter::ShowQuitMessageCallback() {
     if (currentInstance) {
         currentInstance->ShowQuitMessage();
     }
 }
 
+/**
+ * @brief Display quit message and restore farming interface
+ * 
+ * Shows quit confirmation message and restores the farming interface
+ * with appropriate prompts and instructions.
+ */
 void FarmingCounter::ShowQuitMessage() {
     SpecialFunctions::showQuitMessage();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Farming/farming2.txt");
     UI::DisplayCenterText("Here is a farm, the crops you get from here", 24);
     UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
@@ -100,6 +148,14 @@ void FarmingCounter::ShowQuitMessage() {
     UI::DisplayCenterText("Assign farmers (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }
 
+/**
+ * @brief Get valid input for number of farmers to assign
+ * @param max Maximum number of farmers that can be assigned
+ * @return Valid number of farmers to assign
+ * 
+ * Handles input validation and user interface for selecting number of farmers
+ * to assign. Includes error handling and feedback.
+ */
 int FarmingCounter::GetValidInput(int max) {
     while (true) {
         UI::ShowInterface("ui/Counters/Farming/farming2.txt");
