@@ -117,22 +117,22 @@ make run
 
 ## Short Tutorial
 ### In main menu / home
-- Press *Enter* to select/continue/enter the counter.
-- Press *W/A/S/D*  to move or change the selection in the home.
-- Press *L* to show the game status and data.
-- Press *Q* to quit the game.
+- Press ***Enter*** to select/continue/enter the counter.
+- Press ***W/A/S/D***  to move or change the selection in the home.
+- Press ***L*** to show the game status and data.
+- Press ***Q*** to quit the game.
 ### In counters
-- Press *Enter* to confirm input.
-- Press *H* to delete all the change and return to home.
-- Press *L* to show the game status and data.
-- Press *Q* to quit the game.
-- Press *W* to show the weapon information.**(Only available in the shop)**
+- Press ***Enter*** to confirm input.
+- Press ***H*** to delete all the change and return to home.
+- Press ***L*** to show the game status and data.
+- Press ***Q*** to quit the game.
+- Press ***W*** to show the weapon information.**(Only available in the shop)**
 ### In combat
-- Press *A/D* to move left/right.
-- Press *Z/C* to move faster.
-- Press *Space* to shoot.
-- Press *P* to pause the fight.
->**Tips:** DO NOT press *ENTER* many times, otherwise it may cause unexpected scene skipping.
+- Press ***A/D*** to move left/right.
+- Press ***Z/C*** to move faster.
+- Press ***Space*** to shoot.
+- Press ***P*** to pause the fight.
+>**Tips:** DO NOT press ***Enter*** many times, otherwise it may cause unexpected scene skipping.
 
 
 # Game Implementation
