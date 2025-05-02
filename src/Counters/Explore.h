@@ -43,9 +43,9 @@ private:
 
     // 资源奖励范围
     static constexpr int MIN_GOLD_REWARD = 10;
-    static constexpr int MAX_GOLD_REWARD = 30;
+    static constexpr int MAX_GOLD_REWARD = 50;
     static constexpr int MIN_CROP_REWARD = 10;
-    static constexpr int MAX_CROP_REWARD = 30;
+    static constexpr int MAX_CROP_REWARD = 50;
     static constexpr int MIN_PEOPLE_REWARD = 1;
     static constexpr int MAX_PEOPLE_REWARD = 3;
 
