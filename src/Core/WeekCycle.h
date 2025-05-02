@@ -2,31 +2,65 @@
 #include <string>
 #include <vector>
 
+/**
+ * @class WeekCycle
+ * @brief Manages the game's weekly cycle and day tracking
+ * 
+ * The WeekCycle class handles:
+ * - Day progression (Friday to Thursday, skipping weekends)
+ * - Week counting
+ * - Day name retrieval
+ * - Special day detection (e.g., Thursday for battles)
+ */
 class WeekCycle {
 private:
-    int m_day;          // 当前天数（1-25）
-    int m_weekdayIndex; // 0=周五,1=周一,2=周二,3=周三,4=周四
+    int m_day;          // Current day number (1-25)
+    int m_weekdayIndex; // 0=Friday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday
     
     static const std::vector<std::string> WEEKDAY_NAMES;
 
 public:
+    /**
+     * @brief Constructs a new WeekCycle object
+     * @note Initializes to day 1 (Friday)
+     */
     WeekCycle();
     
-    // 推进到下一天（自动跳过周末）
+    /**
+     * @brief Advances the game to the next day
+     * @note Automatically skips weekends (Saturday and Sunday)
+     */
     void advanceDay();
     
-    // 获取当前是星期几
+    /**
+     * @brief Gets the name of the current day
+     * @return String representing the current day (Friday, Monday, Tuesday, Wednesday, or Thursday)
+     */
     std::string getDayName() const;
     
-    // 是否是星期四（战斗日）
+    /**
+     * @brief Checks if the current day is Thursday
+     * @return true if current day is Thursday, false otherwise
+     * @note Thursday is typically used for battle events
+     */
     bool isThursday() const;
     
-    // 获取总天数
+    /**
+     * @brief Gets the total number of days in the game
+     * @return Total number of days (from GameConfig::TOTAL_DAYS)
+     */
     int getTotalDays() const;
     
-    // 获取当前是第几天
+    /**
+     * @brief Gets the current day number
+     * @return Current day number (1-25)
+     */
     int getCurrentDay() const;
 
-    // 获取当前是第几周
+    /**
+     * @brief Gets the current week number
+     * @return Current week number (1-5)
+     * @note Each week consists of 5 working days (Friday to Thursday)
+     */
     int getCurrentWeek() const;
 };
