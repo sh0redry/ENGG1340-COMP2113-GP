@@ -122,6 +122,7 @@ int Terminal::GetKeyPress() {
 }
 
 char Terminal::GetYN() {
+    ShowCursor();
     char ch;
     while ((ch = getchar()) != '\n') {
         if (ch == 'y' || ch == 'Y' || ch == 'n' || ch == 'N') {
@@ -145,6 +146,7 @@ char Terminal::GetYN() {
             }
         }
     }
+    HideCursor();
     return 0; // 返回0表示无效输入
 }
 
@@ -178,6 +180,7 @@ std::string Terminal::GetLine(int maxLength) {
 }
 
 int Terminal::GetInteger() {
+    ShowCursor();
     std::string input;
     int result = 0;
     char ch;
@@ -206,6 +209,7 @@ int Terminal::GetInteger() {
             result = result * 10 + (ch - '0');
         }
     }
+    HideCursor();
     return result;
 }
 

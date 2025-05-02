@@ -12,10 +12,12 @@
 
 
 void Animation::Typewriter(const std::string& text, int delayMs) {
+    Terminal::GetInstance().ShowCursor();
     for (char c : text) {
         std::cout << c << std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
     }
+    Terminal::GetInstance().HideCursor();
 }
 
 void Animation::TypewriterInBox(const std::string& text, int delayMs, int lineNumber) {
