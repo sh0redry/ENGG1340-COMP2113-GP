@@ -1,16 +1,51 @@
 ![Crazy Thursday Banner](./title.jpg)
-# Team members 
-[Li Yitong](https://github.com/Lyt060814)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289377)
 
-[Qu Sijin](https://github.com/Rosette2048)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289676)
+# Team Members
 
-[Xue Hengtai](https://github.com/R1card0xht)&ensp;&ensp;&ensp;&ensp;&ensp; (3036289391)
+<!-- markdownlint-disable MD033 -->
 
-[Yu Chuhan](https://github.com/Yu-Chuhan)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; (3036449006)
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>UID</th>
+            <th>Profile</th>
+        </tr>
+        <tr>
+            <td>Li Yitong</td>
+            <td>3036289377</td>
+            <td><a href="https://github.com/Lyt060814"><img src="https://avatars.githubusercontent.com/Lyt060814" alt="Li Yitong" width=50></a></td>
+        </tr>
+        <tr>
+            <td>Qu Sijin</td>
+            <td>3036289676</td>
+            <td><a href="https://github.com/Rosette2048"><img src="https://avatars.githubusercontent.com/Rosette2048" alt="Qu Sijin" width=50></a></td>
+        </tr>
+        <tr>
+            <td>Xue Hengtai</td>
+            <td>3036289391</td>
+            <td><a href="https://github.com/R1card0xht"><img src="https://avatars.githubusercontent.com/R1card0xht" alt="Xue Hengtai" width=50></a></td>
+        </tr>
+        <tr>
+            <td>Yu Chuhan</td>
+            <td>3036449006</td>
+            <td><a href="https://github.com/Yu-Chuhan"><img src="https://avatars.githubusercontent.com/Yu-Chuhan" alt="Yu Chuhan" width=50></a></td>
+        </tr>
+        <tr>
+            <td>Zhao Dingcheng</td>
+            <td>3036292283</td>
+            <td><a href="https://github.com/sh0redry"><img src="https://avatars.githubusercontent.com/sh0redry" alt="Zhao Dingcheng" width=50></a></td>
+        </tr>
+        <tr>
+            <td>Zheng Yilin</td>
+            <td>3036289195</td>
+            <td><a href="https://github.com/Yilinss27"><img src="https://avatars.githubusercontent.com/Yilinss27" alt="Zheng Yilin" width=50></a></td>
+        </tr>
+    </tbody>
+</table>
 
-[Zhao Dingcheng](https://github.com/sh0redry)&ensp;&ensp;(3036292283)
+<!-- markdownlint-enable MD033-->
 
-[Zheng Yilin](https://github.com/Yilinss27)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289195)
 # Quick Start
 
 ```bash
@@ -27,7 +62,7 @@ make
 
 # Description
 
- `:wave:` **Welcome to a post-apocalyptic world built with C++!** You are the leader of a shelter in a world overrun by zombies. Guide your survivors to gather resources, explore the wasteland, and hold out until rescue arrives.  
+:wave: **Welcome to a post-apocalyptic world built with C++!** You are the leader of a shelter in a world overrun by zombies. Guide your survivors to gather resources, explore the wasteland, and hold out until rescue arrives.  
 
 The year is 2025. A zombie outbreak has erupted at HKU, and you and your teammates have built a makeshift shelter. The infected—former classmates—still retain strange habits, like becoming inactive on weekends. But **Thursdays** are different: zombies grow more aggressive, posing both danger and opportunity.  
 
@@ -85,9 +120,7 @@ graph LR
     style E fill:#bbf,stroke:#333,stroke-width:2px
     style F fill:#bbf,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
-
 ```
-
 
 ## Source Code Descriptions
 
