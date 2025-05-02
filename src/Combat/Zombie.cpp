@@ -9,7 +9,7 @@ char Zombie::getDisplayChar() const {
 
 ZombieManager::ZombieManager(int difficulty, int gameLevel) 
     : enemySpeed(20), enemyMoveCounter(0), enemySpawnCounter(0), 
-      enemySpawnInterval(30), spawnProbability(8) {
+      enemySpawnInterval(30), spawnProbability(15) {
     
     // 根据难度和等级设置初始血量
     if (difficulty == 1) {
