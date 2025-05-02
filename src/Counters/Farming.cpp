@@ -57,13 +57,15 @@ void FarmingCounter::Process() {
     }
     
     UI::WaitForEnter("Press Enter to return to home...");
-    
-    // 清除h键回调
+}
+
+void FarmingCounter::OnExit() {
+    // 清除所有回调
     clearHKeyCallback();
-    // 清除l键回调
     clearLKeyCallback();
-    // 清除q键回调
     clearQKeyCallback();
+    // 清除当前实例
+    currentInstance = nullptr;
 }
 
 void FarmingCounter::ShowPlayerInfoCallback() {

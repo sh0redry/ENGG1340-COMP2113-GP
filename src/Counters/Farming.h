@@ -25,4 +25,5 @@ public:
     explicit FarmingCounter(Player& player, WeekCycle& weekCycle);
     void OnEnter() override;
     void Process() override;
+    void OnExit() override;
 };

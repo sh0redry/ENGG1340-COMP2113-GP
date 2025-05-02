@@ -76,13 +76,6 @@ void ShopCounter::Process() {
     }
 
     UI::WaitForEnter("Press Enter to return to home...");
-
-    // 清除h键回调
-    clearHKeyCallback();
-    // 清除w键回调
-    clearWKeyCallback();
-    // 清除l键回调
-    clearLKeyCallback();
 }
 
 int ShopCounter::GetValidInput() {

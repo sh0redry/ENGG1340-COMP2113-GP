@@ -58,15 +58,17 @@ void MiningCounter::Process() {
         UI::DisplayCenterText("You can use the golds to upgrade your weapons and defend yourself against the zombies!", 26);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-
-    UI::WaitForEnter("Press Enter to return to home...");
     
-    // 清除h键回调
+    UI::WaitForEnter("Press Enter to return to home...");
+}
+
+void MiningCounter::OnExit() {
+    // 清除所有回调
     clearHKeyCallback();
-    // 清除l键回调
     clearLKeyCallback();
-    // 清除q键回调
     clearQKeyCallback();
+    // 清除当前实例
+    currentInstance = nullptr;
 }
 
 void MiningCounter::ShowPlayerInfoCallback() {

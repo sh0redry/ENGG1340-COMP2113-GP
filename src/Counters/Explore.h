@@ -25,6 +25,7 @@ public:
     explicit ExploreCounter(Player& player, WeekCycle& weekCycle);
     void OnEnter() override;
     void Process() override;
+    void OnExit() override;
 
 private:
     // 探索结果类型

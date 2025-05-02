@@ -47,7 +47,7 @@ void ExploreCounter::Process() {
         ExploreResult result = executeExplore();
         int value = 0;
         applyResult(result, peopleSent, value);
-
+        
         UI::WaitForEnter();
         // 之后修改为打字机效果
         UI::ShowInterface("ui/Counters/Explore/explore1.txt");
@@ -68,13 +68,15 @@ void ExploreCounter::Process() {
     }
     
     UI::WaitForEnter("Press Enter to return to home...");
-    
-    // 清除h键回调
+}
+
+void ExploreCounter::OnExit() {
+    // 清除所有回调
     clearHKeyCallback();
-    // 清除l键回调
     clearLKeyCallback();
-    // 清除q键回调
     clearQKeyCallback();
+    // 清除当前实例
+    currentInstance = nullptr;
 }
 
 // --- 私有方法实现 ---

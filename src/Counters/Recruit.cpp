@@ -36,9 +36,8 @@ void RecruitCounter::OnEnter() {
 }
 
 void RecruitCounter::Process() {
-    int maxPossible = calculateMaxRecruits();
-    if (maxPossible <= 0) {
-        // to be modified
+    int maxRecruits = calculateMaxRecruits();
+    if (maxRecruits <= 0) {
         UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
         UI::DisplayCenterText("No enough crops to recruit new members!", 25);
         UI::DisplayCenterText("Minimum required: " + std::to_string(BASE_COST + COST_PER_MEMBER) + " crops", 27);
@@ -46,9 +45,8 @@ void RecruitCounter::Process() {
         UI::WaitForEnter("Press Enter to return to home...");
         return;
     }
-    
-    int recruits = GetValidInput(maxPossible);
-    
+
+    int recruits = GetValidInput(maxRecruits);
     if (recruits > 0) {
         int totalCost = BASE_COST + COST_PER_MEMBER * recruits;
         m_player.addCrop(-totalCost);
@@ -56,7 +54,6 @@ void RecruitCounter::Process() {
         m_player.assignWorkers(0, 0, 1, 0, 0);
         
         UI::WaitForEnter();
-        // 之后修改为打字机效果
         UI::ShowInterface("ui/Counters/Recruit/recruit3.txt");
         Animation::TypewriterInBox("Your soldiers are ready for fight!", 50, 25);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -70,13 +67,6 @@ void RecruitCounter::Process() {
     }
     
     UI::WaitForEnter("Press Enter to return to home...");
-    
-    // 清除h键回调
-    clearHKeyCallback();
-    // 清除l键回调
-    clearLKeyCallback();
-    // 清除q键回调
-    clearQKeyCallback();
 }
 
 void RecruitCounter::ShowPlayerInfoCallback() {
@@ -162,4 +152,13 @@ void RecruitCounter::ShowQuitMessage() {
         UI::DisplayCenterText("Do you want to assign one of your workers to recruit new members? [y/n] y", 26);
         UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(calculateMaxRecruits()) + "): ", 28);
     }
+}
+
+void RecruitCounter::OnExit() {
+    // 清除所有回调
+    clearHKeyCallback();
+    clearLKeyCallback();
+    clearQKeyCallback();
+    // 清除当前实例
+    currentInstance = nullptr;
 }
