@@ -4,11 +4,25 @@
 #include <iostream>
 #include <limits>
 
+/**
+ * @brief Get the name of the counter
+ * @return const reference to the counter's name string
+ * 
+ * This function returns the name of the counter that was set during construction.
+ * The name is used for display purposes and identification.
+ */
 const std::string& CounterBase::GetName() const {
     return m_name;
 }
 
+/**
+ * @brief Default implementation of the OnExit function
+ * 
+ * This is the base implementation of OnExit which does nothing.
+ * Derived classes can override this to perform cleanup or state saving
+ * when exiting the counter.
+ */
 void CounterBase::OnExit() {
-    // 默认实现为空
+    // Default implementation is empty
 }
 

@@ -5,7 +5,9 @@
 #include "../UI/UI.h"
 #include <stdexcept>
 
-// 用于中断Counter执行的异常类
+/**
+ * @brief Exception class used to interrupt Counter execution and return to home menu
+ */
 class ReturnToHomeException : public std::exception {
 public:
     const char* what() const noexcept override {
@@ -13,63 +15,119 @@ public:
     }
 };
 
+/**
+ * @brief Base class for all game counters/systems
+ * 
+ * This abstract class provides the foundation for different game systems
+ * like shops, exploration, farming, etc. It handles player interaction
+ * and provides common functionality for all derived counters.
+ */
 class CounterBase {
 protected:
-    Player& m_player;       // 引用玩家对象
-    std::string m_name;     // 计数器名称
+    Player& m_player;       // Reference to the player object
+    std::string m_name;     // Name of the counter
 
-    // 返回主菜单的函数
+    /**
+     * @brief Static function to trigger return to home menu
+     * @throws ReturnToHomeException when called
+     */
     static void returnToHome() {
         throw ReturnToHomeException();
     }
 
 public:
-    // 构造函数：必须绑定玩家和名称
+    /**
+     * @brief Constructor for CounterBase
+     * @param player Reference to the player object
+     * @param name Name of the counter
+     */
     CounterBase(Player& player, const std::string& name)
         : m_player(player), m_name(name) {}
     
-    // 虚析构函数：确保派生类正确释放资源
+    /**
+     * @brief Virtual destructor to ensure proper cleanup of derived classes
+     */
     virtual ~CounterBase() = default;
     
-    // 纯虚函数：子类必须实现
-    virtual void OnEnter() = 0;    // 进入计数器时的逻辑
-    virtual void Process() = 0;    // 核心处理逻辑
+    /**
+     * @brief Pure virtual function called when entering the counter
+     * Must be implemented by derived classes
+     */
+    virtual void OnEnter() = 0;
+
+    /**
+     * @brief Pure virtual function for main counter logic
+     * Must be implemented by derived classes
+     */
+    virtual void Process() = 0;
     
-    // 可选覆盖函数
-    virtual void OnExit();         // 退出计数器时的逻辑
-    
-    // 获取计数器名称
+    /**
+     * @brief Virtual function called when exiting the counter
+     * Can be overridden by derived classes
+     */
+    virtual void OnExit();
+
+    /**
+     * @brief Get the name of the counter
+     * @return const reference to the counter's name
+     */
     const std::string& GetName() const;
 
-    // 设置和清除h键回调
+    /**
+     * @brief Set up the 'H' key callback to return to home menu
+     */
     void setupHKeyCallback() {
         Terminal::GetInstance().SetHKeyCallback(returnToHome);
     }
     
+    /**
+     * @brief Clear the 'H' key callback
+     */
     void clearHKeyCallback() {
         Terminal::GetInstance().ClearHKeyCallback();
     }
 
-    // 设置和清除w键回调
+    /**
+     * @brief Set up the 'W' key callback
+     * @param callback Function pointer to the callback function
+     */
     void setupWKeyCallback(void (*callback)()) {
         Terminal::GetInstance().SetWKeyCallback(callback);
     }
+
+    /**
+     * @brief Clear the 'W' key callback
+     */
     void clearWKeyCallback() {
         Terminal::GetInstance().ClearWKeyCallback();
     }
 
-    // 设置和清除l键回调
+    /**
+     * @brief Set up the 'L' key callback
+     * @param callback Function pointer to the callback function
+     */
     void setupLKeyCallback(void (*callback)()) {
         Terminal::GetInstance().SetLKeyCallback(callback);
     }
+
+    /**
+     * @brief Clear the 'L' key callback
+     */
     void clearLKeyCallback() {
         Terminal::GetInstance().ClearLKeyCallback();
     }
 
-    // 设置和清除q键回调
+    /**
+     * @brief Set up the 'Q' key callback
+     * @param callback Function pointer to the callback function
+     */
     void setupQKeyCallback(void (*callback)()) {
         Terminal::GetInstance().SetQKeyCallback(callback);
     }
+
+    /**
+     * @brief Clear the 'Q' key callback
+     */
     void clearQKeyCallback() {
         Terminal::GetInstance().ClearQKeyCallback();
     }
