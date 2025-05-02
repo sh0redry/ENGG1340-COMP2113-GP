@@ -3,7 +3,10 @@
 #include "../Core/Player.h"
 #include "../Core/WeekCycle.h"
 #include "../Combat/Weapon.h"
+#include "../UI/Terminal.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 
 // 显示武器信息的函数
@@ -62,6 +65,18 @@ void SpecialFunctions::showQuitMessage() {
     while (true) {
         int ch = getchar();
         if (ch == 'q' || ch == 'Q') {
+            UI::ShowInterface("ui/empty.txt");
+            UI::DisplayCenterText("Thank you for playing!", 15);
+            UI::DisplayCenterText("See you next time!", 17);
+            std::cout << std::flush;  // 确保文本被立即显示
+
+            // 增加显示时间到3秒
+            std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+            
+            // 先显示光标，再清除屏幕
+            Terminal::GetInstance().ShowCursor();
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            Terminal::GetInstance().Clear();
             exit(0);  // 直接退出游戏
         } else {
             break;
