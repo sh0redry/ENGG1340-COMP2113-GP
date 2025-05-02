@@ -8,23 +8,35 @@
 #include "../UI/Animation.h"
 #include "../Utils/SpecialFunctions.h"
 
-// 初始化静态成员
+// Initialize static member
 RecruitCounter* RecruitCounter::currentInstance = nullptr;
 
+/**
+ * @brief Constructor for RecruitCounter
+ * @param player Reference to the player object
+ * @param weekCycle Reference to the week cycle system
+ * 
+ * Initializes the recruitment counter with player and week cycle references,
+ * sets up the current instance pointer, and initializes the input state.
+ */
 RecruitCounter::RecruitCounter(Player& player, WeekCycle& weekCycle) 
     : CounterBase(player, "Recruit"), m_weekCycle(weekCycle), m_currentState(InputState::WAITING_YN) {
     currentInstance = this;
 }
 
+/**
+ * @brief Called when entering the recruitment system
+ * 
+ * Sets up key callbacks and displays the initial recruitment interface
+ * with animated introduction text.
+ */
 void RecruitCounter::OnEnter() {
-    // 设置h键回调
+    // Set up key callbacks
     setupHKeyCallback();
-    // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 设置q键回调
     setupQKeyCallback(ShowQuitMessageCallback);
     
-    // 之后修改为打字机效果
+    // Display introduction with typewriter effect
     UI::ShowInterface("ui/Counters/Recruit/recruit1.txt");
     Animation::TypewriterInBox("Hey! Come to hire someone, huh?", 50, 26);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -35,6 +47,15 @@ void RecruitCounter::OnEnter() {
     UI::WaitForEnter();
 }
 
+/**
+ * @brief Main processing loop for recruitment
+ * 
+ * Handles the core recruitment mechanics including:
+ * 1. Checking if player has enough resources
+ * 2. Getting valid input for number of recruits
+ * 3. Processing recruitment and updating resources
+ * 4. Displaying results with animations
+ */
 void RecruitCounter::Process() {
     int maxRecruits = calculateMaxRecruits();
     if (maxRecruits <= 0) {
@@ -59,7 +80,7 @@ void RecruitCounter::Process() {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
-        // 之后修改为打字机效果
+        // Display results with typewriter effect
         UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
         UI::DisplayCenterText("Now you have " + std::to_string(recruits) + " more members!", 25);
         UI::DisplayCenterText("Consumed crops: " + std::to_string(totalCost), 27);
@@ -69,15 +90,26 @@ void RecruitCounter::Process() {
     UI::WaitForEnter("Press Enter to return to home...");
 }
 
+/**
+ * @brief Static callback for showing player information
+ * 
+ * Called when 'L' key is pressed to display player stats.
+ */
 void RecruitCounter::ShowPlayerInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowPlayerInfo();
     }
 }
 
+/**
+ * @brief Display player information and restore recruitment interface
+ * 
+ * Shows player stats and resources, then restores the recruitment interface
+ * with appropriate prompts and instructions based on current input state.
+ */
 void RecruitCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
-    // 根据当前状态重新显示对应的界面
+    // Restore interface based on current state
     UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
     UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
     UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
@@ -90,6 +122,16 @@ void RecruitCounter::ShowPlayerInfo() {
     }
 }
 
+/**
+ * @brief Get valid input for recruitment process
+ * @param max Maximum number of recruits possible
+ * @return Number of recruits to hire
+ * 
+ * Handles the two-step input process:
+ * 1. Yes/No confirmation for recruitment
+ * 2. Number of recruits to hire
+ * Includes error handling and feedback.
+ */
 int RecruitCounter::GetValidInput(int max) {
     while (true) {
         m_currentState = InputState::WAITING_YN;
@@ -106,7 +148,7 @@ int RecruitCounter::GetValidInput(int max) {
         }else if (yn == 'y' || yn == 'Y'){
             while (true) {
                 m_currentState = InputState::WAITING_NUMBER;
-                // 这个txt文件的第一个框里有一个y
+                // The first box in this txt file contains a 'y'
                 UI::DisplayCenterText("Recruit how many members? (0-" + std::to_string(max) + "): ", 28);
 
                 int input = Terminal::GetInstance().GetInteger();
@@ -129,19 +171,39 @@ int RecruitCounter::GetValidInput(int max) {
     }
 }
 
+/**
+ * @brief Calculate maximum number of possible recruits
+ * @return Maximum number of recruits based on available crops
+ * 
+ * Calculates how many recruits the player can afford based on:
+ * - Available crops
+ * - Base cost
+ * - Cost per member
+ */
 int RecruitCounter::calculateMaxRecruits() const {
     return std::max(0, (m_player.getCrop() - BASE_COST) / COST_PER_MEMBER);
 }
 
+/**
+ * @brief Static callback for showing quit message
+ * 
+ * Called when 'Q' key is pressed to display quit confirmation.
+ */
 void RecruitCounter::ShowQuitMessageCallback() {
     if (currentInstance) {
         currentInstance->ShowQuitMessage();
     }
 }
 
+/**
+ * @brief Display quit message and restore recruitment interface
+ * 
+ * Shows quit confirmation message and restores the recruitment interface
+ * with appropriate prompts and instructions based on current input state.
+ */
 void RecruitCounter::ShowQuitMessage() {
     SpecialFunctions::showQuitMessage();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Recruit/recruit2.txt");
     UI::DisplayCenterText("This is the recruiting office. You can use crops to recruit new members.", 24);
     UI::DisplayCenterText("Enter: confirm | H: return to home | L: show information | Q: quit", 32);
@@ -154,11 +216,16 @@ void RecruitCounter::ShowQuitMessage() {
     }
 }
 
+/**
+ * @brief Called when exiting the recruitment system
+ * 
+ * Cleans up by removing all key callbacks and resetting the current instance pointer.
+ */
 void RecruitCounter::OnExit() {
-    // 清除所有回调
+    // Clear all callbacks
     clearHKeyCallback();
     clearLKeyCallback();
     clearQKeyCallback();
-    // 清除当前实例
+    // Clear current instance
     currentInstance = nullptr;
 }
