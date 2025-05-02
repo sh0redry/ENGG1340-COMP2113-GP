@@ -44,45 +44,53 @@ Our wasteland odyssey blends base-building progression, tactical shooting mechan
 ## File Structure
 ```mermaid
 graph LR
-    A[src/] --> B[main.cpp]
-    A --> C[Core/]
-    A --> D[Counters/]
-    A --> E[Combat/]
-    A --> F[UI/]
-    A --> G[Utils/]
+    A[Crazy Thursday] --> B[Makefile]
+    A --> C[README.md]
+    A --> D[src/]
+    A --> E[ui/]
+    A --> F[anim/]
     
-    C --> C1[Game.cpp/h]
-    C --> C2[Player.cpp/h]
-    C --> C3[WeekCycle.cpp/h]
-    C --> C4[Difficulty.h]
+    D --> D1[main.cpp]
+    D --> D2[Utils/]
+    D --> D3[Core/]
+    D --> D4[Counters/]
+    D --> D5[UI/]
+    D --> D6[Combat/]
     
-    D --> D1[CounterBase.cpp/h]
-    D --> D2[CounterFactory.h]
-    D --> D3[Explore.cpp/h]
-    D --> D4[Farming.cpp/h]
-    D --> D5[Mining.cpp/h]
-    D --> D6[Recruit.cpp/h]
-    D --> D7[Shop.cpp/h]
+    D2 --> D2a[Random.h]
+    D2 --> D2b[Constants.h]
+    D2 --> D2c[SpecialFunctions.h/cpp]
     
-    E --> E1[Combat.cpp/h]
-    E --> E2[Weapon.cpp/h]
-    E --> E3[Zombie.cpp/h]
+    D3 --> D3a[Game.h/cpp]
+    D3 --> D3b[Player.h/cpp]
+    D3 --> D3c[WeekCycle.h/cpp]
+    D3 --> D3d[Difficulty.h]
     
-    F --> F1[UI.cpp/h]
-    F --> F2[Terminal.cpp/h]
-    F --> F3[Animation.cpp/h]
+    D4 --> D4a[CounterBase.h/cpp]
+    D4 --> D4b[CounterFactory.h]
+    D4 --> D4c[Explore.h/cpp]
+    D4 --> D4d[Farming.h/cpp]
+    D4 --> D4e[Mining.h/cpp]
+    D4 --> D4f[Recruit.h/cpp]
+    D4 --> D4g[Shop.h/cpp]
     
-    G --> G1[Constants.h]
-    G --> G2[Random.h]
-    G --> G3[SpecialFunctions.cpp/h]
+    D5 --> D5a[UI.h/cpp]
+    D5 --> D5b[Terminal.h/cpp]
+    D5 --> D5c[Animation.h/cpp]
+    
+    D6 --> D6a[Combat.h/cpp]
+    D6 --> D6b[Weapon.h/cpp]
+    D6 --> D6c[Zombie.h/cpp]
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#bbf,stroke:#333,stroke-width:2px
     style D fill:#bbf,stroke:#333,stroke-width:2px
     style E fill:#bbf,stroke:#333,stroke-width:2px
     style F fill:#bbf,stroke:#333,stroke-width:2px
-    style G fill:#bbf,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+
 ```
+
 
 ## File Descriptions
 
