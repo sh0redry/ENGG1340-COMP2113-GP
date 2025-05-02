@@ -1,8 +1,3 @@
-/**
- * @file Game.cpp
- * @brief Implementation of the main game logic and state management
- */
-
 #include "Game.h"
 #include "Difficulty.h"
 #include "../Counters/CounterFactory.h"
