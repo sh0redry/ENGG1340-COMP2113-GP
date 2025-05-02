@@ -40,3 +40,78 @@ Or will you venture into the chaotic wastelands with your companions – where e
 When crimson Thursday dawns – that cursed cycle triggering the horde's primal rage – zombies unleash their frenzied siege, battering against your defenses with unnatural ferocity. This is your trial by fire: deploy strategic mastery to fortify your stronghold, channeling every upgraded turret and stockpiled resource. Hold the line until dawn brings salvation... or die trying!
 
 Our wasteland odyssey blends base-building progression, tactical shooting mechanics, and roguelike randomization – where no two playthroughs unfold identically. While countless survival strategies exist in this dynamic ecosystem, we entrust you to forge your own path to victory through emergent gameplay. The wasteland awaits your legend – survival starts now!
+
+## File Structure
+```mermaid
+graph LR
+    A[src/] --> B[main.cpp]
+    A --> C[Core/]
+    A --> D[Counters/]
+    A --> E[Combat/]
+    A --> F[UI/]
+    A --> G[Utils/]
+    
+    C --> C1[Game.cpp/h]
+    C --> C2[Player.cpp/h]
+    C --> C3[WeekCycle.cpp/h]
+    C --> C4[Difficulty.h]
+    
+    D --> D1[CounterBase.cpp/h]
+    D --> D2[CounterFactory.h]
+    D --> D3[Explore.cpp/h]
+    D --> D4[Farming.cpp/h]
+    D --> D5[Mining.cpp/h]
+    D --> D6[Recruit.cpp/h]
+    D --> D7[Shop.cpp/h]
+    
+    E --> E1[Combat.cpp/h]
+    E --> E2[Weapon.cpp/h]
+    E --> E3[Zombie.cpp/h]
+    
+    F --> F1[UI.cpp/h]
+    F --> F2[Terminal.cpp/h]
+    F --> F3[Animation.cpp/h]
+    
+    G --> G1[Constants.h]
+    G --> G2[Random.h]
+    G --> G3[SpecialFunctions.cpp/h]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#bbf,stroke:#333,stroke-width:2px
+    style D fill:#bbf,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style F fill:#bbf,stroke:#333,stroke-width:2px
+    style G fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+## File Descriptions
+
+### Core Components
+- **[Game.cpp/h](src/Core/Game.h)**: Manages the main game loop, state transitions, and overall game flow
+- **[Player.cpp/h](src/Core/Player.h)**: Handles player data, survivor management, and resource tracking
+- **[WeekCycle.cpp/h](src/Core/WeekCycle.h)**: Controls the game's time system and zombie behavior patterns
+- **[Difficulty.h](src/Core/Difficulty.h)**: Defines game difficulty levels and their associated parameters
+
+### Game Mechanics
+- **[CounterBase.cpp/h](src/Counters/CounterBase.h)**: Base class for all game counters and activities
+- **[CounterFactory.h](src/Counters/CounterFactory.h)**: Implements the factory pattern for creating different types of counters
+- **[Explore.cpp/h](src/Counters/Explore.h)**: Manages exploration mechanics and resource discovery
+- **[Farming.cpp/h](src/Counters/Farming.h)**: Handles crop growth and food production
+- **[Mining.cpp/h](src/Counters/Mining.h)**: Controls resource gathering and mining operations
+- **[Recruit.cpp/h](src/Counters/Recruit.h)**: Manages survivor recruitment and population
+- **[Shop.cpp/h](src/Counters/Shop.h)**: Handles trading and upgrades
+
+### Combat System
+- **[Combat.cpp/h](src/Combat/Combat.h)**: Core combat mechanics and battle resolution
+- **[Weapon.cpp/h](src/Combat/Weapon.h)**: Weapon properties and combat calculations
+- **[Zombie.cpp/h](src/Combat/Zombie.h)**: Zombie behavior, stats, and special abilities
+
+### User Interface
+- **[UI.cpp/h](src/UI/UI.h)**: Main interface system and screen management
+- **[Terminal.cpp/h](src/UI/Terminal.h)**: Terminal display and text rendering
+- **[Animation.cpp/h](src/UI/Animation.h)**: Game animations and visual effects
+
+### Utilities
+- **[Constants.h](src/Utils/Constants.h)**: Game constants and configuration values
+- **[Random.h](src/Utils/Random.h)**: Random number generation utilities
+- **[SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h)**: Helper functions used throughout the game
