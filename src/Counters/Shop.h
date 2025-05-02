@@ -2,32 +2,65 @@
 #include "CounterBase.h"
 #include "../Core/WeekCycle.h"
 
+/**
+ * @brief Class representing the shop system in the game
+ * 
+ * This class handles the shop mechanics where players can purchase weapons
+ * and upgrades. The shop system displays weapon information, player resources,
+ * and handles the transaction process.
+ */
 class ShopCounter : public CounterBase {
 private:
-    // 内部方法
+    /**
+     * @brief Get valid input for shop menu selection
+     * @return Valid menu selection number
+     */
     int GetValidInput();
     
-    // 当前ShopCounter实例的指针
+    // Pointer to the current ShopCounter instance
     static ShopCounter* currentInstance;
     
-    // 显示武器信息相关方法
+    /**
+     * @brief Display weapon power and level information
+     */
     void ShowWeaponPowerAndLevelInfo();
     static void ShowWeaponPowerAndLevelInfoCallback();
 
-    // 显示玩家信息相关方法
+    /**
+     * @brief Display player's current information and resources
+     */
     void ShowPlayerInfo();
     static void ShowPlayerInfoCallback();
 
-    // 显示退出信息相关方法
+    /**
+     * @brief Display quit message when player wants to exit
+     */
     void ShowQuitMessage();
     static void ShowQuitMessageCallback();
 
-    // 周循环引用
+    // Reference to the week cycle system
     WeekCycle& m_weekCycle;
 
 public:
+    /**
+     * @brief Constructor for ShopCounter
+     * @param player Reference to the player object
+     * @param weekCycle Reference to the week cycle system
+     */
     explicit ShopCounter(Player& player, WeekCycle& weekCycle);
+
+    /**
+     * @brief Called when entering the shop system
+     */
     void OnEnter() override;
+
+    /**
+     * @brief Main processing loop for shop interactions
+     */
     void Process() override;
+
+    /**
+     * @brief Called when exiting the shop system
+     */
     void OnExit() override;
 };

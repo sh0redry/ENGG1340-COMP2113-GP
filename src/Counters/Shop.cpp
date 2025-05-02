@@ -7,22 +7,33 @@
 #include <chrono>
 #include "../UI/Animation.h"
 #include "../Utils/SpecialFunctions.h"
-// 静态成员初始化
+
+// Initialize static member
 ShopCounter* ShopCounter::currentInstance = nullptr;
 
+/**
+ * @brief Constructor for ShopCounter
+ * @param player Reference to the player object
+ * @param weekCycle Reference to the week cycle system
+ * 
+ * Initializes the shop counter with player and week cycle references.
+ */
 ShopCounter::ShopCounter(Player& player, WeekCycle& weekCycle) 
     : CounterBase(player, "Shop"), m_weekCycle(weekCycle) {}
 
+/**
+ * @brief Called when entering the shop system
+ * 
+ * Sets up key callbacks and displays the initial shop interface
+ * with animated introduction text.
+ */
 void ShopCounter::OnEnter() {
-    // 设置当前实例
+    // Set up current instance
     currentInstance = this;
-    // 设置h键回调
+    // Set up key callbacks
     setupHKeyCallback();
-    // 设置w键回调
     setupWKeyCallback(ShowWeaponPowerAndLevelInfoCallback);
-    // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 设置q键回调
     setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Shop/shop1.txt");
@@ -37,6 +48,15 @@ void ShopCounter::OnEnter() {
     UI::WaitForEnter();
 }
 
+/**
+ * @brief Main processing loop for weapon upgrades
+ * 
+ * Handles the core shop mechanics including:
+ * 1. Checking weapon level and upgrade costs
+ * 2. Validating player resources
+ * 3. Processing upgrades
+ * 4. Displaying results with animations
+ */
 void ShopCounter::Process() {
     int currentLevel = m_player.getWeaponLevel();
     int cost = Player::WEAPON_UPGRADE_COST.at(currentLevel);
@@ -60,7 +80,7 @@ void ShopCounter::Process() {
         m_player.upgradeWeapon();
         m_player.assignWorkers(0, 0, 0, 1, 0);
         UI::WaitForEnter();
-        // 之后修改为打字机效果
+        // Display upgrade in progress message with typewriter effect
         UI::ShowInterface("ui/Counters/Shop/shop3.txt");
         Animation::TypewriterInBox("Um, what a beautiful and powerful weapon!", 50, 24);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -68,7 +88,7 @@ void ShopCounter::Process() {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
-        // 之后修改为打字机效果
+        // Display results with typewriter effect
         UI::ShowInterface("ui/Counters/Shop/shop2.txt");
         UI::DisplayCenterText("Current level: " + std::to_string(m_player.getWeaponLevel()), 25);
         UI::DisplayCenterText("Cost: " + std::to_string(cost) + " gold", 27);
@@ -78,6 +98,13 @@ void ShopCounter::Process() {
     UI::WaitForEnter("Press Enter to return to home...");
 }
 
+/**
+ * @brief Get valid input for weapon upgrade confirmation
+ * @return 1 if upgrade confirmed, 0 if cancelled
+ * 
+ * Handles the yes/no confirmation process for weapon upgrades,
+ * including input validation and user feedback.
+ */
 int ShopCounter::GetValidInput() {
     while (true) {
         UI::ShowInterface("ui/Counters/Shop/shop2.txt");
@@ -104,17 +131,26 @@ int ShopCounter::GetValidInput() {
     }
 }
 
-// 静态回调函数
+/**
+ * @brief Static callback for showing weapon information
+ * 
+ * Called when 'W' key is pressed to display weapon stats.
+ */
 void ShopCounter::ShowWeaponPowerAndLevelInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowWeaponPowerAndLevelInfo();
     }
 }
 
-// 非静态方法：显示武器威力和发射数量与等级关系
+/**
+ * @brief Display weapon information and restore shop interface
+ * 
+ * Shows weapon stats and upgrade information, then restores the shop interface
+ * with appropriate prompts and instructions.
+ */
 void ShopCounter::ShowWeaponPowerAndLevelInfo() {
     SpecialFunctions::showWeaponInfo();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Shop/shop2.txt");
     UI::DisplayCenterText("Here you can upgrade your weapon to increase its power and fire count.", 24);
     UI::DisplayCenterText("The better your weapon, the longer you can survive!", 25);
@@ -123,17 +159,26 @@ void ShopCounter::ShowWeaponPowerAndLevelInfo() {
     UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
 }
 
-// 静态回调函数
+/**
+ * @brief Static callback for showing player information
+ * 
+ * Called when 'L' key is pressed to display player stats.
+ */
 void ShopCounter::ShowPlayerInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowPlayerInfo();
     }
 }
 
-// 非静态方法：显示玩家信息
+/**
+ * @brief Display player information and restore shop interface
+ * 
+ * Shows player stats and resources, then restores the shop interface
+ * with appropriate prompts and instructions.
+ */
 void ShopCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Shop/shop2.txt");
     UI::DisplayCenterText("Here you can upgrade your weapon to increase its power and fire count.", 24);
     UI::DisplayCenterText("The better your weapon, the longer you can survive!", 25);
@@ -142,15 +187,26 @@ void ShopCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
 }
 
+/**
+ * @brief Static callback for showing quit message
+ * 
+ * Called when 'Q' key is pressed to display quit confirmation.
+ */
 void ShopCounter::ShowQuitMessageCallback() {
     if (currentInstance) {
         currentInstance->ShowQuitMessage();
     }
 }
 
+/**
+ * @brief Display quit message and restore shop interface
+ * 
+ * Shows quit confirmation message and restores the shop interface
+ * with appropriate prompts and instructions.
+ */
 void ShopCounter::ShowQuitMessage() {
     SpecialFunctions::showQuitMessage();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Shop/shop2.txt");
     UI::DisplayCenterText("Here you can upgrade your weapon to increase its power and fire count.", 24);
     UI::DisplayCenterText("The better your weapon, the longer you can survive!", 25);
@@ -159,8 +215,13 @@ void ShopCounter::ShowQuitMessage() {
     UI::DisplayCenterText("Do you want to assign one of your workers to upgrade your weapon? [y/n] ", 27);
 }
 
+/**
+ * @brief Called when exiting the shop system
+ * 
+ * Cleans up by removing all key callbacks.
+ */
 void ShopCounter::OnExit() {
-    // 清除所有回调
+    // Clear all callbacks
     clearHKeyCallback();
     clearWKeyCallback();
     clearLKeyCallback();
