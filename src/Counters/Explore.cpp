@@ -13,20 +13,32 @@
 #include <thread>
 #include <chrono>
 
-// 初始化静态成员
+// Initialize static member
 ExploreCounter* ExploreCounter::currentInstance = nullptr;
 
+/**
+ * @brief Constructor for ExploreCounter
+ * @param player Reference to the player object
+ * @param weekCycle Reference to the week cycle system
+ * 
+ * Initializes the exploration counter with player and week cycle references,
+ * and sets up the current instance pointer.
+ */
 ExploreCounter::ExploreCounter(Player& player, WeekCycle& weekCycle) 
     : CounterBase(player, "Explore"), m_weekCycle(weekCycle) {
     currentInstance = this;
 }
 
+/**
+ * @brief Called when entering the exploration system
+ * 
+ * Sets up key callbacks and displays the initial exploration interface
+ * with animated introduction text.
+ */
 void ExploreCounter::OnEnter() {
-    // 设置h键回调
+    // Set up key callbacks
     setupHKeyCallback();
-    // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 设置q键回调
     setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Explore/explore1.txt");
@@ -39,6 +51,15 @@ void ExploreCounter::OnEnter() {
     UI::WaitForEnter();
 }
 
+/**
+ * @brief Main processing loop for exploration
+ * 
+ * Handles the core exploration mechanics including:
+ * 1. Getting valid input for number of people to send
+ * 2. Executing exploration
+ * 3. Applying results
+ * 4. Displaying results with animations
+ */
 void ExploreCounter::Process() {
     int peopleSent = getValidPeopleInput(m_player.getAvailablePeople());
     
@@ -49,7 +70,7 @@ void ExploreCounter::Process() {
         applyResult(result, peopleSent, value);
         
         UI::WaitForEnter();
-        // 之后修改为打字机效果
+        // Display exploration in progress message with typewriter effect
         UI::ShowInterface("ui/Counters/Explore/explore1.txt");
         Animation::TypewriterInBox("Your guys are exploring the land, which is full of perils and treasures!", 50, 16);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -59,7 +80,7 @@ void ExploreCounter::Process() {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
-        // 之后修改为打字机效果
+        // Display results with typewriter effect
         std::vector<std::string> messages = showResultMessage(result, value);
         UI::ShowInterface("ui/Counters/Explore/explore2.txt");
         UI::DisplayCenterText(messages[0], 23);
@@ -70,18 +91,31 @@ void ExploreCounter::Process() {
     UI::WaitForEnter("Press Enter to return to home...");
 }
 
+/**
+ * @brief Called when exiting the exploration system
+ * 
+ * Cleans up by removing all key callbacks and resetting the current instance pointer.
+ */
 void ExploreCounter::OnExit() {
-    // 清除所有回调
+    // Clear all callbacks
     clearHKeyCallback();
     clearLKeyCallback();
     clearQKeyCallback();
-    // 清除当前实例
+    // Clear current instance
     currentInstance = nullptr;
 }
 
-// --- 私有方法实现 ---
+// --- Private method implementations ---
+
+/**
+ * @brief Execute the core exploration logic
+ * @return ExploreResult indicating the outcome of exploration
+ * 
+ * Determines the exploration outcome based on:
+ * 1. Difficulty-based loss probability
+ * 2. Random distribution of rewards (gold:crops:people:nothing = 2:2:2:1)
+ */
 ExploreCounter::ExploreResult ExploreCounter::executeExplore() {
-    
     // Get difficulty configuration
     const float lossProbability = Difficulty::GetConfig(m_player.getStringDifficulty()).exploreRisk;
 
@@ -105,6 +139,19 @@ ExploreCounter::ExploreResult ExploreCounter::executeExplore() {
     }
 }
 
+/**
+ * @brief Apply the results of exploration to the game state
+ * @param result The exploration result
+ * @param peopleSent Number of people sent on exploration
+ * @param value Reference to store the reward value
+ * 
+ * Updates player resources based on exploration outcome:
+ * - Gold found: Adds gold to player
+ * - Crops found: Adds crops to player
+ * - People joined: Adds new people
+ * - People lost: Removes people
+ * - Nothing found: No changes
+ */
 void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& value) {
     switch (result) {
         case ExploreResult::GOLD_FOUND:
@@ -123,7 +170,7 @@ void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& valu
             break;
             
         case ExploreResult::PEOPLE_LOST:
-            value = peopleSent; // 损失全部探索成员
+            value = peopleSent; // Lost all exploration members
             m_player.addPeople(-value);
             break;
             
@@ -135,6 +182,14 @@ void ExploreCounter::applyResult(ExploreResult result, int peopleSent, int& valu
     }
 }
 
+/**
+ * @brief Generate result messages for the UI
+ * @param result The exploration result
+ * @param value The reward value
+ * @return Vector of strings containing the result messages
+ * 
+ * Creates appropriate messages to display based on the exploration outcome.
+ */
 std::vector<std::string> ExploreCounter::showResultMessage(ExploreResult result, int value) {
     std::vector<std::string> messages;
     
@@ -165,15 +220,26 @@ std::vector<std::string> ExploreCounter::showResultMessage(ExploreResult result,
     return messages;
 }
 
+/**
+ * @brief Static callback for showing player information
+ * 
+ * Called when 'L' key is pressed to display player stats.
+ */
 void ExploreCounter::ShowPlayerInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowPlayerInfo();
     }
 }
 
+/**
+ * @brief Display player information and restore exploration interface
+ * 
+ * Shows player stats and resources, then restores the exploration interface
+ * with appropriate prompts and instructions.
+ */
 void ExploreCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Explore/explore2.txt");
     UI::DisplayCenterText("Type in the number of people you want to assign to this land!", 22);
     UI::DisplayCenterText("Think twice before you decide!", 23);
@@ -182,6 +248,14 @@ void ExploreCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("Assign people to explore (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 26);
 }
 
+/**
+ * @brief Get valid input for number of people to send
+ * @param max Maximum number of people that can be sent
+ * @return Valid number of people to send
+ * 
+ * Handles input validation and user interface for selecting number of people
+ * to send on exploration. Includes error handling and feedback.
+ */
 int ExploreCounter::getValidPeopleInput(int max) {
     while (true) {
         UI::ShowInterface("ui/Counters/Explore/explore2.txt");
@@ -206,15 +280,26 @@ int ExploreCounter::getValidPeopleInput(int max) {
     }
 }
 
+/**
+ * @brief Static callback for showing quit message
+ * 
+ * Called when 'Q' key is pressed to display quit confirmation.
+ */
 void ExploreCounter::ShowQuitMessageCallback() {
     if (currentInstance) {
         currentInstance->ShowQuitMessage();
     }
 }
 
+/**
+ * @brief Display quit message and restore exploration interface
+ * 
+ * Shows quit confirmation message and restores the exploration interface
+ * with appropriate prompts and instructions.
+ */
 void ExploreCounter::ShowQuitMessage() {
     SpecialFunctions::showQuitMessage();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Explore/explore2.txt");
     UI::DisplayCenterText("Type in the number of people you want to assign to this land!", 22);
     UI::DisplayCenterText("Think twice before you decide!", 23);
