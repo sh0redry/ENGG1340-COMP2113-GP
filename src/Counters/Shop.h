@@ -1,3 +1,24 @@
+/**
+ * @file Shop.h
+ * @brief Shop counter for weapon upgrades
+ * 
+ * This file defines the ShopCounter class, which manages the weapon upgrade
+ * system in the game. It provides functionality for players to upgrade their
+ * weapons using gold, with each upgrade increasing the weapon's power and
+ * capabilities.
+ * 
+ * The ShopCounter class features:
+ * - Weapon upgrade mechanics
+ * - Cost calculation and resource management
+ * - Upgrade confirmation system
+ * - Weapon information display
+ * - Player resource validation
+ * 
+ * @see CounterBase
+ * @see Player
+ * @see WeekCycle
+ */
+
 #pragma once
 #include "CounterBase.h"
 #include "../Core/WeekCycle.h"

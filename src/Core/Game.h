@@ -1,3 +1,26 @@
+/**
+ * @file Game.h
+ * @brief Main game class for managing game flow and state
+ * 
+ * This file defines the Game class, which serves as the main controller
+ * for the game. It manages the game loop, state transitions, and
+ * coordinates between different game systems.
+ * 
+ * The Game class features:
+ * - Game loop management
+ * - State machine implementation
+ * - Counter system coordination
+ * - Game initialization and cleanup
+ * - User input handling
+ * - Game state persistence
+ * - Difficulty management
+ * 
+ * @see Player
+ * @see WeekCycle
+ * @see CounterBase
+ * @see Difficulty
+ */
+
 #pragma once
 #include "WeekCycle.h"
 #include "Player.h"

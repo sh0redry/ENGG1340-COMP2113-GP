@@ -1,3 +1,24 @@
+/**
+ * @file CounterBase.h
+ * @brief Base class for all counter types in the game
+ * 
+ * This file defines the CounterBase class, which serves as the foundation for all
+ * counter types in the game (Farming, Mining, Recruit, Shop, and Explore).
+ * It provides common functionality and interface that all counters must implement.
+ * 
+ * The CounterBase class defines:
+ * - Basic counter properties (name, player reference)
+ * - Common interface methods (OnEnter, Process, OnExit)
+ * - Key callback management
+ * - Player information display
+ * 
+ * @see FarmingCounter
+ * @see MiningCounter
+ * @see RecruitCounter
+ * @see ShopCounter
+ * @see ExploreCounter
+ */
+
 #pragma once
 #include "../Core/Player.h"
 #include <string>

@@ -1,3 +1,24 @@
+/**
+ * @file Player.h
+ * @brief Player class for managing game state and resources
+ * 
+ * This file defines the Player class, which is the core class for managing
+ * the player's game state, resources, and progression. It handles all
+ * player-related data and operations.
+ * 
+ * The Player class features:
+ * - Resource management (people, crops, gold)
+ * - Weapon system and upgrades
+ * - Team management
+ * - Resource calculations
+ * - Game state persistence
+ * - Difficulty-based initialization
+ * 
+ * @see Game
+ * @see WeekCycle
+ * @see Difficulty
+ */
+
 #pragma once
 #include <map>
 #include <string>

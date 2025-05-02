@@ -1,3 +1,22 @@
+/**
+ * @file WeekCycle.h
+ * @brief Week cycle system for game progression
+ * 
+ * This file defines the WeekCycle class, which manages the game's time
+ * progression system. It tracks weeks, seasons, and provides seasonal
+ * effects that influence various game mechanics.
+ * 
+ * The WeekCycle class features:
+ * - Week tracking and progression
+ * - Seasonal cycle management
+ * - Seasonal effects on game mechanics
+ * - Week-based event triggers
+ * - Time-based game state management
+ * 
+ * @see Player
+ * @see Game
+ */
+
 #pragma once
 #include <string>
 #include <vector>

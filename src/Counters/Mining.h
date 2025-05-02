@@ -1,3 +1,24 @@
+/**
+ * @file Mining.h
+ * @brief Mining counter for gold production
+ * 
+ * This file defines the MiningCounter class, which manages the gold mining
+ * system in the game. It allows players to assign workers to mining activities,
+ * generating gold based on the number of miners and difficulty settings.
+ * 
+ * The MiningCounter class features:
+ * - Gold production mechanics
+ * - Worker assignment system
+ * - Resource yield calculation
+ * - Player resource management
+ * - Difficulty-based yield adjustments
+ * 
+ * @see CounterBase
+ * @see Player
+ * @see WeekCycle
+ * @see Difficulty
+ */
+
 #pragma once
 #include "CounterBase.h"
 #include "../Core/WeekCycle.h"

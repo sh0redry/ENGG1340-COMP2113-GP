@@ -1,3 +1,25 @@
+/**
+ * @file CounterFactory.h
+ * @brief Factory class for creating different types of counters
+ * 
+ * This file implements the Factory design pattern for creating different types
+ * of counters in the game. It provides a centralized way to instantiate counter
+ * objects based on their type, ensuring proper initialization with required
+ * dependencies.
+ * 
+ * The file contains:
+ * - CounterType enumeration defining all available counter types
+ * - CounterFactory class implementing the factory pattern
+ * - Static Create method for instantiating counters
+ * 
+ * @see CounterBase
+ * @see FarmingCounter
+ * @see MiningCounter
+ * @see RecruitCounter
+ * @see ShopCounter
+ * @see ExploreCounter
+ */
+
 #pragma once
 #include "Farming.h"
 #include "Mining.h"

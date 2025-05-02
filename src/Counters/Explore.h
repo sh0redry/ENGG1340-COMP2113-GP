@@ -1,3 +1,26 @@
+/**
+ * @file Explore.h
+ * @brief Exploration counter for territory expansion
+ * 
+ * This file defines the ExploreCounter class, which manages the exploration
+ * system in the game. It allows players to explore new territories, with
+ * risks and rewards varying based on the number of explorers and difficulty
+ * settings.
+ * 
+ * The ExploreCounter class features:
+ * - Territory exploration mechanics
+ * - Risk and reward system
+ * - Resource discovery
+ * - Player resource management
+ * - Difficulty-based risk adjustments
+ * - Seasonal effects on exploration
+ * 
+ * @see CounterBase
+ * @see Player
+ * @see WeekCycle
+ * @see Difficulty
+ */
+
 #pragma once
 #include "CounterBase.h"
 #include "../Utils/Random.h"

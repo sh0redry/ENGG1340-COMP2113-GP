@@ -1,3 +1,24 @@
+/**
+ * @file Farming.h
+ * @brief Farming counter for crop production
+ * 
+ * This file defines the FarmingCounter class, which manages the crop production
+ * system in the game. It allows players to assign workers to farming activities,
+ * generating crops based on the number of farmers and difficulty settings.
+ * 
+ * The FarmingCounter class features:
+ * - Crop production mechanics
+ * - Worker assignment system
+ * - Resource yield calculation
+ * - Player resource management
+ * - Difficulty-based yield adjustments
+ * 
+ * @see CounterBase
+ * @see Player
+ * @see WeekCycle
+ * @see Difficulty
+ */
+
 #pragma once
 #include "CounterBase.h"
 #include "../Core/WeekCycle.h"

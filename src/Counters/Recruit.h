@@ -1,3 +1,23 @@
+/**
+ * @file Recruit.h
+ * @brief Recruitment counter for team expansion
+ * 
+ * This file defines the RecruitCounter class, which manages the recruitment
+ * system in the game. It allows players to recruit new members using crops,
+ * with costs varying based on the number of recruits and base costs.
+ * 
+ * The RecruitCounter class features:
+ * - Recruitment mechanics
+ * - Cost calculation system
+ * - Resource management
+ * - Input validation
+ * - State management for recruitment process
+ * 
+ * @see CounterBase
+ * @see Player
+ * @see WeekCycle
+ */
+
 #pragma once
 #include "CounterBase.h"
 #include "../Core/WeekCycle.h"
