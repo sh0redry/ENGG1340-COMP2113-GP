@@ -1,3 +1,10 @@
+/**
+ * @file Explore.cpp
+ * @brief Implementation of the exploration counter system
+ * @details Manages exploration mechanics including risk assessment,
+ *          resource discovery, and worker assignment for
+ *          scavenging missions.
+ */
 #include "Explore.h"
 #include "../UI/Terminal.h"
 #include "../UI/UI.h"

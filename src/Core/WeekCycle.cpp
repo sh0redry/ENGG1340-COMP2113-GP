@@ -1,3 +1,9 @@
+/**
+ * @file WeekCycle.cpp
+ * @brief Implementation of the game's time cycle system
+ * @details Manages the game's day and week progression, including
+ *          weekday tracking, weekend skipping, and special day events.
+ */
 #include "WeekCycle.h"
 #include "../Utils/Constants.h"
 

@@ -1,3 +1,10 @@
+/**
+ * @file Farming.cpp
+ * @brief Implementation of the farming counter system
+ * @details Manages the farming mechanics including worker assignment,
+ *          crop yield calculations, and resource management for food
+ *          production.
+ */
 #include "Farming.h"
 #include "../UI/UI.h"
 #include "../UI/Terminal.h"

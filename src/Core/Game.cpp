@@ -1,3 +1,10 @@
+/**
+ * @file Game.cpp
+ * @brief Implementation of the main game logic and state management
+ * @details Handles game initialization, main game loop, state transitions,
+ *          and core gameplay mechanics including resource management,
+ *          combat system, and player interactions.
+ */
 #include "Game.h"
 #include "Difficulty.h"
 #include "../Counters/CounterFactory.h"

@@ -1,3 +1,10 @@
+/**
+ * @file Shop.cpp
+ * @brief Implementation of the shop counter system
+ * @details Handles the shop interface, weapon upgrades, resource
+ *          management, and player interactions for purchasing
+ *          improvements.
+ */
 #include "Shop.h"
 #include "../UI/Terminal.h"
 #include "../UI/UI.h"

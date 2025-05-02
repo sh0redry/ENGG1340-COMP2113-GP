@@ -1,3 +1,10 @@
+/**
+ * @file CounterBase.cpp
+ * @brief Implementation of the base counter class
+ * @details Provides the foundation for all game counters with basic
+ *          functionality and interface methods that derived counters
+ *          can override.
+ */
 #include "CounterBase.h"
 #include "../UI/Terminal.h"
 #include "../UI/UI.h"

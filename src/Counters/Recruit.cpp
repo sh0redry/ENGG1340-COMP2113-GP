@@ -1,3 +1,10 @@
+/**
+ * @file Recruit.cpp
+ * @brief Implementation of the recruitment counter system
+ * @details Manages the recruitment process including population growth,
+ *          resource costs, and worker assignment for recruiting
+ *          new survivors.
+ */
 #include "Recruit.h"
 #include "../UI/UI.h"
 #include "../UI/Terminal.h"

@@ -1,3 +1,9 @@
+/**
+ * @file Player.cpp
+ * @brief Implementation of the player class and resource management
+ * @details Manages player resources (people, food, gold), worker assignments,
+ *          weapon upgrades, and difficulty-based gameplay mechanics.
+ */
 #include "Player.h"
 #include "Difficulty.h"
 

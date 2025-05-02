@@ -1,3 +1,10 @@
+/**
+ * @file Mining.cpp
+ * @brief Implementation of the mining counter system
+ * @details Handles mining operations including worker assignment,
+ *          gold production, and resource management for mining
+ *          activities.
+ */
 #include "Mining.h"
 #include "../UI/UI.h"
 #include "../UI/Terminal.h"
