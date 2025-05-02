@@ -1,3 +1,10 @@
+/**
+ * @file SpecialFunctions.cpp
+ * @brief Implementation of special game feature functions
+ * @details Handles the implementation of various special game features
+ *          including weapon information display, player status display,
+ *          quit confirmation, and game pause functionality.
+ */
 #include "SpecialFunctions.h"
 #include "../UI/UI.h"
 #include "../Core/Player.h"
@@ -8,10 +15,15 @@
 #include <thread>
 #include <chrono>
 
-
-// 显示武器信息的函数
+/**
+ * @brief Displays weapon information and statistics
+ * 
+ * Shows a formatted table of weapon levels, their power, and fire count.
+ * Displays information for all weapon levels (1-10) in a centered table format.
+ * Waits for 'w' key press to return.
+ * @return void
+ */
 void SpecialFunctions::showWeaponInfo() {
-    // 实现武器信息显示
     UI::ShowInterface("ui/empty.txt");
     UI::DisplayCenterText("Weapon Level | Power | Fire Count", 12);
     UI::DisplayCenterText("--------------------------------", 13);
@@ -30,9 +42,18 @@ void SpecialFunctions::showWeaponInfo() {
     }
 }
 
-// 显示玩家信息的函数
+/**
+ * @brief Displays current player status and game information
+ * 
+ * Shows detailed information about the player's current state in a formatted display.
+ * Information includes day, week, resources, population, weapon level, and difficulty.
+ * Waits for 'l' key press to return.
+ * 
+ * @param weekCycle Current week cycle information
+ * @param player Current player state
+ * @return void
+ */
 void SpecialFunctions::showPlayerInfo(const WeekCycle& weekCycle, const Player& player) {
-    // 实现玩家信息显示
     UI::ShowInterface("ui/empty.txt");
     UI::DisplayCenterText("Player Information", 10);
     UI::DisplayCenterText("----------------", 11);
@@ -54,8 +75,15 @@ void SpecialFunctions::showPlayerInfo(const WeekCycle& weekCycle, const Player& 
     }
 }
 
+/**
+ * @brief Displays quit confirmation screen
+ * 
+ * Shows a confirmation dialog for quitting the game.
+ * Handles user input for quit confirmation.
+ * If confirmed, displays a farewell message and exits the game.
+ * @return void
+ */
 void SpecialFunctions::showQuitMessage() {
-    // 实现退出信息显示
     UI::ShowInterface("ui/empty.txt");
     UI::DisplayCenterText("Are you sure you want to quit?", 15);
     UI::DisplayCenterText("----------------", 16);
@@ -68,22 +96,29 @@ void SpecialFunctions::showQuitMessage() {
             UI::ShowInterface("ui/empty.txt");
             UI::DisplayCenterText("Thank you for playing!", 15);
             UI::DisplayCenterText("See you next time!", 17);
-            std::cout << std::flush;  // 确保文本被立即显示
+            std::cout << std::flush;  // Ensure text is displayed immediately
 
-            // 增加显示时间到3秒
+            // Increase display time to 3 seconds
             std::this_thread::sleep_for(std::chrono::milliseconds(1500));
             
-            // 先显示光标，再清除屏幕
+            // Show cursor before clearing screen
             Terminal::GetInstance().ShowCursor();
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             Terminal::GetInstance().Clear();
-            exit(0);  // 直接退出游戏
+            exit(0);  // Exit game directly
         } else {
             break;
         }
     }
 }
 
+/**
+ * @brief Displays and handles game pause screen
+ * 
+ * Shows the pause menu and handles user input for resuming the game.
+ * Waits for 'p' key press to continue.
+ * @return bool True if game should continue, false if game should quit
+ */
 bool SpecialFunctions::showPauseScreen() {
     UI::ShowInterface("ui/empty.txt");
     UI::DisplayCenterText("Game Paused", 16);
@@ -93,7 +128,7 @@ bool SpecialFunctions::showPauseScreen() {
     while (true) {
         int ch = getchar();
         if (ch == 'p' || ch == 'P') {
-            return true;  // 返回true表示继续游戏
+            return true;  // Return true to continue game
         }
     }
 }
