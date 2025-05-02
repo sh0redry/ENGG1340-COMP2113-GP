@@ -9,20 +9,32 @@
 #include <thread>
 #include <chrono>
 
-// 初始化静态成员
+// Initialize static member
 MiningCounter* MiningCounter::currentInstance = nullptr;
 
+/**
+ * @brief Constructor for MiningCounter
+ * @param player Reference to the player object
+ * @param weekCycle Reference to the week cycle system
+ * 
+ * Initializes the mining counter with player and week cycle references,
+ * and sets up the current instance pointer.
+ */
 MiningCounter::MiningCounter(Player& player, WeekCycle& weekCycle) 
     : CounterBase(player, "Mining"), m_weekCycle(weekCycle) {
     currentInstance = this;
 }
 
+/**
+ * @brief Called when entering the mining system
+ * 
+ * Sets up key callbacks and displays the initial mining interface
+ * with animated introduction text.
+ */
 void MiningCounter::OnEnter() {
-    // 设置h键回调
+    // Set up key callbacks
     setupHKeyCallback();
-    // 设置l键回调
     setupLKeyCallback(ShowPlayerInfoCallback);
-    // 设置q键回调
     setupQKeyCallback(ShowQuitMessageCallback);
     
     UI::ShowInterface("ui/Counters/Mining/mining1.txt");
@@ -37,6 +49,15 @@ void MiningCounter::OnEnter() {
     UI::WaitForEnter();
 }
 
+/**
+ * @brief Main processing loop for mining
+ * 
+ * Handles the core mining mechanics including:
+ * 1. Getting valid input for number of miners to assign
+ * 2. Calculating gold yield based on difficulty
+ * 3. Updating player resources
+ * 4. Displaying results with animations
+ */
 void MiningCounter::Process() {
     const int yield = Difficulty::GetConfig(m_player.getStringDifficulty()).goldYield;
     int workers = GetValidInput(m_player.getAvailablePeople());
@@ -46,13 +67,13 @@ void MiningCounter::Process() {
         m_player.assignWorkers(0, workers, 0, 0, 0);
         
         UI::WaitForEnter();
-        // 之后修改为打字机效果
+        // Display mining in progress message with typewriter effect
         UI::ShowInterface("ui/Counters/Mining/mining3.txt");
         Animation::TypewriterInBox("Your guys are working hard to get more golds!", 50, 23);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         UI::WaitForEnter();
 
-        // 之后修改为打字机效果
+        // Display results with typewriter effect
         UI::ShowInterface("ui/Counters/Mining/mining2.txt");
         UI::DisplayCenterText("You got " + std::to_string(yield * workers) + " golds!", 24);
         UI::DisplayCenterText("You can use the golds to upgrade your weapons and defend yourself against the zombies!", 26);
@@ -62,24 +83,40 @@ void MiningCounter::Process() {
     UI::WaitForEnter("Press Enter to return to home...");
 }
 
+/**
+ * @brief Called when exiting the mining system
+ * 
+ * Cleans up by removing all key callbacks and resetting the current instance pointer.
+ */
 void MiningCounter::OnExit() {
-    // 清除所有回调
+    // Clear all callbacks
     clearHKeyCallback();
     clearLKeyCallback();
     clearQKeyCallback();
-    // 清除当前实例
+    // Clear current instance
     currentInstance = nullptr;
 }
 
+/**
+ * @brief Static callback for showing player information
+ * 
+ * Called when 'L' key is pressed to display player stats.
+ */
 void MiningCounter::ShowPlayerInfoCallback() {
     if (currentInstance) {
         currentInstance->ShowPlayerInfo();
     }
 }
 
+/**
+ * @brief Display player information and restore mining interface
+ * 
+ * Shows player stats and resources, then restores the mining interface
+ * with appropriate prompts and instructions.
+ */
 void MiningCounter::ShowPlayerInfo() {
     SpecialFunctions::showPlayerInfo(m_weekCycle, m_player);
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Mining/mining2.txt");
     UI::DisplayCenterText("Here is a mine, the minerals you get from here", 24);
     UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
@@ -87,6 +124,14 @@ void MiningCounter::ShowPlayerInfo() {
     UI::DisplayCenterText("Assign miners (0-" + std::to_string(m_player.getAvailablePeople()) + "): ", 27);
 }
 
+/**
+ * @brief Get valid input for number of miners to assign
+ * @param max Maximum number of miners that can be assigned
+ * @return Valid number of miners to assign
+ * 
+ * Handles input validation and user interface for selecting number of miners
+ * to assign. Includes error handling and feedback.
+ */
 int MiningCounter::GetValidInput(int max) {
     while (true) {
         UI::ShowInterface("ui/Counters/Mining/mining2.txt");
@@ -110,15 +155,26 @@ int MiningCounter::GetValidInput(int max) {
     }
 }
 
+/**
+ * @brief Static callback for showing quit message
+ * 
+ * Called when 'Q' key is pressed to display quit confirmation.
+ */
 void MiningCounter::ShowQuitMessageCallback() {
     if (currentInstance) {
         currentInstance->ShowQuitMessage();
     }
 }
 
+/**
+ * @brief Display quit message and restore mining interface
+ * 
+ * Shows quit confirmation message and restores the mining interface
+ * with appropriate prompts and instructions.
+ */
 void MiningCounter::ShowQuitMessage() {
     SpecialFunctions::showQuitMessage();
-    // 重新显示之前的界面
+    // Restore previous interface
     UI::ShowInterface("ui/Counters/Mining/mining2.txt");
     UI::DisplayCenterText("Here is a mine, the minerals you get from here", 24);
     UI::DisplayCenterText("can be used to recruit new members and grow your team!", 25);
