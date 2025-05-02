@@ -44,11 +44,11 @@ Our wasteland odyssey blends base-building progression, tactical shooting mechan
 ## File Structure
 ```mermaid
 graph LR
-    A[Crazy Thursday] --> B[Makefile]
-    A --> C[README.md]
-    A --> D[src/]
-    A --> E[ui/]
+    A[Crazy Thursday] --> E[ui/]
     A --> F[anim/]
+    A --> D[src/]
+    A --> B[Makefile]
+    A --> C[README.md]
     
     D --> D1[main.cpp]
     D --> D2[Utils/]
@@ -92,7 +92,7 @@ graph LR
 ```
 
 
-## File Descriptions
+## Source Code Descriptions
 
 ### Core Components
 - **[Game.cpp/h](src/Core/Game.h)**: Manages the main game loop, state transitions, and overall game flow
@@ -123,3 +123,40 @@ graph LR
 - **[Constants.h](src/Utils/Constants.h)**: Game constants and configuration values
 - **[Random.h](src/Utils/Random.h)**: Random number generation utilities
 - **[SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h)**: Helper functions used throughout the game
+
+## Data Flow
+```mermaid
+sequenceDiagram
+    participant M as main.cpp
+    participant G as Game
+    participant P as Player
+    participant C as Counters
+    participant B as Combat
+    participant U as UI
+    
+    M ->> G: Start Game
+    G ->> U: Play Opening Animation
+    U -->> G: Animation Complete
+    
+    loop Daily Cycle
+        G ->> U: Show Home Screen
+        U ->> G: Pass Player Choice
+        alt Choose Counter
+            G ->> C: Enter Counter
+            C ->> P: Update Resources/Personnel
+            C -->> G: Return Result
+        else Thursday Combat
+            G ->> B: Trigger Combat
+            B ->> P: Update Combat Results
+            B -->> G: Return Victory/Defeat
+        end
+        G ->> U: Update Status Display
+    end
+    
+    alt Game Victory
+        G ->> U: Play Win Animation
+    else Game Defeat
+        G ->> U: Play Lose Animation
+    end
+    U -->> M: Exit Game
+```
