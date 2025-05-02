@@ -1,3 +1,8 @@
+/**
+ * @file Game.cpp
+ * @brief Implementation of the main game logic and state management
+ */
+
 #include "Game.h"
 #include "Difficulty.h"
 #include "../Counters/CounterFactory.h"
@@ -9,8 +14,17 @@
 #include <thread>
 #include <iostream>
 
+/**
+ * @brief Constructor for the Game class
+ * Initializes the game state to MAIN_MENU
+ */
 Game::Game() : m_state(GameState::MAIN_MENU) {}
 
+/**
+ * @brief Main game loop that handles different game states
+ * Continuously processes the current game state until the game ends
+ * @return void
+ */
 void Game::run() {
     while (true) {
         Terminal::GetInstance().Clear();
@@ -29,24 +43,35 @@ void Game::run() {
                 triggerCombat(); 
                 break;
             case GameState::GAME_OVER: 
-                return; // 结束游戏
+                return;
         }
     }
 }
 
+/**
+ * @brief Initializes a new game with the selected difficulty
+ * Creates a new player with initial resources based on difficulty settings
+ * @return void
+ */
 void Game::initNewGame() {
     const auto& config = Difficulty::GetConfig(m_difficulty);
     m_player = std::make_unique<Player>(
         config.initialPeople,
-        config.initialPeople * 10, // 初始食物
-        config.initialPeople * 10,  // 初始金币
-        m_difficulty              // 传递难度参数
+        config.initialPeople * 10, // Initial food
+        config.initialPeople * 10,  // Initial gold
+        m_difficulty              // Difficulty parameter
     );
     m_weekCycle = WeekCycle();
     Animation::PlaySequence("anim/Loading", 70);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
+/**
+ * @brief Processes the main menu state
+ * Handles user input for starting a new game or quitting
+ * Displays the main menu interface and animations
+ * @return void
+ */
 void Game::processMainMenu() {
     UI::ShowInterface("ui/empty.txt");
     UI::MoveCursorToCenter("Please adjust your terminal size to make the box fit the screen", 18);
@@ -56,13 +81,12 @@ void Game::processMainMenu() {
     Animation::PlaySequence("anim/Title", 40);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    int selectedOption = 0; // 0表示Play Game，1表示Quit
+    int selectedOption = 0; // 0 for Play Game, 1 for Quit
     bool selectionMade = false;
 
     while (!selectionMade) {
         Terminal::GetInstance().Clear();
         
-        // 根据当前选择显示对应的界面
         switch (selectedOption) {
             case 0: UI::ShowInterface("ui/Menu/menu_play.txt"); break;
             case 1: UI::ShowInterface("ui/Menu/menu_quit.txt"); break;
@@ -79,7 +103,7 @@ void Game::processMainMenu() {
             case 'S':
                 selectedOption = 1;
                 break;
-            case '\n': // Enter键
+            case '\n': // Enter key
                 selectionMade = true;
                 break;
         }
@@ -92,14 +116,18 @@ void Game::processMainMenu() {
     }
 }
 
+/**
+ * @brief Processes the difficulty selection state
+ * Allows player to choose between EASY, MEDIUM, and HARD difficulties
+ * @return void
+ */
 void Game::processDifficultySelect() {
-    int selectedOption = 0; // 0表示EASY，1表示MEDIUM，2表示HARD
+    int selectedOption = 0; // 0 for EASY, 1 for MEDIUM, 2 for HARD
     bool selectionMade = false;
 
     while (!selectionMade) {
         Terminal::GetInstance().Clear();
         
-        // 根据当前选择显示对应的界面
         switch (selectedOption) {
             case 0: UI::ShowInterface("ui/Difficulty/difficulty_easy.txt"); break;
             case 1: UI::ShowInterface("ui/Difficulty/difficulty_medium.txt"); break;
@@ -111,13 +139,13 @@ void Game::processDifficultySelect() {
         switch (input) {
             case 'w':
             case 'W':
-                if (selectedOption > 0) selectedOption--; // 向上选择，但不允许循环
+                if (selectedOption > 0) selectedOption--;
                 break;
             case 's':
             case 'S':
-                if (selectedOption < 2) selectedOption++; // 向下选择，但不允许循环
+                if (selectedOption < 2) selectedOption++;
                 break;
-            case '\n': // Enter键
+            case '\n': // Enter key
                 selectionMade = true;
                 break;
         }
@@ -133,8 +161,13 @@ void Game::processDifficultySelect() {
     m_state = GameState::PLAYING;
 }
 
+/**
+ * @brief Processes a single day in the game
+ * Handles daily resource consumption, worker allocation, and game progression
+ * @return void
+ */
 void Game::processDay() {
-    // 对第一天需进行特殊处理（增加故事情节）
+    // Special handling for the first day with story sequence
     if (m_weekCycle.getCurrentDay() == 1) {
         UI::ShowInterface("ui/empty.txt");
         Animation::TypewriterInBox("The year is 2025.", 50, 10);
@@ -160,24 +193,24 @@ void Game::processDay() {
         UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
     }
 
-    // 每日开始重置
+    // Reset daily workers and consume daily food
     m_player->resetDailyWorkers();
     m_player->consumeDailyFood();
     
-    // 主游戏循环
+    // Main game loop for the day
     while (m_player->getAvailablePeople() > 0) {
         handleCounterAction();
     }
     
-    // 推进到下一天
+    // Advance to next day
     m_weekCycle.advanceDay();
     
-    // 检查明天是否是星期四
+    // Check if next day is Thursday (combat day)
     if (m_weekCycle.isThursday()) {
         m_state = GameState::COMBAT;
     }
     
-    // 检查游戏结束
+    // Check game end conditions
     if (m_weekCycle.getCurrentDay() > GameConfig::TOTAL_DAYS) {
         showEndScreen(true);
     } else if (m_player->getPeople() <= 0) {
@@ -185,6 +218,11 @@ void Game::processDay() {
     }
 }
 
+/**
+ * @brief Handles player interaction with different game counters
+ * Manages the 2x3 grid layout of game counters and player navigation
+ * @return void
+ */
 void Game::handleCounterAction() {
     // 2x3 grid layout for counters
     // [0] [1] [2]
@@ -195,7 +233,6 @@ void Game::handleCounterAction() {
     while (!selectionMade) {
         Terminal::GetInstance().Clear();
         
-        // 根据当前选择显示对应的界面
         switch (selectedOption) {
             case 0: UI::ShowInterface("ui/Home/home_mining.txt");
                     break;
@@ -214,24 +251,24 @@ void Game::handleCounterAction() {
         switch (input) {
             case 'w':
             case 'W':
-                if (selectedOption > 2) selectedOption -= 3; // 向上移动
+                if (selectedOption > 2) selectedOption -= 3; // Move up
                 break;
             case 's':
             case 'S':
-                if (selectedOption < 3 && selectedOption != 1) selectedOption += 3; // 向下移动，但1不能下移
+                if (selectedOption < 3 && selectedOption != 1) selectedOption += 3; // Move down
                 break;
             case 'a':
             case 'A':
                 if (selectedOption > 0) {
-                    if (selectedOption == 5) selectedOption = 3; // 从5直接到3
-                    else if (selectedOption != 3) selectedOption--; // 其他情况正常左移，但3不能左移
+                    if (selectedOption == 5) selectedOption = 3; // Direct path from 5 to 3
+                    else if (selectedOption != 3) selectedOption--; // Normal left movement
                 }
                 break;
             case 'd':
             case 'D':
-                if (selectedOption < 2) selectedOption++; // 第一行正常右移
-                else if (selectedOption == 3) selectedOption = 5; // 从3直接到5
-                else if (selectedOption != 5 && selectedOption != 2) selectedOption++; // 其他情况正常右移，但5和2不能右移
+                if (selectedOption < 2) selectedOption++; // Normal right movement in first row
+                else if (selectedOption == 3) selectedOption = 5; // Direct path from 3 to 5
+                else if (selectedOption != 5 && selectedOption != 2) selectedOption++; // Normal right movement
                 break;
             case 'l':
             case 'L':
@@ -241,13 +278,13 @@ void Game::handleCounterAction() {
             case 'Q':
                 SpecialFunctions::showQuitMessage();
                 break;
-            case '\n': // Enter键
+            case '\n': // Enter key
                 selectionMade = true;
                 break;
         }
     }
     
-    // 将选择的选项转换为对应的CounterType
+    // Convert selection to counter type
     CounterType type;
     switch (selectedOption) {
         case 0: type = CounterType::MINING; break;
@@ -266,12 +303,17 @@ void Game::handleCounterAction() {
         counter->Process();
         counter->OnExit();
     } catch (const ReturnToHomeException&) {
-        // 捕获返回主菜单的异常，确保调用OnExit
         counter->OnExit();
         return;
     }
 }
 
+/**
+ * @brief Triggers and manages the combat sequence
+ * Handles the zombie attack event, displays combat animations,
+ * and processes the combat outcome
+ * @return void
+ */
 void Game::triggerCombat() {
     UI::ShowDayTransition(m_weekCycle.getDayName(), m_weekCycle.getCurrentWeek());
 
@@ -297,7 +339,7 @@ void Game::triggerCombat() {
         if (m_weekCycle.getCurrentDay() >= GameConfig::TOTAL_DAYS) {
             showEndScreen(true);
         } else {
-            m_weekCycle.advanceDay();  // 战斗胜利后推进到下一天
+            m_weekCycle.advanceDay();  // Advance to next day after victory
             m_state = GameState::PLAYING;
         }
     } else {
@@ -305,6 +347,12 @@ void Game::triggerCombat() {
     }
 }
 
+/**
+ * @brief Displays the end game screen
+ * Shows victory or defeat animations based on game outcome
+ * @param victory Boolean indicating whether the player won or lost
+ * @return void
+ */
 void Game::showEndScreen(bool victory) {
     if (victory) {
         UI::ShowInterface("ui/empty.txt");
