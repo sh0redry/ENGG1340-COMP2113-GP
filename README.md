@@ -1,6 +1,5 @@
-# ENGG1340-COMP2113-GP
-
-## Team members 
+![Crazy Thursday Banner](./title.jpg)
+# Team members 
 [Li Yitong](https://github.com/Lyt060814)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289377)
 
 [Qu Sijin](https://github.com/Rosette2048)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289676)
@@ -12,7 +11,7 @@
 [Zhao Dingcheng](https://github.com/sh0redry)&ensp;&ensp;(3036292283)
 
 [Zheng Yilin](https://github.com/Yilinss27)&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3036289195)
-## Quick Start
+# Quick Start
 
 ```bash
 make
@@ -26,7 +25,7 @@ make
 - Tips:
     - DO NOT press *enter* many times, otherwise it may cause unexpected scene skipping.
 
-## Description
+# Description
  Welcome to this post-apocalyptic world built with C++ code. Here, you'll play as the leader of a shelter in a world ravaged by a zombie outbreak, guiding survivors to gather resources and explore the environment. Your ultimate goal is to strive to survive for until the day rescue arrives!  
 
 The story unfolds in the year 2025 when a zombie outbreak erupts at HKU. You and your group project teammates have built a makeshift shelter. Survive here long enough to await rescue and secure your chance to live through this catastrophe!
