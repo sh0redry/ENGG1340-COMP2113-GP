@@ -53,7 +53,7 @@ void Game::processMainMenu() {
     std::cout << "Please adjust your terminal size to make the box fit the screen" << std::endl;
     UI::WaitForEnter("Press Enter to start...");
 
-    Animation::PlaySequence("anim/Title", 50);
+    Animation::PlaySequence("anim/Title", 40);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int selectedOption = 0; // 0表示Play Game，1表示Quit
