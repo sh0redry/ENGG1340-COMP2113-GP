@@ -62,19 +62,6 @@
 
 > **Note:** Due to some operations like **Merge** and **Bulk Edits to .txt Files**, the GitHub metrics may not reflect our true efforts. Everyone in our team was actively involved in the project and there is no free rider.
 
-# Quick Start
-
-```bash
-make
-./bin/game
-```
-
-- Press *Enter* to start/continue.
-- Press *W/A/S/D*  to move or change the selection in the home or in the fight.
-- Press *L* to show the game status and data.
-- Press *H* to delete all the change and return to home.
-- Tips:
-    - DO NOT press *enter* many times, otherwise it may cause unexpected scene skipping.
 
 # Description
 
@@ -87,6 +74,66 @@ Within your sanctuary's limited operational capacity, you and fellow survivors m
 When **crimson Thursday** dawns – that cursed cycle triggering the horde's primal rage – zombies unleash their frenzied siege, battering against your defenses with unnatural ferocity. This is your trial by fire: deploy strategic mastery to fortify your stronghold, channeling every upgraded turret and stockpiled resource. **Hold the line until dawn brings salvation... or die trying!**
 
 This world blends **base-building, tactical combat, and roguelike randomness**—no two playthroughs are the same. Forge your own path to survival. **The wasteland awaits!**
+
+# How to play
+## Quick Demo
+
+## Compilation
+
+Prerequisite:
+
+- This repository.
+- A working `g++` compiler that supports `C++17`
+- `make`
+
+To compile:
+
+```bash
+make
+```
+
+To run the game:
+
+```bash
+./bin/game
+```
+
+Or if you prefer one step:
+
+```bash
+make run
+```
+### Terminal Size
+
+1. **Maximize your terminal window to its fullest extent.**
+
+   On Windows, you can achieve this by pressing the `Alt+Enter` key combination, which will toggle the terminal to fullscreen mode.
+
+
+2. **Adjust the font size to make the box fit the screen.**
+     
+    After running the game, you will see a message: `Please adjust your terminal size to make the box fit the screen` shown in a box.
+    The box is the user interface of the game, and you should make it almost fill the screen.
+
+## Short Tutorial
+### In main menu / home
+- Press *Enter* to select/continue/enter the counter.
+- Press *W/A/S/D*  to move or change the selection in the home.
+- Press *L* to show the game status and data.
+- Press *Q* to quit the game.
+### In counters
+- Press *Enter* to confirm input.
+- Press *H* to delete all the change and return to home.
+- Press *L* to show the game status and data.
+- Press *Q* to quit the game.
+- Press *W* to show the weapon information.**(Only available in the shop)**
+### In combat
+- Press *A/D* to move left/right.
+- Press *Z/C* to move faster.
+- Press *Space* to shoot.
+- Press *P* to pause the fight.
+>**Tips:** DO NOT press *Enter* many times, otherwise it may cause unexpected scene skipping.
+
 
 # Game Implementation
 ## File Structure
