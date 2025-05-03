@@ -523,6 +523,7 @@ The code implements file I/O in several places:
   - [`src/UI/`](src/UI/): User interface
   - [`src/Counters/`](src/Counters/): Game counters
   - [`src/Utils/`](src/Utils/): Utility functions
+- [Click me to see the details of each file.](#file-structure)
 
 ## Multiple Difficulty Levels
 - The game supports multiple difficulty levels, which are defined in [`src/Core/Difficulty.h`](src/Core/Difficulty.h):
@@ -547,6 +548,11 @@ The code implements file I/O in several places:
   - Class member variables use `m_` prefix (e.g., `m_people`, `m_gold`)
   - Function names use camelCase (e.g., `getCurrentDay`, `processMainMenu`)
   - Constants use UPPERCASE (e.g., `TOTAL_WEEKS`, `DAYS_PER_WEEK`)
+  - Class names use PascalCase (e.g., `ZombieManager`, `WeaponSystem`)
+  - Namespace names use PascalCase (e.g., `Difficulty`, `GameConfig`)
+  - Template parameters use PascalCase with T prefix (e.g., `template<typename TValue>`)
+  - Local variables use camelCase (e.g., `currentDay`, `playerHealth`)
+  - Boolean variables use 'is' or 'has' prefix (e.g., `isGameOver`, `hasWeapon`)
 
 ## In-Code Documentation
 - Code includes detailed documentation comments using JavaDoc style:
@@ -563,3 +569,4 @@ The code implements file I/O in several places:
       // ...
   }
   ```
+- This enables seamless integration with third-party documentation auto-generation tools like [Doxygen](https://www.doxygen.nl/).
