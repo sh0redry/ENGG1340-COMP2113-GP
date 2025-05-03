@@ -405,26 +405,26 @@ sequenceDiagram
 ## File Structure
 The codebase is organized into multiple files and directories, each handling specific aspects of the game:
 
-| System | File | Description |
+| Directory | File | Description |
 |--------|------|-------------|
-| **Core Components** | [Game.cpp/h](src/Core/Game.h) | Manages the main game loop, state transitions, and overall game flow |
+| **Core/** | [Game.cpp/h](src/Core/Game.h) | Manages the main game loop, state transitions, and overall game flow |
 | | [Player.cpp/h](src/Core/Player.h) | Handles player data, survivor management, and resource tracking |
 | | [WeekCycle.cpp/h](src/Core/WeekCycle.h) | Controls the game's time system and zombie behavior patterns |
 | | [Difficulty.h](src/Core/Difficulty.h) | Defines game difficulty levels and their associated parameters |
-| **Counter System** | [CounterBase.cpp/h](src/Counters/CounterBase.h) | Base class for all game counters and activities |
+| **Counters/** | [CounterBase.cpp/h](src/Counters/CounterBase.h) | Base class for all game counters and activities |
 | | [CounterFactory.h](src/Counters/CounterFactory.h) | Implements the factory pattern for creating different types of counters |
 | | [Explore.cpp/h](src/Counters/Explore.h) | Manages exploration mechanics and resource discovery |
 | | [Farming.cpp/h](src/Counters/Farming.h) | Handles crop growth and food production |
 | | [Mining.cpp/h](src/Counters/Mining.h) | Controls resource gathering and mining operations |
 | | [Recruit.cpp/h](src/Counters/Recruit.h) | Manages survivor recruitment and population |
 | | [Shop.cpp/h](src/Counters/Shop.h) | Handles trading and upgrades |
-| **Combat System** | [Combat.cpp/h](src/Combat/Combat.h) | Core combat mechanics and battle resolution |
+| **Combat/** | [Combat.cpp/h](src/Combat/Combat.h) | Core combat mechanics and battle resolution |
 | | [Weapon.cpp/h](src/Combat/Weapon.h) | Weapon properties and combat calculations |
 | | [Zombie.cpp/h](src/Combat/Zombie.h) | Zombie behavior, stats, and special abilities |
-| **User Interface** | [UI.cpp/h](src/UI/UI.h) | Main interface system and screen management |
+| **UI/** | [UI.cpp/h](src/UI/UI.h) | Main interface system and screen management |
 | | [Terminal.cpp/h](src/UI/Terminal.h) | Terminal display and text rendering |
 | | [Animation.cpp/h](src/UI/Animation.h) | Game animations and visual effects |
-| **Utilities** | [Constants.h](src/Utils/Constants.h) | Game constants and configuration values |
+| **Utils/** | [Constants.h](src/Utils/Constants.h) | Game constants and configuration values |
 | | [Random.h](src/Utils/Random.h) | Random number generation utilities |
 | | [SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h) | Helper functions used throughout the game |
 
