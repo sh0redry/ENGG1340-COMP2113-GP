@@ -150,89 +150,221 @@ make clean
 >**Tips:** DO NOT press ***Enter*** many times, otherwise it may cause unexpected scene skipping.
 
 
-# Game Implementation
-## File Structure
+# Overview
+The game follows a component-based architecture with a central Game Engine coordinating various subsystems.
 ```mermaid
-graph LR
-    A[Crazy Thursday] --> E[ui/]
-    A --> F[anim/]
-    A --> D[src/]
-    A --> B[Makefile]
-    A --> C[README.md]
-    
-    D --> D1[main.cpp]
-    D --> D2[Utils/]
-    D --> D3[Core/]
-    D --> D4[Counters/]
-    D --> D5[UI/]
-    D --> D6[Combat/]
-    
-    D2 --> D2a[Random.h]
-    D2 --> D2b[Constants.h]
-    D2 --> D2c[SpecialFunctions.h/cpp]
-    
-    D3 --> D3a[Game.h/cpp]
-    D3 --> D3b[Player.h/cpp]
-    D3 --> D3c[WeekCycle.h/cpp]
-    D3 --> D3d[Difficulty.h]
-    
-    D4 --> D4a[CounterBase.h/cpp]
-    D4 --> D4b[CounterFactory.h]
-    D4 --> D4c[Explore.h/cpp]
-    D4 --> D4d[Farming.h/cpp]
-    D4 --> D4e[Mining.h/cpp]
-    D4 --> D4f[Recruit.h/cpp]
-    D4 --> D4g[Shop.h/cpp]
-    
-    D5 --> D5a[UI.h/cpp]
-    D5 --> D5b[Terminal.h/cpp]
-    D5 --> D5c[Animation.h/cpp]
-    
-    D6 --> D6a[Combat.h/cpp]
-    D6 --> D6b[Weapon.h/cpp]
-    D6 --> D6c[Zombie.h/cpp]
+flowchart TD
+    subgraph UI_Layer
+        UI[UI Module]
+        Terminal[Terminal Display]
+        Animation[Animation System]
+    end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-    style D fill:#bbf,stroke:#333,stroke-width:2px
-    style E fill:#bbf,stroke:#333,stroke-width:2px
-    style F fill:#bbf,stroke:#333,stroke-width:2px
-    style B fill:#bbf,stroke:#333,stroke-width:2px
+    subgraph Core_Game_Layer
+        Game[Game Manager]
+        Player[Player System]
+        WeekCycle[Week Cycle System]
+        Difficulty[Difficulty System]
+    end
+
+    subgraph Counter_System
+        CounterBase[Counter Base]
+        Explore[Exploration]
+        Farming[Farming]
+        Mining[Mining]
+        Recruit[Recruitment]
+        Shop[Shop]
+    end
+
+    subgraph Combat_System
+        Combat[Combat Manager]
+        Weapon[Weapon System]
+        Zombie[Zombie System]
+    end
+
+    subgraph Utility_Layer
+        Random[Random Generator]
+        Constants[Constants]
+        SpecialFunctions[Special Functions]
+    end
+
+    %% Data Flow
+    UI -->|User Input| Game
+    Game -->|State Update| UI
+    Game -->|Game State| Player
+    Game -->|Time Control| WeekCycle
+    Game -->|Difficulty Settings| Difficulty
+    
+    Player -->|Resource Management| CounterBase
+    CounterBase -->|Task Execution| Explore
+    CounterBase -->|Task Execution| Farming
+    CounterBase -->|Task Execution| Mining
+    CounterBase -->|Task Execution| Recruit
+    CounterBase -->|Task Execution| Shop
+    
+    Game -->|Combat Trigger| Combat
+    Combat -->|Combat Data| Weapon
+    Combat -->|Enemy Data| Zombie
+    Combat -->|Combat Results| Player
+    
+    Random -->|Random Numbers| Game
+    Random -->|Random Numbers| Combat
+    Constants -->|Configuration Data| Game
+    Constants -->|Configuration Data| Combat
+    SpecialFunctions -->|Helper Functions| Game
+    SpecialFunctions -->|Helper Functions| Combat
+
+    style UI fill:#f9f,stroke:#333,stroke-width:2px
+    style Game fill:#bbf,stroke:#333,stroke-width:2px
+    style Combat fill:#bfb,stroke:#333,stroke-width:2px
+    style CounterBase fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
-## Source Code Descriptions
+## Core Components
 
-### Core Components
-- **[Game.cpp/h](src/Core/Game.h)**: Manages the main game loop, state transitions, and overall game flow
-- **[Player.cpp/h](src/Core/Player.h)**: Handles player data, survivor management, and resource tracking
-- **[WeekCycle.cpp/h](src/Core/WeekCycle.h)**: Controls the game's time system and zombie behavior patterns
-- **[Difficulty.h](src/Core/Difficulty.h)**: Defines game difficulty levels and their associated parameters
+### Object Model Hierarchy
+The codebase is organized around several core classes, each responsible for a major aspect of the game's logic and flow. The design emphasizes modularity and clear separation of concerns, with `Game` as the central coordinator, and `Player`, `Combat`, and `CounterBase` (and its derivatives) as key subsystems.
 
-### Game Mechanics
-- **[CounterBase.cpp/h](src/Counters/CounterBase.h)**: Base class for all game counters and activities
-- **[CounterFactory.h](src/Counters/CounterFactory.h)**: Implements the factory pattern for creating different types of counters
-- **[Explore.cpp/h](src/Counters/Explore.h)**: Manages exploration mechanics and resource discovery
-- **[Farming.cpp/h](src/Counters/Farming.h)**: Handles crop growth and food production
-- **[Mining.cpp/h](src/Counters/Mining.h)**: Controls resource gathering and mining operations
-- **[Recruit.cpp/h](src/Counters/Recruit.h)**: Manages survivor recruitment and population
-- **[Shop.cpp/h](src/Counters/Shop.h)**: Handles trading and upgrades
+```mermaid
+classDiagram
+    %% 上方主要子系统
+    class Player {
+        - int m_people
+        - int m_crop
+        - int m_gold
+        - int m_weaponLevel
+        + void assignWorkers(...)
+        + void upgradeWeapon()
+    }
+    class WeekCycle
+    class UI
+    class Animation
+    class Combat {
+        - Player& player
+        - Weapon weapon
+        - ZombieManager zombieManager
+        + bool run()
+    }
 
-### Combat System
-- **[Combat.cpp/h](src/Combat/Combat.h)**: Core combat mechanics and battle resolution
-- **[Weapon.cpp/h](src/Combat/Weapon.h)**: Weapon properties and combat calculations
-- **[Zombie.cpp/h](src/Combat/Zombie.h)**: Zombie behavior, stats, and special abilities
+    %% 核心类
+    class Game {
+        - GameState m_state
+        - unique_ptr<Player> m_player
+        - WeekCycle m_weekCycle
+        - string m_difficulty
+        + void run()
+        - void initNewGame()
+        - void processMainMenu()
+        - void processDay()
+        - void triggerCombat()
+        - void showEndScreen(bool)
+    }
 
-### User Interface
-- **[UI.cpp/h](src/UI/UI.h)**: Main interface system and screen management
-- **[Terminal.cpp/h](src/UI/Terminal.h)**: Terminal display and text rendering
-- **[Animation.cpp/h](src/UI/Animation.h)**: Game animations and visual effects
+    %% 下方Counters相关
+    class CounterFactory
+    class CounterBase {
+        # Player& m_player
+        # string m_name
+        + CounterBase(Player&, string)
+        + virtual ~CounterBase()
+        + virtual void OnEnter() = 0
+        + virtual void Process() = 0
+        + virtual void OnExit()
+    }    
+    class ExploreCounter
+    class FarmingCounter
+    class MiningCounter
+    class RecruitCounter
+    class ShopCounter
 
-### Utilities
-- **[Constants.h](src/Utils/Constants.h)**: Game constants and configuration values
-- **[Random.h](src/Utils/Random.h)**: Random number generation utilities
-- **[SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h)**: Helper functions used throughout the game
+    %% 其他子系统
+    class Weapon
+    class ZombieManager
+    class Terminal
+
+    %% 连接关系
+    Player --|> Game
+    WeekCycle --|> Game
+    UI --|> Game
+    Animation --|> Game
+    Combat --|> Game
+
+    Game o-- CounterFactory
+
+    CounterFactory <|-- ExploreCounter
+    CounterFactory <|-- FarmingCounter
+    CounterFactory <|-- MiningCounter
+    CounterFactory <|-- RecruitCounter
+    CounterFactory <|-- ShopCounter
+
+    CounterBase <|-- ExploreCounter
+    CounterBase <|-- FarmingCounter
+    CounterBase <|-- MiningCounter
+    CounterBase <|-- RecruitCounter
+    CounterBase <|-- ShopCounter
+
+    Combat o-- Weapon
+    Combat o-- ZombieManager
+
+    UI o-- Terminal
+```
+---
+### Game Class
+The `Game` class serves as the **central coordinator** for the entire game. Its main responsibilities include:
+- **Managing the main game loop** (`run()`), which drives the progression of days, events, and combat.
+- **Maintaining game state** (e.g., current day, difficulty, and references to all major subsystems).
+- **Coordinating interactions** between the player, counters (resource systems), and combat.
+- **Handling state transitions** (e.g., from main menu to gameplay, or from gameplay to combat).
+- **Initializing and cleaning up** game resources.
+
+The `Game` class holds references to:
+- A `Player` object (managing resources and upgrades)
+- A `WeekCycle` object (tracking the passage of time)
+- A `CounterFactory` (for creating and managing resource counters)
+- A `Combat` object (for handling zombie sieges)
+- UI and Animation subsystems
+
+---
+
+### Player Class
+The `Player` class encapsulates all **player-related data and operations**, including:
+- **Resource management**: tracks population, food (crop), gold, and weapon level.
+- **Worker assignment**: manages how many people are assigned to each resource counter (farming, mining, recruiting, shopping, exploring).
+- **Upgrades**: handles weapon upgrades and their costs.
+- **Daily consumption**: processes food consumption and population changes.
+- **Difficulty**: stores and provides access to the current difficulty setting.
+
+The `Player` class provides methods for:
+- Adding/subtracting resources (`addCrop`, `addGold`, `addPeople`)
+- Assigning and resetting workers
+- Upgrading weapons
+- Querying current resource and worker status
+
+---
+
+### Combat Class
+The `Combat` class manages the **combat system** during zombie sieges. Its responsibilities include:
+- **Player movement and shooting**: processes user input for real-time combat.
+- **Zombie management**: spawns and moves zombies, checks for collisions.
+- **Weapon usage**: integrates with the player's weapon upgrades.
+- **Game state management**: tracks health, time, and win/loss conditions.
+- **Pause and resume**: supports pausing the combat sequence.
+
+The `Combat` class interacts closely with the `Player` (for health, weapon, and upgrades) and the `WeekCycle` (for difficulty scaling).
+
+---
+
+### CounterBase and Resource Counters
+The `CounterBase` class is an **abstract base class** for all resource management systems (counters), such as farming, mining, recruiting, shopping, and exploring. Its key features:
+- **Polymorphic interface**: defines virtual methods (`OnEnter`, `Process`, `OnExit`) for entering, processing, and exiting a counter.
+- **Player reference**: each counter operates on the player's resources and assignments.
+- **Key callback management**: provides utility functions for handling user input (e.g., returning to home, special actions).
+- **Extensibility**: derived classes (e.g., `FarmingCounter`, `MiningCounter`) implement specific resource logic.
+
+The `CounterFactory` is responsible for creating the appropriate counter objects as needed.
 
 ## Data Flow
+The main game loop follows this sequence:
 ```mermaid
 sequenceDiagram
     participant M as main.cpp
@@ -268,3 +400,31 @@ sequenceDiagram
     end
     U -->> M: Exit Game
 ```
+
+
+## File Structure
+The codebase is organized into multiple files and directories, each handling specific aspects of the game:
+
+| System | File | Description |
+|--------|------|-------------|
+| **Core Components** | [Game.cpp/h](src/Core/Game.h) | Manages the main game loop, state transitions, and overall game flow |
+| | [Player.cpp/h](src/Core/Player.h) | Handles player data, survivor management, and resource tracking |
+| | [WeekCycle.cpp/h](src/Core/WeekCycle.h) | Controls the game's time system and zombie behavior patterns |
+| | [Difficulty.h](src/Core/Difficulty.h) | Defines game difficulty levels and their associated parameters |
+| **Counter System** | [CounterBase.cpp/h](src/Counters/CounterBase.h) | Base class for all game counters and activities |
+| | [CounterFactory.h](src/Counters/CounterFactory.h) | Implements the factory pattern for creating different types of counters |
+| | [Explore.cpp/h](src/Counters/Explore.h) | Manages exploration mechanics and resource discovery |
+| | [Farming.cpp/h](src/Counters/Farming.h) | Handles crop growth and food production |
+| | [Mining.cpp/h](src/Counters/Mining.h) | Controls resource gathering and mining operations |
+| | [Recruit.cpp/h](src/Counters/Recruit.h) | Manages survivor recruitment and population |
+| | [Shop.cpp/h](src/Counters/Shop.h) | Handles trading and upgrades |
+| **Combat System** | [Combat.cpp/h](src/Combat/Combat.h) | Core combat mechanics and battle resolution |
+| | [Weapon.cpp/h](src/Combat/Weapon.h) | Weapon properties and combat calculations |
+| | [Zombie.cpp/h](src/Combat/Zombie.h) | Zombie behavior, stats, and special abilities |
+| **User Interface** | [UI.cpp/h](src/UI/UI.h) | Main interface system and screen management |
+| | [Terminal.cpp/h](src/UI/Terminal.h) | Terminal display and text rendering |
+| | [Animation.cpp/h](src/UI/Animation.h) | Game animations and visual effects |
+| **Utilities** | [Constants.h](src/Utils/Constants.h) | Game constants and configuration values |
+| | [Random.h](src/Utils/Random.h) | Random number generation utilities |
+| | [SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h) | Helper functions used throughout the game |
+
