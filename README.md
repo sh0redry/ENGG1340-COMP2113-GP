@@ -428,3 +428,138 @@ The codebase is organized into multiple files and directories, each handling spe
 | | [Random.h](src/Utils/Random.h) | Random number generation utilities |
 | | [SpecialFunctions.cpp/h](src/Utils/SpecialFunctions.h) | Helper functions used throughout the game |
 
+# Code Requirements
+## Generation of Random Game Events
+- In `src/Utils/Random.h`, a complete random number generation system is implemented, providing multiple random number generation functions:
+  - `Range<T>`: Generates random integers within a specified range
+  - `RangeReal<T>`: Generates random floating-point numbers within a specified range
+  - `Chance`: Makes probability-based random decisions
+
+- In `src/Counters/Explore.cpp`, the random system is used to generate exploration results:
+  ```cpp
+  if (Random::Chance(lossProbability)) {
+      return ExploreResult::PEOPLE_LOST;
+  }
+  ```
+
+## Data Structures for Storing Data
+The code uses several data structures to store game status:
+
+- In `src/Combat/Zombie.h`, the `Zombie` struct is used to store game status:
+  ```cpp
+  struct Zombie {
+      int x;          // X coordinate position
+      int y;          // Y coordinate position
+      int health;     // Current health points
+    
+      Zombie(int x, int y, int health);
+      char getDisplayChar() const;
+  };
+  ```
+- In `src/UI/Terminal.h`, the `TerminalSize` struct is used to store terminal window dimensions:
+    ```cpp
+    struct TerminalSize {
+        int width;   // Terminal width in characters
+        int height;  // Terminal height in characters
+    };
+    ```
+
+## Dynamic Memory Management
+The code uses several STL containers for dynamic memory management:
+
+- Vector in `ZombieManager`:
+    ```cpp
+    std::vector<Zombie> zombies;   // Collection of active zombies
+    ```
+
+- Map in `Player`:
+    ```cpp
+    /**
+     * @brief Weapon upgrade costs for each level
+     * Key: Weapon level (1-9)
+     * Value: Gold cost for upgrading to next level
+     */
+    const std::map<int, int> Player::WEAPON_UPGRADE_COST = {
+        {1, 30}, {2, 30}, {3, 30}, {4, 40}, {5, 40},
+        {6, 40}, {7, 50}, {8, 50}, {9, 50}
+    };
+    ```
+
+## File Input/Output
+The code implements file I/O in several places:
+
+- UI File Reading in `UI.cpp`:
+    ```cpp
+    std::string UI::LoadUI(const std::string& filename) {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open UI file: " + filename);
+        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        return buffer.str();
+    }
+    ```
+
+- Animation File Reading in `Animation.cpp`:
+    ```cpp
+    void Animation::PlaySequence(const std::string& dirPath, int frameDelayMs) {
+        auto frames = GetSortedFrames(dirPath);
+        if (frames.empty()) {
+            throw std::runtime_error("No animation frames found in: " + dirPath);
+        }
+
+        for (const auto& frameFile : frames) {
+            UI::ShowInterface(dirPath + "/" + frameFile);
+            std::this_thread::sleep_for(std::chrono::milliseconds(frameDelayMs));
+        }
+    }
+    ```
+
+## Program Codes in Multiple Files
+- Code is organized in multiple directories:
+  - `src/Core/`: Core game logic
+  - `src/Combat/`: Combat system
+  - `src/UI/`: User interface
+  - `src/Counters/`: Game counters
+  - `src/Utils/`: Utility functions
+
+## Multiple Difficulty Levels
+- The game supports multiple difficulty levels, which are defined in `src/Core/Difficulty.h`:
+  ```cpp
+  namespace Difficulty {
+    struct Config {
+      int initialPeople;
+      int cropYield;
+      int goldYield;
+      float exploreRisk;
+    };
+
+    const std::unordered_map<std::string, Config> PRESETS = {
+        { "EASY", Config{ 5, 40, 40, 0.05f } },
+        { "MEDIUM", Config{ 3, 30, 30, 0.10f } },
+        { "HARD", Config{ 2, 20, 20, 0.20f } }
+    };
+  }
+  ```
+## Proper Indentation and Naming Styles
+- Code uses clear naming conventions:
+  - Class member variables use `m_` prefix (e.g., `m_people`, `m_gold`)
+  - Function names use camelCase (e.g., `getCurrentDay`, `processMainMenu`)
+  - Constants use UPPERCASE (e.g., `TOTAL_WEEKS`, `DAYS_PER_WEEK`)
+
+## In-Code Documentation
+- Code includes detailed documentation comments using JavaDoc style:
+  ```cpp
+  /**
+   * @brief Game configuration constants
+   * 
+   * This namespace contains fundamental game configuration parameters that
+   * define the game's structure and basic mechanics. These constants are
+   * used throughout the game to maintain consistency in game rules and
+   * balance.
+   */
+  namespace GameConfig {
+      // ...
+  }
+  ```
