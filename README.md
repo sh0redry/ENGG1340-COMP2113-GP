@@ -1,5 +1,39 @@
 ![Crazy Thursday Banner](./title.jpg)
 
+# Menu
+
+- [Menu](#menu)
+- [Team Members](#team-members)
+  - [Contributions](#contributions)
+- [Description](#description)
+- [How to play](#how-to-play)
+  - [Quick Demo](#quick-demo)
+  - [Compilation](#compilation)
+    - [Terminal Size](#terminal-size)
+  - [Short Tutorial](#short-tutorial)
+    - [In main menu / home](#in-main-menu--home)
+    - [In counters](#in-counters)
+    - [In combat](#in-combat)
+- [Overview](#overview)
+  - [Core Components](#core-components)
+    - [Object Model Hierarchy](#object-model-hierarchy)
+    - [Game Class](#game-class)
+    - [Player Class](#player-class)
+    - [Combat Class](#combat-class)
+    - [CounterBase and Resource Counters](#counterbase-and-resource-counters)
+  - [Data Flow](#data-flow)
+  - [File Structure](#file-structure)
+- [Code Requirements](#code-requirements)
+  - [Generation of Random Game Events](#generation-of-random-game-events)
+  - [Data Structures for Storing Data](#data-structures-for-storing-data)
+  - [Dynamic Memory Management](#dynamic-memory-management)
+  - [File Input/Output](#file-inputoutput)
+  - [Program Codes in Multiple Files](#program-codes-in-multiple-files)
+  - [Multiple Difficulty Levels](#multiple-difficulty-levels)
+  - [Proper Indentation and Naming Styles](#proper-indentation-and-naming-styles)
+  - [In-Code Documentation](#in-code-documentation)
+- [Non-standard Libraries](#non-standard-libraries)
+
 # Team Members
 
 <!-- markdownlint-disable MD033 -->
