@@ -112,7 +112,7 @@
 # How to play
 ## Demo
 
-[<img src="./assets/demo_picture.png" width="500" alt="Watch Demo Video">](https://connecthkuhk-my.sharepoint.com/:v:/g/personal/u3628937_connect_hku_hk/EYUCHmNUm1dEgQp9J-2tvTkBLi6YYdC4FUeOmeJlG3Nz8Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=L9J2gJ)
+[<img src="./assets/demo_picture.png" width="500" alt="Watch Demo Video">](https://connecthkuhk-my.sharepoint.com/:v:/g/personal/u3628937_connect_hku_hk/EYUCHmNUm1dEgQp9J-2tvTkBLi6YYdC4FUeOmeJlG3Nz8Q)
 
 ## Quick Start
 
