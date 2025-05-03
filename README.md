@@ -261,7 +261,6 @@ The codebase is organized around several core classes, each responsible for a ma
 
 ```mermaid
 classDiagram
-    %% 上方主要子系统
     class Player {
         - int m_people
         - int m_crop
@@ -280,7 +279,6 @@ classDiagram
         + bool run()
     }
 
-    %% 核心类
     class Game {
         - GameState m_state
         - unique_ptr<Player> m_player
@@ -294,7 +292,6 @@ classDiagram
         - void showEndScreen(bool)
     }
 
-    %% 下方Counters相关
     class CounterFactory
     class CounterBase {
         # Player& m_player
@@ -311,12 +308,10 @@ classDiagram
     class RecruitCounter
     class ShopCounter
 
-    %% 其他子系统
     class Weapon
     class ZombieManager
     class Terminal
 
-    %% 连接关系
     Player --|> Game
     WeekCycle --|> Game
     UI --|> Game
