@@ -430,12 +430,12 @@ The codebase is organized into multiple files and directories, each handling spe
 
 # Code Requirements
 ## Generation of Random Game Events
-- In `src/Utils/Random.h`, a complete random number generation system is implemented, providing multiple random number generation functions:
+- In [`src/Utils/Random.h`](src/Utils/Random.h), a complete random number generation system is implemented, providing multiple random number generation functions:
   - `Range<T>`: Generates random integers within a specified range
   - `RangeReal<T>`: Generates random floating-point numbers within a specified range
   - `Chance`: Makes probability-based random decisions
 
-- In `src/Counters/Explore.cpp`, the random system is used to generate exploration results:
+- In [`src/Counters/Explore.cpp`](src/Counters/Explore.cpp), the random system is used to generate exploration results:
   ```cpp
   if (Random::Chance(lossProbability)) {
       return ExploreResult::PEOPLE_LOST;
@@ -445,7 +445,7 @@ The codebase is organized into multiple files and directories, each handling spe
 ## Data Structures for Storing Data
 The code uses several data structures to store game status:
 
-- In `src/Combat/Zombie.h`, the `Zombie` struct is used to store game status:
+- In [`src/Combat/Zombie.h`](src/Combat/Zombie.h), the `Zombie` struct is used to store game status:
   ```cpp
   struct Zombie {
       int x;          // X coordinate position
@@ -456,7 +456,7 @@ The code uses several data structures to store game status:
       char getDisplayChar() const;
   };
   ```
-- In `src/UI/Terminal.h`, the `TerminalSize` struct is used to store terminal window dimensions:
+- In [`src/UI/Terminal.h`](src/UI/Terminal.h), the `TerminalSize` struct is used to store terminal window dimensions:
     ```cpp
     struct TerminalSize {
         int width;   // Terminal width in characters
@@ -488,7 +488,7 @@ The code uses several STL containers for dynamic memory management:
 ## File Input/Output
 The code implements file I/O in several places:
 
-- UI File Reading in `UI.cpp`:
+- UI File Reading in [`src/UI/UI.cpp`](src/UI/UI.cpp):
     ```cpp
     std::string UI::LoadUI(const std::string& filename) {
         std::ifstream file(filename);
@@ -501,7 +501,7 @@ The code implements file I/O in several places:
     }
     ```
 
-- Animation File Reading in `Animation.cpp`:
+- Animation File Reading in [`src/UI/Animation.cpp`](src/UI/Animation.cpp):
     ```cpp
     void Animation::PlaySequence(const std::string& dirPath, int frameDelayMs) {
         auto frames = GetSortedFrames(dirPath);
@@ -518,14 +518,14 @@ The code implements file I/O in several places:
 
 ## Program Codes in Multiple Files
 - Code is organized in multiple directories:
-  - `src/Core/`: Core game logic
-  - `src/Combat/`: Combat system
-  - `src/UI/`: User interface
-  - `src/Counters/`: Game counters
-  - `src/Utils/`: Utility functions
+  - [`src/Core/`](src/Core/): Core game logic
+  - [`src/Combat/`](src/Combat/): Combat system
+  - [`src/UI/`](src/UI/): User interface
+  - [`src/Counters/`](src/Counters/): Game counters
+  - [`src/Utils/`](src/Utils/): Utility functions
 
 ## Multiple Difficulty Levels
-- The game supports multiple difficulty levels, which are defined in `src/Core/Difficulty.h`:
+- The game supports multiple difficulty levels, which are defined in [`src/Core/Difficulty.h`](src/Core/Difficulty.h):
   ```cpp
   namespace Difficulty {
     struct Config {
