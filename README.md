@@ -112,6 +112,8 @@
 # How to play
 ## Demo
 
+<iframe src="https://connecthkuhk-my.sharepoint.com/personal/u3628937_connect_hku_hk/_layouts/15/embed.aspx?UniqueId=631e0285-9b54-4457-810a-7d27edadbd39&embed=%7B%22ust%22%3Atrue%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create" width="640" height="360" frameborder="0" scrolling="no" allowfullscreen title="WeChat_20250503165932.mp4"></iframe>
+
 ## Quick Start
 
 Prerequisite:
