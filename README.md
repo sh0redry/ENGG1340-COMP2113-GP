@@ -546,13 +546,13 @@ The code implements file I/O in several places:
 ## Proper Indentation and Naming Styles
 - Code uses clear naming conventions:
   - Class member variables use `m_` prefix (e.g., `m_people`, `m_gold`)
-  - Function names use camelCase (e.g., `getCurrentDay`, `processMainMenu`)
-  - Constants use UPPERCASE (e.g., `TOTAL_WEEKS`, `DAYS_PER_WEEK`)
-  - Class names use PascalCase (e.g., `ZombieManager`, `WeaponSystem`)
-  - Namespace names use PascalCase (e.g., `Difficulty`, `GameConfig`)
-  - Template parameters use PascalCase with T prefix (e.g., `template<typename TValue>`)
-  - Local variables use camelCase (e.g., `currentDay`, `playerHealth`)
-  - Boolean variables use 'is' or 'has' prefix (e.g., `isGameOver`, `hasWeapon`)
+  - Function names use **camelCase** (e.g., `getCurrentDay`, `processMainMenu`)
+  - Constants use **UPPERCASE** (e.g., `TOTAL_WEEKS`, `DAYS_PER_WEEK`)
+  - Class names use **PascalCase** (e.g., `ZombieManager`, `WeaponSystem`)
+  - Namespace names use **PascalCase** (e.g., `Difficulty`, `GameConfig`)
+  - Template parameters use **PascalCase** with `T` prefix (e.g., `template<typename TValue>`)
+  - Local variables use **camelCase** (e.g., `currentDay`, `playerHealth`)
+  - Boolean variables use `is` or `has` prefix (e.g., `isGameOver`, `hasWeapon`)
 
 ## In-Code Documentation
 - Code includes detailed documentation comments using JavaDoc style:
