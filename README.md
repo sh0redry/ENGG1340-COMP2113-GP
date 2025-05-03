@@ -116,31 +116,31 @@
 
 ## Quick Start
 
-Prerequisite:
+**Prerequisite:**
 
 - Root directory of this repository.
 - A working `g++` compiler that supports `C++17`
 - `make`
 
-To compile:
+**To compile:**
 
 ```bash
 make
 ```
 
-To run the game:
+**To run the game:**
 
 ```bash
 ./bin/game
 ```
 
-Or if you prefer one step:
+**Or if you prefer one step:**
 
 ```bash
 make run
 ```
 
-To clean the build files:
+**To clean the build files:**
 
 ```bash
 make clean
