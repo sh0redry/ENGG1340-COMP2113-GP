@@ -7,8 +7,8 @@
   - [Contributions](#contributions)
 - [Description](#description)
 - [How to play](#how-to-play)
-  - [Quick Demo](#quick-demo)
-  - [Compilation](#compilation)
+  - [Demo](#demo)
+  - [Quick Start](#quick-start)
     - [Terminal Size](#terminal-size)
   - [Short Tutorial](#short-tutorial)
     - [In main menu / home](#in-main-menu--home)
@@ -110,9 +110,9 @@
 :question: This world blends **base-building, tactical combat, and roguelike randomness**—no two playthroughs are the same. Forge your own path to survival. **The wasteland awaits!**
 
 # How to play
-## Quick Demo
+## Demo
 
-## Compilation
+## Quick Start
 
 Prerequisite:
 
@@ -175,7 +175,7 @@ make clean
 - Press ***H*** to delete all the change and return to home.
 - Press ***L*** to show the game status and data.
 - Press ***Q*** to quit the game.
-- Press ***W*** to show the weapon information.**(Only available in the shop)**
+- Press ***W*** to show the weapon information. **(Only available in the shop)**
 ### In combat
 - Press ***A/D*** to move left/right.
 - Press ***Z/C*** to move faster.
