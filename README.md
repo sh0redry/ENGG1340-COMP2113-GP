@@ -82,7 +82,7 @@ This world blends **base-building, tactical combat, and roguelike randomness**â€
 
 Prerequisite:
 
-- This repository.
+- Root directory of this repository.
 - A working `g++` compiler that supports `C++17`
 - `make`
 
@@ -103,6 +103,21 @@ Or if you prefer one step:
 ```bash
 make run
 ```
+
+To clean the build files:
+
+```bash
+make clean
+```
+> If you use `CMake`:
+> ```bash
+> mkdir build && cd build
+> cmake ..
+> make
+> cd ../bin
+> ./Crazy_Thursday
+> ```
+
 ### Terminal Size
 
 1. **Maximize your terminal window to its fullest extent.**
