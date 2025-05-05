@@ -603,4 +603,4 @@ The code implements file I/O in several places:
 - This enables seamless integration with third-party documentation auto-generation tools like [Doxygen](https://www.doxygen.nl/).
 
 # Non-standard Libraries
-Not used, standard libraries only.
+- Not used, standard libraries only.
