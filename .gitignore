@@ -54,3 +54,9 @@ cmake_install.cmake
 .Trashes
 ehthumbs.db
 Thumbs.db 
+
+# test files
+tests/
+
+# docs
+*.pdf
