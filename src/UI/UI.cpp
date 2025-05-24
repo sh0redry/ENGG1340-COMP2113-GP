@@ -208,50 +208,6 @@ void UI::ShowDayTransition(std::string dayName, int currentWeek) {
 }
 
 /**
- * @brief Gets the coordinates of the UI box
- * 
- * Calculates the boundary coordinates of the UI box based on content
- * and terminal size.
- * @param content The content to calculate box coordinates for
- * @return BoxCoordinates containing the box boundaries
- */
-UI::BoxCoordinates UI::GetBoxCoordinates(const std::string& content) {
-    auto& terminal = Terminal::GetInstance();
-    auto size = terminal.GetTerminalSize();
-    std::vector<std::string> lines;
-    size_t boxWidth = 0;
-    size_t pos;
-    std::string temp = content;
-    
-    // Split content into lines
-    while ((pos = temp.find('\n')) != std::string::npos) {
-        std::string line = temp.substr(0, pos);
-        boxWidth = std::max(boxWidth, line.length());
-        lines.push_back(line);
-        temp.erase(0, pos + 1);
-    }
-    if (!temp.empty()) {
-        boxWidth = std::max(boxWidth, temp.length());
-        lines.push_back(temp);
-    }
-    
-    // Calculate horizontal and vertical padding
-    int hPadding = (size.width - boxWidth) / 2;
-    int vPadding = (size.height - lines.size()) / 2;
-    
-    if (hPadding < 0) hPadding = 0;
-    if (vPadding < 0) vPadding = 0;
-    
-    BoxCoordinates coords;
-    coords.top = vPadding;
-    coords.bottom = vPadding + lines.size() - 1;
-    coords.left = hPadding;
-    coords.right = hPadding + boxWidth - 1;
-    
-    return coords;
-}
-
-/**
  * @brief Moves cursor to position within UI box
  * 
  * Positions the cursor at specified coordinates relative to

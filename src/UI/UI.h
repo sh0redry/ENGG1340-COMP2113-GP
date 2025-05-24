@@ -77,16 +77,6 @@ public:
     };
 
     /**
-     * @brief Gets the coordinates of the UI box
-     * 
-     * Calculates and returns the boundary coordinates of the UI box
-     * based on the content.
-     * @param content The content to calculate box coordinates for
-     * @return BoxCoordinates containing the box boundaries
-     */
-    static BoxCoordinates GetBoxCoordinates(const std::string& content);
-
-    /**
      * @brief Loads UI content from a file
      * 
      * Reads and returns the contents of a UI file.
